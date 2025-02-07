@@ -8,7 +8,7 @@ export class LoadScene extends Component {
 
     onLoad() {
         // this.ws = new WebSocket('ws://192.168.56.1:5000');
-        this.ws = new WebSocket('ws://ninjaserver-production.up.railway.app');
+        this.ws = new WebSocket('wss://ninjaserver-production.up.railway.app');
         // this.ws = new WebSocket('ws://將你的後端網址放在這');
 
         if (this.ws) console.log("ws:", this.ws);
