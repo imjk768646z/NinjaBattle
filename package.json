@@ -3,5 +3,11 @@
   "uuid": "3a0684ba-8c3b-4c96-aadf-f55abd2d2e9d",
   "creator": {
     "version": "3.8.2"
+  },
+  "scripts": {
+    "start": "npx serve -s build"
+  },
+  "dependencies": {
+    "serve": "^14.0.1"
   }
 }
