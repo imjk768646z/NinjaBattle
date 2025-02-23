@@ -17,3 +17,7 @@ message Stop {
   string ID = 1;
   bool IsStopGoRight = 2;
 }
+
+message Jump {
+  string ID = 1;
+}

@@ -739,6 +739,209 @@ $root.protobuf = (function() {
         return Stop;
     })();
 
+    protobuf.Jump = (function() {
+
+        /**
+         * Properties of a Jump.
+         * @memberof protobuf
+         * @interface IJump
+         * @property {string|null} [ID] Jump ID
+         */
+
+        /**
+         * Constructs a new Jump.
+         * @memberof protobuf
+         * @classdesc Represents a Jump.
+         * @implements IJump
+         * @constructor
+         * @param {protobuf.IJump=} [properties] Properties to set
+         */
+        function Jump(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Jump ID.
+         * @member {string} ID
+         * @memberof protobuf.Jump
+         * @instance
+         */
+        Jump.prototype.ID = "";
+
+        /**
+         * Creates a new Jump instance using the specified properties.
+         * @function create
+         * @memberof protobuf.Jump
+         * @static
+         * @param {protobuf.IJump=} [properties] Properties to set
+         * @returns {protobuf.Jump} Jump instance
+         */
+        Jump.create = function create(properties) {
+            return new Jump(properties);
+        };
+
+        /**
+         * Encodes the specified Jump message. Does not implicitly {@link protobuf.Jump.verify|verify} messages.
+         * @function encode
+         * @memberof protobuf.Jump
+         * @static
+         * @param {protobuf.IJump} message Jump message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Jump.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.ID != null && Object.hasOwnProperty.call(message, "ID"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.ID);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Jump message, length delimited. Does not implicitly {@link protobuf.Jump.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof protobuf.Jump
+         * @static
+         * @param {protobuf.IJump} message Jump message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Jump.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Jump message from the specified reader or buffer.
+         * @function decode
+         * @memberof protobuf.Jump
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {protobuf.Jump} Jump
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Jump.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.Jump();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.ID = reader.string();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Jump message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof protobuf.Jump
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {protobuf.Jump} Jump
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Jump.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Jump message.
+         * @function verify
+         * @memberof protobuf.Jump
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Jump.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                if (!$util.isString(message.ID))
+                    return "ID: string expected";
+            return null;
+        };
+
+        /**
+         * Creates a Jump message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof protobuf.Jump
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {protobuf.Jump} Jump
+         */
+        Jump.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.Jump)
+                return object;
+            var message = new $root.protobuf.Jump();
+            if (object.ID != null)
+                message.ID = String(object.ID);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Jump message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof protobuf.Jump
+         * @static
+         * @param {protobuf.Jump} message Jump
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Jump.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.ID = "";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                object.ID = message.ID;
+            return object;
+        };
+
+        /**
+         * Converts this Jump to JSON.
+         * @function toJSON
+         * @memberof protobuf.Jump
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Jump.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for Jump
+         * @function getTypeUrl
+         * @memberof protobuf.Jump
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        Jump.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/protobuf.Jump";
+        };
+
+        return Jump;
+    })();
+
     return protobuf;
 })();
 

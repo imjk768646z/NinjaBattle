@@ -22,6 +22,7 @@ export class Player extends Component {
 
     private movePackHandler: MovePacket = null;
     private stopPackHandler: MovePacket = null;
+    private jumpPackHandler: Function = null;
 
     private _playerID: string = "";
     private player: Node = null;
@@ -138,6 +139,10 @@ export class Player extends Component {
         this.stopPackHandler = func;
     }
 
+    public setJumpPackHandler(func: Function) {
+        this.jumpPackHandler = func;
+    }
+
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // console.log("接觸地面 self:", selfCollider, "other:", otherCollider);
         if (otherCollider.group === PHY_GROUP.FLOOR) {
@@ -177,6 +182,7 @@ export class Player extends Component {
                 this.faceToRight = false;
                 break;
             case KeyCode.SPACE:
+                if (this.isSelfControl) this.jumpPackHandler();
                 if (this.onGround) {
                     this.rigidBody.linearVelocity = new Vec2(this.rigidBody.linearVelocity.x, this.jumpForce); // 施加跳躍力
                     this.onGround = false; // 跳躍後標記為離地

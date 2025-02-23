@@ -8,12 +8,14 @@ export enum Action {
     Join = '1000',
     Move = '2000',
     Stop = '3000',
+    Jump = '4000',
 }
 
 export const ActionReverseMap = {
     '1000': 'Join',
     '2000': 'Move',
-    '3000': 'Stop'
+    '3000': 'Stop',
+    '4000': 'Jump',
 }
 
 @ccclass('GameScene')
@@ -34,6 +36,7 @@ export class GameScene extends Component {
             let player = value.getComponent(Player);
             player.setMovePackHandler(this.sendMovePacket.bind(this));
             player.setStopPackHandler(this.sendStopPacket.bind(this));
+            player.setJumpPackHandler(this.sendJumpPacket.bind(this));
         })
         // 註冊按鈕事件
         this.join = this.node.getChildByName("Join");
@@ -124,6 +127,12 @@ export class GameScene extends Component {
                     if (msg.IsStopGoRight) EventManager.dispathEvent(EventName.KeyUp, msg.ID, new EventKeyboard(KeyCode.ARROW_RIGHT, false));
                     else EventManager.dispathEvent(EventName.KeyUp, msg.ID, new EventKeyboard(KeyCode.ARROW_LEFT, false));
                     break;
+                case Action.Jump:
+                    bodyArray = data.slice(actionLength);
+                    msg = protobuf.protobuf.Jump.decode(bodyArray);
+                    console.log("[跳躍]封包 body:", msg);
+                    EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.SPACE, true));
+                    break;
                 default:
                     console.error("未處理封包:", action);
                     break;
@@ -143,7 +152,7 @@ export class GameScene extends Component {
         };
     }
 
-    sendMovePacket(isRight: boolean) {
+    private sendMovePacket(isRight: boolean) {
         let move = new protobuf.protobuf.Move();
         move.ID = this._uuid;
         move.IsGoRight = isRight;
@@ -153,13 +162,22 @@ export class GameScene extends Component {
         this.sendPacket(packet);
     }
 
-    sendStopPacket(isStop2Right: boolean) {
+    private sendStopPacket(isStop2Right: boolean) {
         let stop = new protobuf.protobuf.Stop();
         stop.ID = this._uuid;
         stop.IsStopGoRight = isStop2Right;
         console.log("Stop Packet:", protobuf.protobuf.Stop.encode(stop).finish());
 
         let packet = new Packet(Action.Stop, protobuf.protobuf.Stop.encode(stop).finish());
+        this.sendPacket(packet);
+    }
+
+    private sendJumpPacket() {
+        let jump = new protobuf.protobuf.Jump();
+        jump.ID = this._uuid;
+        console.log("Jump Packet:", protobuf.protobuf.Jump.encode(jump).finish());
+
+        let packet = new Packet(Action.Jump, protobuf.protobuf.Jump.encode(jump).finish());
         this.sendPacket(packet);
     }
 
