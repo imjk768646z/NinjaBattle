@@ -1,4 +1,4 @@
-import { _decorator, Component, EventKeyboard, KeyCode, Label, Node, NodeEventType } from 'cc';
+import { _decorator, Component, EventKeyboard, KeyCode, Label, Node, NodeEventType, Vec3 } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
 import { EventManager, EventName } from './Singleton/EventManager';
@@ -9,6 +9,7 @@ export enum Action {
     Move = '2000',
     Stop = '3000',
     Jump = '4000',
+    PositionInfo = '5000',
 }
 
 export const ActionReverseMap = {
@@ -16,6 +17,7 @@ export const ActionReverseMap = {
     '2000': 'Move',
     '3000': 'Stop',
     '4000': 'Jump',
+    '5000': 'PositionInfo',
 }
 
 @ccclass('GameScene')
@@ -37,6 +39,7 @@ export class GameScene extends Component {
             player.setMovePackHandler(this.sendMovePacket.bind(this));
             player.setStopPackHandler(this.sendStopPacket.bind(this));
             player.setJumpPackHandler(this.sendJumpPacket.bind(this));
+            player.setPosInfoPackHandler(this.sendPosInfoPacket.bind(this));
         })
         // 註冊按鈕事件
         this.join = this.node.getChildByName("Join");
@@ -133,6 +136,13 @@ export class GameScene extends Component {
                     console.log("[跳躍]封包 body:", msg);
                     EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.SPACE, true));
                     break;
+                case Action.PositionInfo:
+                    bodyArray = data.slice(actionLength);
+                    msg = protobuf.protobuf.PositionInfo.decode(bodyArray);
+                    console.log("[同步位置]封包 body:", msg);
+                    let poision = new Vec3(msg.X, msg.Y, 0);
+                    EventManager.dispathEvent(EventName.SyncPosition, msg.ID, poision);
+                    break;
                 default:
                     console.error("未處理封包:", action);
                     break;
@@ -178,6 +188,17 @@ export class GameScene extends Component {
         console.log("Jump Packet:", protobuf.protobuf.Jump.encode(jump).finish());
 
         let packet = new Packet(Action.Jump, protobuf.protobuf.Jump.encode(jump).finish());
+        this.sendPacket(packet);
+    }
+
+    private sendPosInfoPacket(playerPosition: Vec3) {
+        let position = new protobuf.protobuf.PositionInfo();
+        position.ID = this._uuid;
+        position.X = playerPosition.x;
+        position.Y = playerPosition.y;
+        console.log("PositionInfo Packet:", position);
+
+        let packet = new Packet(Action.PositionInfo, protobuf.protobuf.PositionInfo.encode(position).finish());
         this.sendPacket(packet);
     }
 

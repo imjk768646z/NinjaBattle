@@ -41,4 +41,5 @@ export class EventManager {
 export enum EventName {
     KeyDown,
     KeyUp,
+    SyncPosition,
 }

@@ -942,6 +942,256 @@ $root.protobuf = (function() {
         return Jump;
     })();
 
+    protobuf.PositionInfo = (function() {
+
+        /**
+         * Properties of a PositionInfo.
+         * @memberof protobuf
+         * @interface IPositionInfo
+         * @property {string|null} [ID] PositionInfo ID
+         * @property {number|null} [X] PositionInfo X
+         * @property {number|null} [Y] PositionInfo Y
+         */
+
+        /**
+         * Constructs a new PositionInfo.
+         * @memberof protobuf
+         * @classdesc Represents a PositionInfo.
+         * @implements IPositionInfo
+         * @constructor
+         * @param {protobuf.IPositionInfo=} [properties] Properties to set
+         */
+        function PositionInfo(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * PositionInfo ID.
+         * @member {string} ID
+         * @memberof protobuf.PositionInfo
+         * @instance
+         */
+        PositionInfo.prototype.ID = "";
+
+        /**
+         * PositionInfo X.
+         * @member {number} X
+         * @memberof protobuf.PositionInfo
+         * @instance
+         */
+        PositionInfo.prototype.X = 0;
+
+        /**
+         * PositionInfo Y.
+         * @member {number} Y
+         * @memberof protobuf.PositionInfo
+         * @instance
+         */
+        PositionInfo.prototype.Y = 0;
+
+        /**
+         * Creates a new PositionInfo instance using the specified properties.
+         * @function create
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {protobuf.IPositionInfo=} [properties] Properties to set
+         * @returns {protobuf.PositionInfo} PositionInfo instance
+         */
+        PositionInfo.create = function create(properties) {
+            return new PositionInfo(properties);
+        };
+
+        /**
+         * Encodes the specified PositionInfo message. Does not implicitly {@link protobuf.PositionInfo.verify|verify} messages.
+         * @function encode
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {protobuf.IPositionInfo} message PositionInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        PositionInfo.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.ID != null && Object.hasOwnProperty.call(message, "ID"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.ID);
+            if (message.X != null && Object.hasOwnProperty.call(message, "X"))
+                writer.uint32(/* id 2, wireType 1 =*/17).double(message.X);
+            if (message.Y != null && Object.hasOwnProperty.call(message, "Y"))
+                writer.uint32(/* id 3, wireType 1 =*/25).double(message.Y);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified PositionInfo message, length delimited. Does not implicitly {@link protobuf.PositionInfo.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {protobuf.IPositionInfo} message PositionInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        PositionInfo.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a PositionInfo message from the specified reader or buffer.
+         * @function decode
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {protobuf.PositionInfo} PositionInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        PositionInfo.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.PositionInfo();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.ID = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.X = reader.double();
+                        break;
+                    }
+                case 3: {
+                        message.Y = reader.double();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a PositionInfo message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {protobuf.PositionInfo} PositionInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        PositionInfo.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a PositionInfo message.
+         * @function verify
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        PositionInfo.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                if (!$util.isString(message.ID))
+                    return "ID: string expected";
+            if (message.X != null && message.hasOwnProperty("X"))
+                if (typeof message.X !== "number")
+                    return "X: number expected";
+            if (message.Y != null && message.hasOwnProperty("Y"))
+                if (typeof message.Y !== "number")
+                    return "Y: number expected";
+            return null;
+        };
+
+        /**
+         * Creates a PositionInfo message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {protobuf.PositionInfo} PositionInfo
+         */
+        PositionInfo.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.PositionInfo)
+                return object;
+            var message = new $root.protobuf.PositionInfo();
+            if (object.ID != null)
+                message.ID = String(object.ID);
+            if (object.X != null)
+                message.X = Number(object.X);
+            if (object.Y != null)
+                message.Y = Number(object.Y);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a PositionInfo message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {protobuf.PositionInfo} message PositionInfo
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        PositionInfo.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.ID = "";
+                object.X = 0;
+                object.Y = 0;
+            }
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                object.ID = message.ID;
+            if (message.X != null && message.hasOwnProperty("X"))
+                object.X = options.json && !isFinite(message.X) ? String(message.X) : message.X;
+            if (message.Y != null && message.hasOwnProperty("Y"))
+                object.Y = options.json && !isFinite(message.Y) ? String(message.Y) : message.Y;
+            return object;
+        };
+
+        /**
+         * Converts this PositionInfo to JSON.
+         * @function toJSON
+         * @memberof protobuf.PositionInfo
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        PositionInfo.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for PositionInfo
+         * @function getTypeUrl
+         * @memberof protobuf.PositionInfo
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        PositionInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/protobuf.PositionInfo";
+        };
+
+        return PositionInfo;
+    })();
+
     return protobuf;
 })();
 

@@ -416,6 +416,115 @@ export namespace protobuf {
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
+
+    /** Properties of a PositionInfo. */
+    interface IPositionInfo {
+
+        /** PositionInfo ID */
+        ID?: (string|null);
+
+        /** PositionInfo X */
+        X?: (number|null);
+
+        /** PositionInfo Y */
+        Y?: (number|null);
+    }
+
+    /** Represents a PositionInfo. */
+    class PositionInfo implements IPositionInfo {
+
+        /**
+         * Constructs a new PositionInfo.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: protobuf.IPositionInfo);
+
+        /** PositionInfo ID. */
+        public ID: string;
+
+        /** PositionInfo X. */
+        public X: number;
+
+        /** PositionInfo Y. */
+        public Y: number;
+
+        /**
+         * Creates a new PositionInfo instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns PositionInfo instance
+         */
+        public static create(properties?: protobuf.IPositionInfo): protobuf.PositionInfo;
+
+        /**
+         * Encodes the specified PositionInfo message. Does not implicitly {@link protobuf.PositionInfo.verify|verify} messages.
+         * @param message PositionInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: protobuf.IPositionInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified PositionInfo message, length delimited. Does not implicitly {@link protobuf.PositionInfo.verify|verify} messages.
+         * @param message PositionInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: protobuf.IPositionInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a PositionInfo message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns PositionInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): protobuf.PositionInfo;
+
+        /**
+         * Decodes a PositionInfo message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns PositionInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): protobuf.PositionInfo;
+
+        /**
+         * Verifies a PositionInfo message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a PositionInfo message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns PositionInfo
+         */
+        public static fromObject(object: { [k: string]: any }): protobuf.PositionInfo;
+
+        /**
+         * Creates a plain object from a PositionInfo message. Also converts values to other types if specified.
+         * @param message PositionInfo
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: protobuf.PositionInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this PositionInfo to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for PositionInfo
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
 }
 
 }

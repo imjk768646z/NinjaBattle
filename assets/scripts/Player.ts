@@ -1,4 +1,4 @@
-import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, Node, Prefab, RigidBody2D, Vec2, Vec3 } from 'cc';
+import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, RigidBody2D, Vec2, Vec3 } from 'cc';
 import { AddEvent, EventManager, EventName } from './Singleton/EventManager';
 import { NodePoolManager } from './Singleton/NodePoolManager';
 import { StateMachine } from './FiniteStateMachine/StateMachine';
@@ -23,6 +23,7 @@ export class Player extends Component {
     private movePackHandler: MovePacket = null;
     private stopPackHandler: MovePacket = null;
     private jumpPackHandler: Function = null;
+    private posInfoPackHandler: Function = null;
 
     private _playerID: string = "";
     private player: Node = null;
@@ -36,10 +37,13 @@ export class Player extends Component {
     private onGround: boolean = true; // 是否接觸地面(腳色出現時可能尚未落地，必須改為落地後重設onGround)
     private serverPosition: Vec3 = null; //後端發來的位置封包
     private isSelfControl: boolean = false;
+    private Delta: number = 0;
+    private updateFrequency: number = 1;
 
     onLoad() {
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
         AddEvent(EventName.KeyUp, this.onServerKeyUp.bind(this));
+        AddEvent(EventName.SyncPosition, this.onSyncPosition.bind(this));
     }
 
     start() {
@@ -96,6 +100,7 @@ export class Player extends Component {
         }
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
         input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
+        // this.schedule(this.posInfoPackHandler, 5, macro.REPEAT_FOREVER, 1);
     }
 
     /* set offPlayerControll(player: Node) {
@@ -141,6 +146,10 @@ export class Player extends Component {
 
     public setJumpPackHandler(func: Function) {
         this.jumpPackHandler = func;
+    }
+
+    public setPosInfoPackHandler(func: Function) {
+        this.posInfoPackHandler = func;
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -231,12 +240,45 @@ export class Player extends Component {
         if (id == this._playerID) this.onKeyUp(event);
     }
 
+    private onSyncPosition(...ary: any[]) {
+        const id = ary[0];
+        const updatePosition: Vec3 = ary[1];
+        if (id == this._playerID) {
+            let clientPos = this.player.position;
+            console.log("當前位置", this.player.position);
+
+            // 插值修正 (平滑補正)
+            // this.player.position = clientPos.lerp(updatePosition, 0.1);
+            this.player.position = updatePosition;
+            console.log("修正位置", this.player.position);
+        }
+        /* if (this.serverPosition) {
+            let clientPos = this.player.position;
+            console.log("當前位置", this.player.position);
+            let serverPos = this.serverPosition;
+
+            // 插值修正 (平滑補正)
+            this.player.position = clientPos.lerp(serverPos, 0.1);
+            console.log("修正位置", this.player.position);
+            this.serverPosition = null;
+        } */
+    }
+
     update(deltaTime: number) {
+        this.Delta += deltaTime;
+
         if (this.player) {
             this.stateMachine.update(deltaTime);
 
+            if (this.Delta >= this.updateFrequency) {
+                this.Delta = 0;
+                if (this.isSelfControl) this.posInfoPackHandler(this.player.position);
+                console.log("! 玩家位置", this.player.position);
+            }
+
+
             // 如果從伺服器收到修正位置
-            if (this.serverPosition) {
+            /* if (this.serverPosition) {
                 let clientPos = this.player.position;
                 console.log("當前位置", this.player.position);
                 let serverPos = this.serverPosition;
@@ -245,7 +287,7 @@ export class Player extends Component {
                 this.player.position = clientPos.lerp(serverPos, 0.1);
                 console.log("修正位置", this.player.position);
                 this.serverPosition = null;
-            }
+            } */
         }
     }
 }
