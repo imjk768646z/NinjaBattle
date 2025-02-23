@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package protobuf;
+
+message Join {
+  string ID = 1;
+  string GameState = 2;
+  repeated string AllPlayers = 3;
+}
+
+message MoveInfo {
+  Join PlayerInfo = 1; 
+  uint32 x = 2;
+  uint32 y = 3;
+}

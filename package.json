@@ -5,9 +5,12 @@
     "version": "3.8.2"
   },
   "scripts": {
-    "start": "npx serve -s build"
+    "build-proto:pbjs": "pbjs --dependency protobufjs/minimal.js --target static-module --wrap commonjs --out ./Proto/protobuf.js ./Proto/*.proto",
+    "build-proto:pbts": "pbts --main --out ./Proto/protobuf.d.ts ./Proto/*.js && node ./Tools/wrap-pbts-result.js"
   },
   "dependencies": {
+    "protobufjs": "^7.4.0",
+    "protobufjs-cli": "^1.1.3",
     "serve": "^14.0.1"
   }
 }
