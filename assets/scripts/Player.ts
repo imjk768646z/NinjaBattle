@@ -4,6 +4,7 @@ import { NodePoolManager } from './Singleton/NodePoolManager';
 import { StateMachine } from './FiniteStateMachine/StateMachine';
 import { IdleState } from './FiniteStateMachine/IdleState';
 const { ccclass, property } = _decorator;
+type MovePacket = (direction) => void;
 
 @ccclass('Player')
 export class Player extends Component {
@@ -19,6 +20,9 @@ export class Player extends Component {
 
     public stateMachine: StateMachine = null;
 
+    private movePackHandler: MovePacket = null;
+    private stopPackHandler: MovePacket = null;
+
     private _playerID: string = "";
     private player: Node = null;
     private moveRight: boolean = false; //todo: 只需要留下往右 取反就是往左
@@ -30,6 +34,7 @@ export class Player extends Component {
     private collider: Collider2D = null;
     private onGround: boolean = true; // 是否接觸地面(腳色出現時可能尚未落地，必須改為落地後重設onGround)
     private serverPosition: Vec3 = null; //後端發來的位置封包
+    private isSelfControl: boolean = false;
 
     onLoad() {
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
@@ -80,6 +85,7 @@ export class Player extends Component {
 
     set setPlayerSelfControll(player: Node) {
         this.player = player;
+        this.isSelfControl = true;
         this.rigidBody = this.player.getComponent(RigidBody2D);
         this.collider = this.player.getComponent(Collider2D);
         // 註冊碰撞偵測，當碰撞時設置 onGround = true
@@ -106,6 +112,7 @@ export class Player extends Component {
 
     set setPlayerOtherControll(player: Node) {
         this.player = player;
+        this.isSelfControl = false;
         this.rigidBody = this.player.getComponent(RigidBody2D);
         this.collider = this.player.getComponent(Collider2D);
         // 註冊碰撞偵測，當碰撞時設置 onGround = true
@@ -121,6 +128,14 @@ export class Player extends Component {
 
     get PlayerID(): string {
         return this._playerID;
+    }
+
+    public setMovePackHandler(func: MovePacket) {
+        this.movePackHandler = func;
+    }
+
+    public setStopPackHandler(func: MovePacket) {
+        this.stopPackHandler = func;
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -150,10 +165,14 @@ export class Player extends Component {
     private onKeyDown(event: EventKeyboard) {
         switch (event.keyCode) {
             case KeyCode.ARROW_RIGHT:
+                if (this.isSelfControl) this.movePackHandler(true);
+                if (this.moveLeft) this.moveLeft = false;
                 this.moveRight = true;
                 this.faceToRight = true;
                 break;
             case KeyCode.ARROW_LEFT:
+                if (this.isSelfControl) this.movePackHandler(false);
+                if (this.moveRight) this.moveRight = false;
                 this.moveLeft = true;
                 this.faceToRight = false;
                 break;
@@ -178,9 +197,11 @@ export class Player extends Component {
     private onKeyUp(event: EventKeyboard) {
         switch (event.keyCode) {
             case KeyCode.ARROW_RIGHT:
+                if (this.isSelfControl) this.stopPackHandler(true);
                 this.moveRight = false;
                 break;
             case KeyCode.ARROW_LEFT:
+                if (this.isSelfControl) this.stopPackHandler(false);
                 this.moveLeft = false;
                 break;
             default:
@@ -189,17 +210,19 @@ export class Player extends Component {
     }
 
     private onServerKeyDown(...ary: any[]) {
-        const event = ary[0];
-        const id = ary[1];
-        if (id != this._playerID) return;
-        this.onKeyDown(event);
+        const id = ary[0];
+        const event = ary[1];
+        // if (id == this._playerID) return;
+        if (this.isSelfControl) return;
+        if (id == this._playerID) this.onKeyDown(event);
     }
 
     private onServerKeyUp(...ary: any[]) {
-        const event = ary[0];
-        const id = ary[1];
-        if (id != this._playerID) return;
-        this.onKeyUp(event);
+        const id = ary[0];
+        const event = ary[1];
+        // if (id != this._playerID) return;
+        if (this.isSelfControl) return;
+        if (id == this._playerID) this.onKeyUp(event);
     }
 
     update(deltaTime: number) {

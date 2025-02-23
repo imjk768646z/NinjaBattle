@@ -285,26 +285,25 @@ $root.protobuf = (function() {
         return Join;
     })();
 
-    protobuf.MoveInfo = (function() {
+    protobuf.Move = (function() {
 
         /**
-         * Properties of a MoveInfo.
+         * Properties of a Move.
          * @memberof protobuf
-         * @interface IMoveInfo
-         * @property {protobuf.IJoin|null} [PlayerInfo] MoveInfo PlayerInfo
-         * @property {number|null} [x] MoveInfo x
-         * @property {number|null} [y] MoveInfo y
+         * @interface IMove
+         * @property {string|null} [ID] Move ID
+         * @property {boolean|null} [IsGoRight] Move IsGoRight
          */
 
         /**
-         * Constructs a new MoveInfo.
+         * Constructs a new Move.
          * @memberof protobuf
-         * @classdesc Represents a MoveInfo.
-         * @implements IMoveInfo
+         * @classdesc Represents a Move.
+         * @implements IMove
          * @constructor
-         * @param {protobuf.IMoveInfo=} [properties] Properties to set
+         * @param {protobuf.IMove=} [properties] Properties to set
          */
-        function MoveInfo(properties) {
+        function Move(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -312,103 +311,89 @@ $root.protobuf = (function() {
         }
 
         /**
-         * MoveInfo PlayerInfo.
-         * @member {protobuf.IJoin|null|undefined} PlayerInfo
-         * @memberof protobuf.MoveInfo
+         * Move ID.
+         * @member {string} ID
+         * @memberof protobuf.Move
          * @instance
          */
-        MoveInfo.prototype.PlayerInfo = null;
+        Move.prototype.ID = "";
 
         /**
-         * MoveInfo x.
-         * @member {number} x
-         * @memberof protobuf.MoveInfo
+         * Move IsGoRight.
+         * @member {boolean} IsGoRight
+         * @memberof protobuf.Move
          * @instance
          */
-        MoveInfo.prototype.x = 0;
+        Move.prototype.IsGoRight = false;
 
         /**
-         * MoveInfo y.
-         * @member {number} y
-         * @memberof protobuf.MoveInfo
-         * @instance
-         */
-        MoveInfo.prototype.y = 0;
-
-        /**
-         * Creates a new MoveInfo instance using the specified properties.
+         * Creates a new Move instance using the specified properties.
          * @function create
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
-         * @param {protobuf.IMoveInfo=} [properties] Properties to set
-         * @returns {protobuf.MoveInfo} MoveInfo instance
+         * @param {protobuf.IMove=} [properties] Properties to set
+         * @returns {protobuf.Move} Move instance
          */
-        MoveInfo.create = function create(properties) {
-            return new MoveInfo(properties);
+        Move.create = function create(properties) {
+            return new Move(properties);
         };
 
         /**
-         * Encodes the specified MoveInfo message. Does not implicitly {@link protobuf.MoveInfo.verify|verify} messages.
+         * Encodes the specified Move message. Does not implicitly {@link protobuf.Move.verify|verify} messages.
          * @function encode
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
-         * @param {protobuf.IMoveInfo} message MoveInfo message or plain object to encode
+         * @param {protobuf.IMove} message Move message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        MoveInfo.encode = function encode(message, writer) {
+        Move.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.PlayerInfo != null && Object.hasOwnProperty.call(message, "PlayerInfo"))
-                $root.protobuf.Join.encode(message.PlayerInfo, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.x != null && Object.hasOwnProperty.call(message, "x"))
-                writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.x);
-            if (message.y != null && Object.hasOwnProperty.call(message, "y"))
-                writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.y);
+            if (message.ID != null && Object.hasOwnProperty.call(message, "ID"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.ID);
+            if (message.IsGoRight != null && Object.hasOwnProperty.call(message, "IsGoRight"))
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.IsGoRight);
             return writer;
         };
 
         /**
-         * Encodes the specified MoveInfo message, length delimited. Does not implicitly {@link protobuf.MoveInfo.verify|verify} messages.
+         * Encodes the specified Move message, length delimited. Does not implicitly {@link protobuf.Move.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
-         * @param {protobuf.IMoveInfo} message MoveInfo message or plain object to encode
+         * @param {protobuf.IMove} message Move message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        MoveInfo.encodeDelimited = function encodeDelimited(message, writer) {
+        Move.encodeDelimited = function encodeDelimited(message, writer) {
             return this.encode(message, writer).ldelim();
         };
 
         /**
-         * Decodes a MoveInfo message from the specified reader or buffer.
+         * Decodes a Move message from the specified reader or buffer.
          * @function decode
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {protobuf.MoveInfo} MoveInfo
+         * @returns {protobuf.Move} Move
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        MoveInfo.decode = function decode(reader, length) {
+        Move.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.MoveInfo();
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.Move();
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1: {
-                        message.PlayerInfo = $root.protobuf.Join.decode(reader, reader.uint32());
+                        message.ID = reader.string();
                         break;
                     }
                 case 2: {
-                        message.x = reader.uint32();
-                        break;
-                    }
-                case 3: {
-                        message.y = reader.uint32();
+                        message.IsGoRight = reader.bool();
                         break;
                     }
                 default:
@@ -420,124 +405,338 @@ $root.protobuf = (function() {
         };
 
         /**
-         * Decodes a MoveInfo message from the specified reader or buffer, length delimited.
+         * Decodes a Move message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {protobuf.MoveInfo} MoveInfo
+         * @returns {protobuf.Move} Move
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        MoveInfo.decodeDelimited = function decodeDelimited(reader) {
+        Move.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
                 reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
-         * Verifies a MoveInfo message.
+         * Verifies a Move message.
          * @function verify
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-        MoveInfo.verify = function verify(message) {
+        Move.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.PlayerInfo != null && message.hasOwnProperty("PlayerInfo")) {
-                var error = $root.protobuf.Join.verify(message.PlayerInfo);
-                if (error)
-                    return "PlayerInfo." + error;
-            }
-            if (message.x != null && message.hasOwnProperty("x"))
-                if (!$util.isInteger(message.x))
-                    return "x: integer expected";
-            if (message.y != null && message.hasOwnProperty("y"))
-                if (!$util.isInteger(message.y))
-                    return "y: integer expected";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                if (!$util.isString(message.ID))
+                    return "ID: string expected";
+            if (message.IsGoRight != null && message.hasOwnProperty("IsGoRight"))
+                if (typeof message.IsGoRight !== "boolean")
+                    return "IsGoRight: boolean expected";
             return null;
         };
 
         /**
-         * Creates a MoveInfo message from a plain object. Also converts values to their respective internal types.
+         * Creates a Move message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {protobuf.MoveInfo} MoveInfo
+         * @returns {protobuf.Move} Move
          */
-        MoveInfo.fromObject = function fromObject(object) {
-            if (object instanceof $root.protobuf.MoveInfo)
+        Move.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.Move)
                 return object;
-            var message = new $root.protobuf.MoveInfo();
-            if (object.PlayerInfo != null) {
-                if (typeof object.PlayerInfo !== "object")
-                    throw TypeError(".protobuf.MoveInfo.PlayerInfo: object expected");
-                message.PlayerInfo = $root.protobuf.Join.fromObject(object.PlayerInfo);
-            }
-            if (object.x != null)
-                message.x = object.x >>> 0;
-            if (object.y != null)
-                message.y = object.y >>> 0;
+            var message = new $root.protobuf.Move();
+            if (object.ID != null)
+                message.ID = String(object.ID);
+            if (object.IsGoRight != null)
+                message.IsGoRight = Boolean(object.IsGoRight);
             return message;
         };
 
         /**
-         * Creates a plain object from a MoveInfo message. Also converts values to other types if specified.
+         * Creates a plain object from a Move message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
-         * @param {protobuf.MoveInfo} message MoveInfo
+         * @param {protobuf.Move} message Move
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        MoveInfo.toObject = function toObject(message, options) {
+        Move.toObject = function toObject(message, options) {
             if (!options)
                 options = {};
             var object = {};
             if (options.defaults) {
-                object.PlayerInfo = null;
-                object.x = 0;
-                object.y = 0;
+                object.ID = "";
+                object.IsGoRight = false;
             }
-            if (message.PlayerInfo != null && message.hasOwnProperty("PlayerInfo"))
-                object.PlayerInfo = $root.protobuf.Join.toObject(message.PlayerInfo, options);
-            if (message.x != null && message.hasOwnProperty("x"))
-                object.x = message.x;
-            if (message.y != null && message.hasOwnProperty("y"))
-                object.y = message.y;
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                object.ID = message.ID;
+            if (message.IsGoRight != null && message.hasOwnProperty("IsGoRight"))
+                object.IsGoRight = message.IsGoRight;
             return object;
         };
 
         /**
-         * Converts this MoveInfo to JSON.
+         * Converts this Move to JSON.
          * @function toJSON
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-        MoveInfo.prototype.toJSON = function toJSON() {
+        Move.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
         /**
-         * Gets the default type url for MoveInfo
+         * Gets the default type url for Move
          * @function getTypeUrl
-         * @memberof protobuf.MoveInfo
+         * @memberof protobuf.Move
          * @static
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        MoveInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        Move.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
             if (typeUrlPrefix === undefined) {
                 typeUrlPrefix = "type.googleapis.com";
             }
-            return typeUrlPrefix + "/protobuf.MoveInfo";
+            return typeUrlPrefix + "/protobuf.Move";
         };
 
-        return MoveInfo;
+        return Move;
+    })();
+
+    protobuf.Stop = (function() {
+
+        /**
+         * Properties of a Stop.
+         * @memberof protobuf
+         * @interface IStop
+         * @property {string|null} [ID] Stop ID
+         * @property {boolean|null} [IsStopGoRight] Stop IsStopGoRight
+         */
+
+        /**
+         * Constructs a new Stop.
+         * @memberof protobuf
+         * @classdesc Represents a Stop.
+         * @implements IStop
+         * @constructor
+         * @param {protobuf.IStop=} [properties] Properties to set
+         */
+        function Stop(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Stop ID.
+         * @member {string} ID
+         * @memberof protobuf.Stop
+         * @instance
+         */
+        Stop.prototype.ID = "";
+
+        /**
+         * Stop IsStopGoRight.
+         * @member {boolean} IsStopGoRight
+         * @memberof protobuf.Stop
+         * @instance
+         */
+        Stop.prototype.IsStopGoRight = false;
+
+        /**
+         * Creates a new Stop instance using the specified properties.
+         * @function create
+         * @memberof protobuf.Stop
+         * @static
+         * @param {protobuf.IStop=} [properties] Properties to set
+         * @returns {protobuf.Stop} Stop instance
+         */
+        Stop.create = function create(properties) {
+            return new Stop(properties);
+        };
+
+        /**
+         * Encodes the specified Stop message. Does not implicitly {@link protobuf.Stop.verify|verify} messages.
+         * @function encode
+         * @memberof protobuf.Stop
+         * @static
+         * @param {protobuf.IStop} message Stop message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Stop.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.ID != null && Object.hasOwnProperty.call(message, "ID"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.ID);
+            if (message.IsStopGoRight != null && Object.hasOwnProperty.call(message, "IsStopGoRight"))
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.IsStopGoRight);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Stop message, length delimited. Does not implicitly {@link protobuf.Stop.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof protobuf.Stop
+         * @static
+         * @param {protobuf.IStop} message Stop message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Stop.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Stop message from the specified reader or buffer.
+         * @function decode
+         * @memberof protobuf.Stop
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {protobuf.Stop} Stop
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Stop.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.Stop();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.ID = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.IsStopGoRight = reader.bool();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Stop message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof protobuf.Stop
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {protobuf.Stop} Stop
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Stop.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Stop message.
+         * @function verify
+         * @memberof protobuf.Stop
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Stop.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                if (!$util.isString(message.ID))
+                    return "ID: string expected";
+            if (message.IsStopGoRight != null && message.hasOwnProperty("IsStopGoRight"))
+                if (typeof message.IsStopGoRight !== "boolean")
+                    return "IsStopGoRight: boolean expected";
+            return null;
+        };
+
+        /**
+         * Creates a Stop message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof protobuf.Stop
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {protobuf.Stop} Stop
+         */
+        Stop.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.Stop)
+                return object;
+            var message = new $root.protobuf.Stop();
+            if (object.ID != null)
+                message.ID = String(object.ID);
+            if (object.IsStopGoRight != null)
+                message.IsStopGoRight = Boolean(object.IsStopGoRight);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Stop message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof protobuf.Stop
+         * @static
+         * @param {protobuf.Stop} message Stop
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Stop.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.ID = "";
+                object.IsStopGoRight = false;
+            }
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                object.ID = message.ID;
+            if (message.IsStopGoRight != null && message.hasOwnProperty("IsStopGoRight"))
+                object.IsStopGoRight = message.IsStopGoRight;
+            return object;
+        };
+
+        /**
+         * Converts this Stop to JSON.
+         * @function toJSON
+         * @memberof protobuf.Stop
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Stop.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for Stop
+         * @function getTypeUrl
+         * @memberof protobuf.Stop
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        Stop.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/protobuf.Stop";
+        };
+
+        return Stop;
     })();
 
     return protobuf;

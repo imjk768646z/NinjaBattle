@@ -114,109 +114,206 @@ export namespace protobuf {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** Properties of a MoveInfo. */
-    interface IMoveInfo {
+    /** Properties of a Move. */
+    interface IMove {
 
-        /** MoveInfo PlayerInfo */
-        PlayerInfo?: (protobuf.IJoin|null);
+        /** Move ID */
+        ID?: (string|null);
 
-        /** MoveInfo x */
-        x?: (number|null);
-
-        /** MoveInfo y */
-        y?: (number|null);
+        /** Move IsGoRight */
+        IsGoRight?: (boolean|null);
     }
 
-    /** Represents a MoveInfo. */
-    class MoveInfo implements IMoveInfo {
+    /** Represents a Move. */
+    class Move implements IMove {
 
         /**
-         * Constructs a new MoveInfo.
+         * Constructs a new Move.
          * @param [properties] Properties to set
          */
-        constructor(properties?: protobuf.IMoveInfo);
+        constructor(properties?: protobuf.IMove);
 
-        /** MoveInfo PlayerInfo. */
-        public PlayerInfo?: (protobuf.IJoin|null);
+        /** Move ID. */
+        public ID: string;
 
-        /** MoveInfo x. */
-        public x: number;
-
-        /** MoveInfo y. */
-        public y: number;
+        /** Move IsGoRight. */
+        public IsGoRight: boolean;
 
         /**
-         * Creates a new MoveInfo instance using the specified properties.
+         * Creates a new Move instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns MoveInfo instance
+         * @returns Move instance
          */
-        public static create(properties?: protobuf.IMoveInfo): protobuf.MoveInfo;
+        public static create(properties?: protobuf.IMove): protobuf.Move;
 
         /**
-         * Encodes the specified MoveInfo message. Does not implicitly {@link protobuf.MoveInfo.verify|verify} messages.
-         * @param message MoveInfo message or plain object to encode
+         * Encodes the specified Move message. Does not implicitly {@link protobuf.Move.verify|verify} messages.
+         * @param message Move message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: protobuf.IMoveInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: protobuf.IMove, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified MoveInfo message, length delimited. Does not implicitly {@link protobuf.MoveInfo.verify|verify} messages.
-         * @param message MoveInfo message or plain object to encode
+         * Encodes the specified Move message, length delimited. Does not implicitly {@link protobuf.Move.verify|verify} messages.
+         * @param message Move message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: protobuf.IMoveInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: protobuf.IMove, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a MoveInfo message from the specified reader or buffer.
+         * Decodes a Move message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns MoveInfo
+         * @returns Move
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): protobuf.MoveInfo;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): protobuf.Move;
 
         /**
-         * Decodes a MoveInfo message from the specified reader or buffer, length delimited.
+         * Decodes a Move message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns MoveInfo
+         * @returns Move
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): protobuf.MoveInfo;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): protobuf.Move;
 
         /**
-         * Verifies a MoveInfo message.
+         * Verifies a Move message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a MoveInfo message from a plain object. Also converts values to their respective internal types.
+         * Creates a Move message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns MoveInfo
+         * @returns Move
          */
-        public static fromObject(object: { [k: string]: any }): protobuf.MoveInfo;
+        public static fromObject(object: { [k: string]: any }): protobuf.Move;
 
         /**
-         * Creates a plain object from a MoveInfo message. Also converts values to other types if specified.
-         * @param message MoveInfo
+         * Creates a plain object from a Move message. Also converts values to other types if specified.
+         * @param message Move
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: protobuf.MoveInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: protobuf.Move, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this MoveInfo to JSON.
+         * Converts this Move to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for MoveInfo
+         * Gets the default type url for Move
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a Stop. */
+    interface IStop {
+
+        /** Stop ID */
+        ID?: (string|null);
+
+        /** Stop IsStopGoRight */
+        IsStopGoRight?: (boolean|null);
+    }
+
+    /** Represents a Stop. */
+    class Stop implements IStop {
+
+        /**
+         * Constructs a new Stop.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: protobuf.IStop);
+
+        /** Stop ID. */
+        public ID: string;
+
+        /** Stop IsStopGoRight. */
+        public IsStopGoRight: boolean;
+
+        /**
+         * Creates a new Stop instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Stop instance
+         */
+        public static create(properties?: protobuf.IStop): protobuf.Stop;
+
+        /**
+         * Encodes the specified Stop message. Does not implicitly {@link protobuf.Stop.verify|verify} messages.
+         * @param message Stop message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: protobuf.IStop, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Stop message, length delimited. Does not implicitly {@link protobuf.Stop.verify|verify} messages.
+         * @param message Stop message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: protobuf.IStop, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Stop message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Stop
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): protobuf.Stop;
+
+        /**
+         * Decodes a Stop message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Stop
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): protobuf.Stop;
+
+        /**
+         * Verifies a Stop message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Stop message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Stop
+         */
+        public static fromObject(object: { [k: string]: any }): protobuf.Stop;
+
+        /**
+         * Creates a plain object from a Stop message. Also converts values to other types if specified.
+         * @param message Stop
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: protobuf.Stop, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Stop to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for Stop
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */

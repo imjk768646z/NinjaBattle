@@ -1,16 +1,19 @@
-import { _decorator, Component, Label, Node, NodeEventType } from 'cc';
+import { _decorator, Component, EventKeyboard, KeyCode, Label, Node, NodeEventType } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
+import { EventManager, EventName } from './Singleton/EventManager';
 const { ccclass, property } = _decorator;
 
 export enum Action {
-    TestJoin = '1000',
-    TestMove = '2000',
+    Join = '1000',
+    Move = '2000',
+    Stop = '3000',
 }
 
 export const ActionReverseMap = {
-    '1000': 'TestJoin',
-    '2000': 'TestMove',
+    '1000': 'Join',
+    '2000': 'Move',
+    '3000': 'Stop'
 }
 
 @ccclass('GameScene')
@@ -19,8 +22,6 @@ export class GameScene extends Component {
     @property(Node)
     private players: Node[] = [];
 
-    // private players = ["0x001", "0x002"]; //temp
-
     private ws: WebSocket = null;
     private join: Node = null;
     private move: Node = null;
@@ -28,6 +29,12 @@ export class GameScene extends Component {
     private _uuid: string = "";
 
     onLoad() {
+        // 註冊移動封包回呼
+        this.players.forEach(value => {
+            let player = value.getComponent(Player);
+            player.setMovePackHandler(this.sendMovePacket.bind(this));
+            player.setStopPackHandler(this.sendStopPacket.bind(this));
+        })
         // 註冊按鈕事件
         this.join = this.node.getChildByName("Join");
         this.move = this.node.getChildByName("Move");
@@ -37,16 +44,16 @@ export class GameScene extends Component {
             // firstRequest.ID = "100";
             console.log("firstRequest:", protobuf.protobuf.Join.encode(firstRequest).finish());
 
-            let packet = new Packet(Action.TestJoin, protobuf.protobuf.Join.encode(firstRequest).finish());
+            let packet = new Packet(Action.Join, protobuf.protobuf.Join.encode(firstRequest).finish());
             this.sendPacket(packet);
         })
         this.move.on(NodeEventType.TOUCH_END, () => {
-            let moveInfo = new protobuf.protobuf.MoveInfo();
-            moveInfo.x = 5;
-            moveInfo.y = 10;
-            console.log("MoveInfo:", protobuf.protobuf.MoveInfo.encode(moveInfo).finish());
+            let moveInfo = new protobuf.protobuf.Move();
+            // moveInfo.x = 5;
+            // moveInfo.y = 10;
+            console.log("MoveInfo:", protobuf.protobuf.Move.encode(moveInfo).finish());
 
-            let packet = new Packet(Action.TestMove, protobuf.protobuf.MoveInfo.encode(moveInfo).finish());
+            let packet = new Packet(Action.Move, protobuf.protobuf.Move.encode(moveInfo).finish());
             this.sendPacket(packet);
         })
         this.die.on(NodeEventType.TOUCH_END, () => {
@@ -76,7 +83,7 @@ export class GameScene extends Component {
             console.log("封包 action:", ActionReverseMap[action]);
 
             switch (action) {
-                case Action.TestJoin:
+                case Action.Join:
                     bodyArray = data.slice(actionLength);
                     msg = protobuf.protobuf.Join.decode(bodyArray);
                     console.log("[加入]封包 body:", msg);
@@ -103,10 +110,19 @@ export class GameScene extends Component {
                         console.log("已設定玩家控制權，遊戲準備開始");
                     }
                     break;
-                case Action.TestMove:
+                case Action.Move:
                     bodyArray = data.slice(actionLength);
-                    msg = protobuf.protobuf.MoveInfo.decode(bodyArray);
+                    msg = protobuf.protobuf.Move.decode(bodyArray);
                     console.log("[移動]封包 body:", msg);
+                    if (msg.IsGoRight) EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.ARROW_RIGHT, true));
+                    else EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.ARROW_LEFT, true));
+                    break;
+                case Action.Stop:
+                    bodyArray = data.slice(actionLength);
+                    msg = protobuf.protobuf.Stop.decode(bodyArray);
+                    console.log("[停止]封包 body:", msg);
+                    if (msg.IsStopGoRight) EventManager.dispathEvent(EventName.KeyUp, msg.ID, new EventKeyboard(KeyCode.ARROW_RIGHT, false));
+                    else EventManager.dispathEvent(EventName.KeyUp, msg.ID, new EventKeyboard(KeyCode.ARROW_LEFT, false));
                     break;
                 default:
                     console.error("未處理封包:", action);
@@ -125,6 +141,26 @@ export class GameScene extends Component {
         this.ws.onclose = () => {
             console.log("🔴 連線已關閉");
         };
+    }
+
+    sendMovePacket(isRight: boolean) {
+        let move = new protobuf.protobuf.Move();
+        move.ID = this._uuid;
+        move.IsGoRight = isRight;
+        console.log("Move Packet:", protobuf.protobuf.Move.encode(move).finish());
+
+        let packet = new Packet(Action.Move, protobuf.protobuf.Move.encode(move).finish());
+        this.sendPacket(packet);
+    }
+
+    sendStopPacket(isStop2Right: boolean) {
+        let stop = new protobuf.protobuf.Stop();
+        stop.ID = this._uuid;
+        stop.IsStopGoRight = isStop2Right;
+        console.log("Stop Packet:", protobuf.protobuf.Stop.encode(stop).finish());
+
+        let packet = new Packet(Action.Stop, protobuf.protobuf.Stop.encode(stop).finish());
+        this.sendPacket(packet);
     }
 
     start() {
