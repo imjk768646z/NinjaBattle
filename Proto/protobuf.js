@@ -942,6 +942,209 @@ $root.protobuf = (function() {
         return Jump;
     })();
 
+    protobuf.Attack = (function() {
+
+        /**
+         * Properties of an Attack.
+         * @memberof protobuf
+         * @interface IAttack
+         * @property {string|null} [ID] Attack ID
+         */
+
+        /**
+         * Constructs a new Attack.
+         * @memberof protobuf
+         * @classdesc Represents an Attack.
+         * @implements IAttack
+         * @constructor
+         * @param {protobuf.IAttack=} [properties] Properties to set
+         */
+        function Attack(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Attack ID.
+         * @member {string} ID
+         * @memberof protobuf.Attack
+         * @instance
+         */
+        Attack.prototype.ID = "";
+
+        /**
+         * Creates a new Attack instance using the specified properties.
+         * @function create
+         * @memberof protobuf.Attack
+         * @static
+         * @param {protobuf.IAttack=} [properties] Properties to set
+         * @returns {protobuf.Attack} Attack instance
+         */
+        Attack.create = function create(properties) {
+            return new Attack(properties);
+        };
+
+        /**
+         * Encodes the specified Attack message. Does not implicitly {@link protobuf.Attack.verify|verify} messages.
+         * @function encode
+         * @memberof protobuf.Attack
+         * @static
+         * @param {protobuf.IAttack} message Attack message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Attack.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.ID != null && Object.hasOwnProperty.call(message, "ID"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.ID);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Attack message, length delimited. Does not implicitly {@link protobuf.Attack.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof protobuf.Attack
+         * @static
+         * @param {protobuf.IAttack} message Attack message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Attack.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes an Attack message from the specified reader or buffer.
+         * @function decode
+         * @memberof protobuf.Attack
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {protobuf.Attack} Attack
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Attack.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.Attack();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.ID = reader.string();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes an Attack message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof protobuf.Attack
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {protobuf.Attack} Attack
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Attack.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies an Attack message.
+         * @function verify
+         * @memberof protobuf.Attack
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Attack.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                if (!$util.isString(message.ID))
+                    return "ID: string expected";
+            return null;
+        };
+
+        /**
+         * Creates an Attack message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof protobuf.Attack
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {protobuf.Attack} Attack
+         */
+        Attack.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.Attack)
+                return object;
+            var message = new $root.protobuf.Attack();
+            if (object.ID != null)
+                message.ID = String(object.ID);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from an Attack message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof protobuf.Attack
+         * @static
+         * @param {protobuf.Attack} message Attack
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Attack.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.ID = "";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                object.ID = message.ID;
+            return object;
+        };
+
+        /**
+         * Converts this Attack to JSON.
+         * @function toJSON
+         * @memberof protobuf.Attack
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Attack.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for Attack
+         * @function getTypeUrl
+         * @memberof protobuf.Attack
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        Attack.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/protobuf.Attack";
+        };
+
+        return Attack;
+    })();
+
     protobuf.PositionInfo = (function() {
 
         /**

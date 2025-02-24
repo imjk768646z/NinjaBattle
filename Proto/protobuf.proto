@@ -22,6 +22,10 @@ message Jump {
   string ID = 1;
 }
 
+message Attack {
+  string ID = 1;
+}
+
 message PositionInfo {
   string ID = 1;
   double X = 2;

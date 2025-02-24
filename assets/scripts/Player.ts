@@ -27,6 +27,7 @@ export class Player extends Component {
     private stopPackHandler: MovePacket = null;
     private jumpPackHandler: Function = null;
     private posInfoPackHandler: Function = null;
+    private attackPackHandler: Function = null;
 
     private _playerID: string = "";
     private player: Node = null;
@@ -158,6 +159,10 @@ export class Player extends Component {
         this.posInfoPackHandler = func;
     }
 
+    public setAttackPackHandler(func: Function) {
+        this.attackPackHandler = func;
+    }
+
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // console.log("接觸地面 self:", selfCollider, "other:", otherCollider);
         if (otherCollider.group === PHY_GROUP.FLOOR) {
@@ -207,6 +212,7 @@ export class Player extends Component {
                 break;
             case KeyCode.KEY_X:
                 if (this.canFight) {
+                    if (this.isSelfControl) this.attackPackHandler();
                     this.canFight = false;
                     this.onFight = true;
                     this.scheduleOnce(this.resetFight, 1);

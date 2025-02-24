@@ -10,6 +10,7 @@ export enum Action {
     Stop = '3000',
     Jump = '4000',
     PositionInfo = '5000',
+    Attack = '6000',
 }
 
 export const ActionReverseMap = {
@@ -18,6 +19,7 @@ export const ActionReverseMap = {
     '3000': 'Stop',
     '4000': 'Jump',
     '5000': 'PositionInfo',
+    '6000': 'Attack',
 }
 
 @ccclass('GameScene')
@@ -33,13 +35,14 @@ export class GameScene extends Component {
     private _uuid: string = "";
 
     onLoad() {
-        // 註冊移動封包回呼
+        // 註冊封包回呼
         this.players.forEach(value => {
             let player = value.getComponent(Player);
             player.setMovePackHandler(this.sendMovePacket.bind(this));
             player.setStopPackHandler(this.sendStopPacket.bind(this));
             player.setJumpPackHandler(this.sendJumpPacket.bind(this));
             player.setPosInfoPackHandler(this.sendPosInfoPacket.bind(this));
+            player.setAttackPackHandler(this.sendAttackPacket.bind(this));
         })
         // 註冊按鈕事件
         this.join = this.node.getChildByName("Join");
@@ -143,6 +146,12 @@ export class GameScene extends Component {
                     let poision = new Vec3(msg.X, msg.Y, 0);
                     EventManager.dispathEvent(EventName.SyncPosition, msg.ID, poision);
                     break;
+                case Action.Attack:
+                    bodyArray = data.slice(actionLength);
+                    msg = protobuf.protobuf.Attack.decode(bodyArray);
+                    console.log("[攻擊]封包 body:", msg);
+                    EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.KEY_X, true));
+                    break;
                 default:
                     console.error("未處理封包:", action);
                     break;
@@ -199,6 +208,15 @@ export class GameScene extends Component {
         console.log("PositionInfo Packet:", position);
 
         let packet = new Packet(Action.PositionInfo, protobuf.protobuf.PositionInfo.encode(position).finish());
+        this.sendPacket(packet);
+    }
+
+    private sendAttackPacket() {
+        let attack = new protobuf.protobuf.Attack();
+        attack.ID = this._uuid;
+        console.log("Attack Packet:", protobuf.protobuf.Attack.encode(attack).finish());
+
+        let packet = new Packet(Action.Attack, protobuf.protobuf.Attack.encode(attack).finish());
         this.sendPacket(packet);
     }
 
