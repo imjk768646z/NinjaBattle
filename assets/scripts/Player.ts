@@ -38,7 +38,7 @@ export class Player extends Component {
     private serverPosition: Vec3 = null; //後端發來的位置封包
     private isSelfControl: boolean = false;
     private Delta: number = 0;
-    private updateFrequency: number = 1;
+    private updateFrequency: number = 0.25;
 
     onLoad() {
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
@@ -245,12 +245,12 @@ export class Player extends Component {
         const updatePosition: Vec3 = ary[1];
         if (id == this._playerID) {
             let clientPos = this.player.position;
-            console.log("當前位置", this.player.position);
+            // console.log("修正前位置", this.player.position);
+            // console.log("S2C 玩家位置", updatePosition);
 
             // 插值修正 (平滑補正)
-            // this.player.position = clientPos.lerp(updatePosition, 0.1);
-            this.player.position = updatePosition;
-            console.log("修正位置", this.player.position);
+            this.player.position = clientPos.lerp(updatePosition, 0.2);
+            // console.log("修正後位置", this.player.position);
         }
         /* if (this.serverPosition) {
             let clientPos = this.player.position;
@@ -272,8 +272,8 @@ export class Player extends Component {
 
             if (this.Delta >= this.updateFrequency) {
                 this.Delta = 0;
-                if (this.isSelfControl) this.posInfoPackHandler(this.player.position);
-                console.log("! 玩家位置", this.player.position);
+                // if (this.isSelfControl) this.posInfoPackHandler(this.player.position);
+                // console.log("C2S 玩家位置", this.player.position);
             }
 
 

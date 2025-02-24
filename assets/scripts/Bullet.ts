@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, RigidBody2D, Vec3 } from 'cc';
+import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, Node, Prefab, RigidBody2D, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Bullet')
@@ -7,8 +7,11 @@ export class Bullet extends Component {
     private readonly moveSpeed: number = 30; // 水平移動速度 (每秒)
 
     private rigidBody: RigidBody2D = null;
+    private collider: BoxCollider2D = null;
     private isGoRight: boolean = false;
     private offset: number = 100;
+
+    private destroyBullet: Function = null;
 
     /**
      * 
@@ -29,9 +32,28 @@ export class Bullet extends Component {
 
     onLoad() {
         this.rigidBody = this.node.getComponent(RigidBody2D);
+        this.collider = this.node.getComponent(BoxCollider2D);
+        if (this.collider) {
+            this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            this.collider.on(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
     }
 
     start() {
+
+    }
+
+    public setDestroyEvent(func: Function) {
+        this.destroyBullet = func;
+    }
+
+    private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        console.log("擊中:", otherCollider);
+        // todo: 若擊中玩家 該玩家要發送受傷封包
+        this.scheduleOnce(this.destroyBullet, 0);
+    }
+
+    private onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
 
     }
 
