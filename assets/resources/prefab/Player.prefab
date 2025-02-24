@@ -188,7 +188,7 @@
       "__id__": 9
     },
     "tag": 0,
-    "_group": 1,
+    "_group": 4,
     "_density": 1,
     "_sensor": false,
     "_friction": 0.2,
@@ -244,6 +244,7 @@
       "__uuid__": "a462ed8c-605f-426a-819b-af39e5306501",
       "__expectedType__": "cc.Prefab"
     },
+    "faceToRight": false,
     "_id": ""
   },
   {

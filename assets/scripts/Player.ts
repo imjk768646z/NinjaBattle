@@ -1,4 +1,4 @@
-import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, RigidBody2D, Vec2, Vec3 } from 'cc';
+import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, RigidBody2D, UITransform, Vec2, Vec3 } from 'cc';
 import { AddEvent, EventManager, EventName } from './Singleton/EventManager';
 import { NodePoolManager } from './Singleton/NodePoolManager';
 import { StateMachine } from './FiniteStateMachine/StateMachine';
@@ -18,6 +18,9 @@ export class Player extends Component {
     @property(Prefab)
     private bullet: Prefab = null;
 
+    @property({ tooltip: "面朝方向" })
+    private faceToRight: boolean = false;
+
     public stateMachine: StateMachine = null;
 
     private movePackHandler: MovePacket = null;
@@ -29,7 +32,7 @@ export class Player extends Component {
     private player: Node = null;
     private moveRight: boolean = false; //todo: 只需要留下往右 取反就是往左
     private moveLeft: boolean = false;
-    private faceToRight: boolean = false;
+    
     private onFight: boolean = false;
     private canFight: boolean = true;
     private rigidBody: RigidBody2D = null;
@@ -288,6 +291,18 @@ export class Player extends Component {
                 console.log("修正位置", this.player.position);
                 this.serverPosition = null;
             } */
+        }
+        // console.log(`! 玩家ID${this._playerID} 方向朝右:${this.faceToRight}`);
+
+        if (this.faceToRight) {
+            // this.node.getComponent(UITransform).setContentSize(this.node.getComponent(UITransform).contentSize.width, this.node.getComponent(UITransform).contentSize.height);
+            const currentScale = this.node.getScale();
+            this.node.setScale(Math.abs(currentScale.x), currentScale.y, currentScale.z);
+        } else {
+            // this.node.getComponent(UITransform).setContentSize(-(this.node.getComponent(UITransform).contentSize.width), this.node.getComponent(UITransform).contentSize.height);
+            const currentScale = this.node.getScale();
+            this.node.setScale(-Math.abs(currentScale.x), currentScale.y, currentScale.z);
+
         }
     }
 }
