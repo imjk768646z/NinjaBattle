@@ -32,7 +32,7 @@ export class Player extends Component {
     private player: Node = null;
     private moveRight: boolean = false; //todo: 只需要留下往右 取反就是往左
     private moveLeft: boolean = false;
-    
+
     private onFight: boolean = false;
     private canFight: boolean = true;
     private rigidBody: RigidBody2D = null;
@@ -42,8 +42,10 @@ export class Player extends Component {
     private isSelfControl: boolean = false;
     private Delta: number = 0;
     private updateFrequency: number = 0.25;
+    private playerWidth: number = 0;
 
     onLoad() {
+        this.playerWidth = this.node.getComponent(UITransform).contentSize.width;
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
         AddEvent(EventName.KeyUp, this.onServerKeyUp.bind(this));
         AddEvent(EventName.SyncPosition, this.onSyncPosition.bind(this));
@@ -53,6 +55,7 @@ export class Player extends Component {
         // EventManager.dispathEvent(EventName.Move, 0, "right");
         // 初始化狀態機，起始狀態設為 Idle
         this.stateMachine = new StateMachine(this, new IdleState());
+        this.flipPlayer();
     }
 
     get MoveLeft(): boolean {
@@ -186,12 +189,14 @@ export class Player extends Component {
                 if (this.moveLeft) this.moveLeft = false;
                 this.moveRight = true;
                 this.faceToRight = true;
+                this.flipPlayer();
                 break;
             case KeyCode.ARROW_LEFT:
                 if (this.isSelfControl) this.movePackHandler(false);
                 if (this.moveRight) this.moveRight = false;
                 this.moveLeft = true;
                 this.faceToRight = false;
+                this.flipPlayer();
                 break;
             case KeyCode.SPACE:
                 if (this.isSelfControl) this.jumpPackHandler();
@@ -230,7 +235,6 @@ export class Player extends Component {
     private onServerKeyDown(...ary: any[]) {
         const id = ary[0];
         const event = ary[1];
-        // if (id == this._playerID) return;
         if (this.isSelfControl) return;
         if (id == this._playerID) this.onKeyDown(event);
     }
@@ -238,7 +242,6 @@ export class Player extends Component {
     private onServerKeyUp(...ary: any[]) {
         const id = ary[0];
         const event = ary[1];
-        // if (id != this._playerID) return;
         if (this.isSelfControl) return;
         if (id == this._playerID) this.onKeyUp(event);
     }
@@ -267,6 +270,11 @@ export class Player extends Component {
         } */
     }
 
+    private flipPlayer() {
+        if (this.faceToRight) this.node.getComponent(UITransform).setContentSize(this.playerWidth, this.node.getComponent(UITransform).contentSize.height);
+        else this.node.getComponent(UITransform).setContentSize(-(this.playerWidth), this.node.getComponent(UITransform).contentSize.height);
+    }
+
     update(deltaTime: number) {
         this.Delta += deltaTime;
 
@@ -275,7 +283,7 @@ export class Player extends Component {
 
             if (this.Delta >= this.updateFrequency) {
                 this.Delta = 0;
-                // if (this.isSelfControl) this.posInfoPackHandler(this.player.position);
+                // if (this.isSelfControl) this.posInfoPackHandler(this.player.position); //暫時關閉(開啟後會定時更新玩家位置)
                 // console.log("C2S 玩家位置", this.player.position);
             }
 
@@ -291,18 +299,6 @@ export class Player extends Component {
                 console.log("修正位置", this.player.position);
                 this.serverPosition = null;
             } */
-        }
-        // console.log(`! 玩家ID${this._playerID} 方向朝右:${this.faceToRight}`);
-
-        if (this.faceToRight) {
-            // this.node.getComponent(UITransform).setContentSize(this.node.getComponent(UITransform).contentSize.width, this.node.getComponent(UITransform).contentSize.height);
-            const currentScale = this.node.getScale();
-            this.node.setScale(Math.abs(currentScale.x), currentScale.y, currentScale.z);
-        } else {
-            // this.node.getComponent(UITransform).setContentSize(-(this.node.getComponent(UITransform).contentSize.width), this.node.getComponent(UITransform).contentSize.height);
-            const currentScale = this.node.getScale();
-            this.node.setScale(-Math.abs(currentScale.x), currentScale.y, currentScale.z);
-
         }
     }
 }
