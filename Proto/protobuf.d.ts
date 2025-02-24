@@ -514,6 +514,103 @@ export namespace protobuf {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
+    /** Properties of a Die. */
+    interface IDie {
+
+        /** Die ID */
+        ID?: (string|null);
+    }
+
+    /** Represents a Die. */
+    class Die implements IDie {
+
+        /**
+         * Constructs a new Die.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: protobuf.IDie);
+
+        /** Die ID. */
+        public ID: string;
+
+        /**
+         * Creates a new Die instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Die instance
+         */
+        public static create(properties?: protobuf.IDie): protobuf.Die;
+
+        /**
+         * Encodes the specified Die message. Does not implicitly {@link protobuf.Die.verify|verify} messages.
+         * @param message Die message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: protobuf.IDie, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Die message, length delimited. Does not implicitly {@link protobuf.Die.verify|verify} messages.
+         * @param message Die message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: protobuf.IDie, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Die message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Die
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): protobuf.Die;
+
+        /**
+         * Decodes a Die message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Die
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): protobuf.Die;
+
+        /**
+         * Verifies a Die message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Die message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Die
+         */
+        public static fromObject(object: { [k: string]: any }): protobuf.Die;
+
+        /**
+         * Creates a plain object from a Die message. Also converts values to other types if specified.
+         * @param message Die
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: protobuf.Die, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Die to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for Die
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
     /** Properties of a PositionInfo. */
     interface IPositionInfo {
 

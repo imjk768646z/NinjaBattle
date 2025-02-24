@@ -11,6 +11,7 @@ export enum Action {
     Jump = '4000',
     PositionInfo = '5000',
     Attack = '6000',
+    Die = '7000',
 }
 
 export const ActionReverseMap = {
@@ -20,6 +21,7 @@ export const ActionReverseMap = {
     '4000': 'Jump',
     '5000': 'PositionInfo',
     '6000': 'Attack',
+    '7000': 'Die',
 }
 
 @ccclass('GameScene')
@@ -66,7 +68,10 @@ export class GameScene extends Component {
             this.sendPacket(packet);
         })
         this.die.on(NodeEventType.TOUCH_END, () => {
-            this.sendPacket();
+            let die = new protobuf.protobuf.Die();
+            die.ID = this._uuid;
+            let packet = new Packet(Action.Die, protobuf.protobuf.Die.encode(die).finish());
+            this.sendPacket(packet);
         })
         // this.ws = new WebSocket('ws://192.168.56.1:5000');
         this.ws = new WebSocket('ws://localhost:5000');
@@ -151,6 +156,12 @@ export class GameScene extends Component {
                     msg = protobuf.protobuf.Attack.decode(bodyArray);
                     console.log("[攻擊]封包 body:", msg);
                     EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.KEY_X, true));
+                    break;
+                case Action.Die:
+                    bodyArray = data.slice(actionLength);
+                    msg = protobuf.protobuf.Die.decode(bodyArray);
+                    console.log("[死亡]封包 body:", msg, "五秒後退回主菜單");
+                    //todo: 退回菜單 + 重置腳色狀態(控制權、重生位置)
                     break;
                 default:
                     console.error("未處理封包:", action);
