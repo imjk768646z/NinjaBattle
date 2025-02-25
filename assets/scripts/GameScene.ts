@@ -1,4 +1,4 @@
-import { _decorator, Component, EventKeyboard, KeyCode, Label, Node, NodeEventType, Vec3 } from 'cc';
+import { _decorator, Camera, Component, EventKeyboard, KeyCode, Label, Node, NodeEventType, Vec3 } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
 import { EventManager, EventName } from './Singleton/EventManager';
@@ -31,6 +31,9 @@ export class GameScene extends Component {
 
     @property(Node)
     private players: Node[] = [];
+
+    @property(Node)
+    private camera: Node = null;
 
     private ws: WebSocket = null;
     private join: Node = null;
@@ -118,6 +121,9 @@ export class GameScene extends Component {
                                 if (uuid == this._uuid) {
                                     console.log("我的ID為:", uuid, "使用腳色", [index]);
                                     player.setPlayerSelfControll = this.players[index];
+                                    // 設定相機跟隨玩家的移動
+                                    this.camera.setParent(this.players[index]);
+                                    this.camera.setPosition(0, 1800, 0);
                                 } else {
                                     console.log("另一個玩家ID是", uuid, "他使用腳色", [index]);
                                     player.setPlayerOtherControll = this.players[index];
@@ -293,6 +299,13 @@ export class GameScene extends Component {
         dist.set(content, 0);
         console.log("To Uint8Array:", dist);
         return dist;
+    }
+
+    // todo: 玩家離線或遊戲結束後需要重置相機的位置
+    private resetCamera() {
+        console.log("重置相機")
+        this.camera.setParent(this.node);
+        this.camera.setPosition(0, 0, 0);
     }
 
     update(deltaTime: number) {
