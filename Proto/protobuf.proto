@@ -3,9 +3,9 @@ syntax = "proto3";
 package protobuf;
 
 message Join {
-  string ID = 1;
-  string GameState = 2;
-  repeated string AllPlayers = 3;
+  string ID = 1;                   //玩家ID
+  string GameState = 2;            //遊戲狀態：wait/start
+  repeated string AllPlayers = 3;  //房間內所有玩家
 }
 
 message Move {
@@ -23,6 +23,10 @@ message Jump {
 }
 
 message Attack {
+  string ID = 1;
+}
+
+message Damage {
   string ID = 1;
 }
 

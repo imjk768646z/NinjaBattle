@@ -1145,6 +1145,209 @@ $root.protobuf = (function() {
         return Attack;
     })();
 
+    protobuf.Damage = (function() {
+
+        /**
+         * Properties of a Damage.
+         * @memberof protobuf
+         * @interface IDamage
+         * @property {string|null} [ID] Damage ID
+         */
+
+        /**
+         * Constructs a new Damage.
+         * @memberof protobuf
+         * @classdesc Represents a Damage.
+         * @implements IDamage
+         * @constructor
+         * @param {protobuf.IDamage=} [properties] Properties to set
+         */
+        function Damage(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Damage ID.
+         * @member {string} ID
+         * @memberof protobuf.Damage
+         * @instance
+         */
+        Damage.prototype.ID = "";
+
+        /**
+         * Creates a new Damage instance using the specified properties.
+         * @function create
+         * @memberof protobuf.Damage
+         * @static
+         * @param {protobuf.IDamage=} [properties] Properties to set
+         * @returns {protobuf.Damage} Damage instance
+         */
+        Damage.create = function create(properties) {
+            return new Damage(properties);
+        };
+
+        /**
+         * Encodes the specified Damage message. Does not implicitly {@link protobuf.Damage.verify|verify} messages.
+         * @function encode
+         * @memberof protobuf.Damage
+         * @static
+         * @param {protobuf.IDamage} message Damage message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Damage.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.ID != null && Object.hasOwnProperty.call(message, "ID"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.ID);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Damage message, length delimited. Does not implicitly {@link protobuf.Damage.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof protobuf.Damage
+         * @static
+         * @param {protobuf.IDamage} message Damage message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Damage.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Damage message from the specified reader or buffer.
+         * @function decode
+         * @memberof protobuf.Damage
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {protobuf.Damage} Damage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Damage.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.Damage();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.ID = reader.string();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Damage message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof protobuf.Damage
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {protobuf.Damage} Damage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Damage.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Damage message.
+         * @function verify
+         * @memberof protobuf.Damage
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Damage.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                if (!$util.isString(message.ID))
+                    return "ID: string expected";
+            return null;
+        };
+
+        /**
+         * Creates a Damage message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof protobuf.Damage
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {protobuf.Damage} Damage
+         */
+        Damage.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.Damage)
+                return object;
+            var message = new $root.protobuf.Damage();
+            if (object.ID != null)
+                message.ID = String(object.ID);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Damage message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof protobuf.Damage
+         * @static
+         * @param {protobuf.Damage} message Damage
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Damage.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.ID = "";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                object.ID = message.ID;
+            return object;
+        };
+
+        /**
+         * Converts this Damage to JSON.
+         * @function toJSON
+         * @memberof protobuf.Damage
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Damage.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for Damage
+         * @function getTypeUrl
+         * @memberof protobuf.Damage
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        Damage.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/protobuf.Damage";
+        };
+
+        return Damage;
+    })();
+
     protobuf.Die = (function() {
 
         /**

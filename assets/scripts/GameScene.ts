@@ -12,6 +12,7 @@ export enum Action {
     PositionInfo = '5000',
     Attack = '6000',
     Die = '7000',
+    Damage = '8000',
 }
 
 export const ActionReverseMap = {
@@ -22,6 +23,7 @@ export const ActionReverseMap = {
     '5000': 'PositionInfo',
     '6000': 'Attack',
     '7000': 'Die',
+    '8000': 'Damage',
 }
 
 @ccclass('GameScene')
@@ -45,6 +47,7 @@ export class GameScene extends Component {
             player.setJumpPackHandler(this.sendJumpPacket.bind(this));
             player.setPosInfoPackHandler(this.sendPosInfoPacket.bind(this));
             player.setAttackPackHandler(this.sendAttackPacket.bind(this));
+            player.setDamagePackHandler(this.sendDamagePacket.bind(this));
         })
         // 註冊按鈕事件
         this.join = this.node.getChildByName("Join");
@@ -163,6 +166,12 @@ export class GameScene extends Component {
                     console.log("[死亡]封包 body:", msg, "五秒後退回主菜單");
                     //todo: 退回菜單 + 重置腳色狀態(控制權、重生位置)
                     break;
+                case Action.Damage:
+                    bodyArray = data.slice(actionLength);
+                    msg = protobuf.protobuf.Damage.decode(bodyArray);
+                    console.log("[受傷]封包 body:", msg);
+                    //todo: 通知該玩家扣血
+                    break;
                 default:
                     console.error("未處理封包:", action);
                     break;
@@ -228,6 +237,15 @@ export class GameScene extends Component {
         console.log("Attack Packet:", protobuf.protobuf.Attack.encode(attack).finish());
 
         let packet = new Packet(Action.Attack, protobuf.protobuf.Attack.encode(attack).finish());
+        this.sendPacket(packet);
+    }
+
+    private sendDamagePacket() {
+        let damage = new protobuf.protobuf.Damage();
+        damage.ID = this._uuid;
+        console.log("Damage Packet:", protobuf.protobuf.Damage.encode(damage).finish());
+
+        let packet = new Packet(Action.Damage, protobuf.protobuf.Damage.encode(damage).finish());
         this.sendPacket(packet);
     }
 

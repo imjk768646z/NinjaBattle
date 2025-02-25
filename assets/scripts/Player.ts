@@ -28,6 +28,7 @@ export class Player extends Component {
     private jumpPackHandler: Function = null;
     private posInfoPackHandler: Function = null;
     private attackPackHandler: Function = null;
+    private damagePackHandler: Function = null;
 
     private _playerID: string = "";
     private player: Node = null;
@@ -163,6 +164,10 @@ export class Player extends Component {
         this.attackPackHandler = func;
     }
 
+    public setDamagePackHandler(func: Function) {
+        this.damagePackHandler = func;
+    }
+
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // console.log("接觸地面 self:", selfCollider, "other:", otherCollider);
         if (otherCollider.group === PHY_GROUP.FLOOR) {
@@ -170,6 +175,9 @@ export class Player extends Component {
             console.log("接觸地面");
         } else if (otherCollider.group === PHY_GROUP.DEFAULT) {
             console.log("接觸玩家");
+        } else if (otherCollider.group === PHY_GROUP.BULLET) {
+            console.log("被子彈擊中");
+            if (this.isSelfControl) this.damagePackHandler();
         }
     }
 
@@ -312,5 +320,7 @@ export class Player extends Component {
 export const PHY_GROUP = {
     DEFAULT: 1 << 0,
     FLOOR: 1 << 1,
-    ENEMY_PLANE: 1 << 2,
+    PLAYER: 1 << 2,
+    BULLET: 1 << 3,
+    WALL: 1 << 4,
 };
