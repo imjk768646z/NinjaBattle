@@ -28,6 +28,7 @@ message Attack {
 
 message Damage {
   string ID = 1;
+  uint32 DamagePower = 2;
 }
 
 message Die {

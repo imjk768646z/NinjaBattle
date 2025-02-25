@@ -1152,6 +1152,7 @@ $root.protobuf = (function() {
          * @memberof protobuf
          * @interface IDamage
          * @property {string|null} [ID] Damage ID
+         * @property {number|null} [DamagePower] Damage DamagePower
          */
 
         /**
@@ -1176,6 +1177,14 @@ $root.protobuf = (function() {
          * @instance
          */
         Damage.prototype.ID = "";
+
+        /**
+         * Damage DamagePower.
+         * @member {number} DamagePower
+         * @memberof protobuf.Damage
+         * @instance
+         */
+        Damage.prototype.DamagePower = 0;
 
         /**
          * Creates a new Damage instance using the specified properties.
@@ -1203,6 +1212,8 @@ $root.protobuf = (function() {
                 writer = $Writer.create();
             if (message.ID != null && Object.hasOwnProperty.call(message, "ID"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.ID);
+            if (message.DamagePower != null && Object.hasOwnProperty.call(message, "DamagePower"))
+                writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.DamagePower);
             return writer;
         };
 
@@ -1239,6 +1250,10 @@ $root.protobuf = (function() {
                 switch (tag >>> 3) {
                 case 1: {
                         message.ID = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.DamagePower = reader.uint32();
                         break;
                     }
                 default:
@@ -1279,6 +1294,9 @@ $root.protobuf = (function() {
             if (message.ID != null && message.hasOwnProperty("ID"))
                 if (!$util.isString(message.ID))
                     return "ID: string expected";
+            if (message.DamagePower != null && message.hasOwnProperty("DamagePower"))
+                if (!$util.isInteger(message.DamagePower))
+                    return "DamagePower: integer expected";
             return null;
         };
 
@@ -1296,6 +1314,8 @@ $root.protobuf = (function() {
             var message = new $root.protobuf.Damage();
             if (object.ID != null)
                 message.ID = String(object.ID);
+            if (object.DamagePower != null)
+                message.DamagePower = object.DamagePower >>> 0;
             return message;
         };
 
@@ -1312,10 +1332,14 @@ $root.protobuf = (function() {
             if (!options)
                 options = {};
             var object = {};
-            if (options.defaults)
+            if (options.defaults) {
                 object.ID = "";
+                object.DamagePower = 0;
+            }
             if (message.ID != null && message.hasOwnProperty("ID"))
                 object.ID = message.ID;
+            if (message.DamagePower != null && message.hasOwnProperty("DamagePower"))
+                object.DamagePower = message.DamagePower;
             return object;
         };
 

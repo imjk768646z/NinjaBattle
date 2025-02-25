@@ -170,7 +170,7 @@ export class GameScene extends Component {
                     bodyArray = data.slice(actionLength);
                     msg = protobuf.protobuf.Damage.decode(bodyArray);
                     console.log("[受傷]封包 body:", msg);
-                    EventManager.dispathEvent(EventName.Damage, msg.ID);
+                    EventManager.dispathEvent(EventName.Damage, msg.ID, msg.DamagePower);
                     break;
                 default:
                     console.error("未處理封包:", action);
@@ -240,9 +240,10 @@ export class GameScene extends Component {
         this.sendPacket(packet);
     }
 
-    private sendDamagePacket() {
+    private sendDamagePacket(damageCause: number) {
         let damage = new protobuf.protobuf.Damage();
         damage.ID = this._uuid;
+        damage.DamagePower = damageCause;
         console.log("Damage Packet:", protobuf.protobuf.Damage.encode(damage).finish());
 
         let packet = new Packet(Action.Damage, protobuf.protobuf.Damage.encode(damage).finish());

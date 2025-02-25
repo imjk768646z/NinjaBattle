@@ -519,6 +519,9 @@ export namespace protobuf {
 
         /** Damage ID */
         ID?: (string|null);
+
+        /** Damage DamagePower */
+        DamagePower?: (number|null);
     }
 
     /** Represents a Damage. */
@@ -532,6 +535,9 @@ export namespace protobuf {
 
         /** Damage ID. */
         public ID: string;
+
+        /** Damage DamagePower. */
+        public DamagePower: number;
 
         /**
          * Creates a new Damage instance using the specified properties.
