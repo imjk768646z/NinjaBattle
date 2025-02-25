@@ -170,7 +170,7 @@ export class GameScene extends Component {
                     bodyArray = data.slice(actionLength);
                     msg = protobuf.protobuf.Damage.decode(bodyArray);
                     console.log("[受傷]封包 body:", msg);
-                    //todo: 通知該玩家扣血
+                    EventManager.dispathEvent(EventName.Damage, msg.ID);
                     break;
                 default:
                     console.error("未處理封包:", action);

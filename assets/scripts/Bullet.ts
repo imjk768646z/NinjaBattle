@@ -6,6 +6,9 @@ export class Bullet extends Component {
     @property({ tooltip: "移動速度" })
     private readonly moveSpeed: number = 30; // 水平移動速度 (每秒)
 
+    @property({ tooltip: "傷害強度" })
+    private readonly damage: number = 10;
+
     private rigidBody: RigidBody2D = null;
     private collider: BoxCollider2D = null;
     private isGoRight: boolean = false;
@@ -63,6 +66,10 @@ export class Bullet extends Component {
         else velocity.x = -this.moveSpeed;
 
         this.rigidBody.linearVelocity = velocity;
+    }
+
+    get Damage(): number {
+        return this.damage;
     }
 }
 

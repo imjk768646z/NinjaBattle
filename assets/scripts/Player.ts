@@ -3,6 +3,7 @@ import { AddEvent, EventManager, EventName } from './Singleton/EventManager';
 import { NodePoolManager } from './Singleton/NodePoolManager';
 import { StateMachine } from './FiniteStateMachine/StateMachine';
 import { IdleState } from './FiniteStateMachine/IdleState';
+import { Bullet } from './Bullet';
 const { ccclass, property } = _decorator;
 type MovePacket = (direction) => void;
 
@@ -45,12 +46,15 @@ export class Player extends Component {
     private Delta: number = 0;
     private updateFrequency: number = 0.25;
     private playerWidth: number = 0;
+    private health: number = 100;
+    private damageOfBullet: number = 0;
 
     onLoad() {
         this.playerWidth = this.node.getComponent(UITransform).contentSize.width;
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
         AddEvent(EventName.KeyUp, this.onServerKeyUp.bind(this));
         AddEvent(EventName.SyncPosition, this.onSyncPosition.bind(this));
+        AddEvent(EventName.Damage, this.onDamage.bind(this));
     }
 
     start() {
@@ -177,6 +181,7 @@ export class Player extends Component {
             console.log("接觸玩家");
         } else if (otherCollider.group === PHY_GROUP.BULLET) {
             console.log("被子彈擊中");
+            this.damageOfBullet = otherCollider.node.getComponent(Bullet).Damage;
             if (this.isSelfControl) this.damagePackHandler();
         }
     }
@@ -287,6 +292,14 @@ export class Player extends Component {
     private flipPlayer() {
         if (this.faceToRight) this.node.getComponent(UITransform).setContentSize(this.playerWidth, this.node.getComponent(UITransform).contentSize.height);
         else this.node.getComponent(UITransform).setContentSize(-(this.playerWidth), this.node.getComponent(UITransform).contentSize.height);
+    }
+
+    private onDamage(...ary: any[]) {
+        const id = ary[0];
+        if (id == this._playerID) {
+            this.health -= this.damageOfBullet;
+            console.log(`玩家${id} 剩餘血量${this.health}`);
+        }
     }
 
     update(deltaTime: number) {
