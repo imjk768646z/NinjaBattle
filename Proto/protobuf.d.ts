@@ -817,6 +817,109 @@ export namespace protobuf {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
+    /** Properties of a HealthGet. */
+    interface IHealthGet {
+
+        /** HealthGet ID */
+        ID?: (string|null);
+
+        /** HealthGet Health */
+        Health?: (number|null);
+    }
+
+    /** Represents a HealthGet. */
+    class HealthGet implements IHealthGet {
+
+        /**
+         * Constructs a new HealthGet.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: protobuf.IHealthGet);
+
+        /** HealthGet ID. */
+        public ID: string;
+
+        /** HealthGet Health. */
+        public Health: number;
+
+        /**
+         * Creates a new HealthGet instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns HealthGet instance
+         */
+        public static create(properties?: protobuf.IHealthGet): protobuf.HealthGet;
+
+        /**
+         * Encodes the specified HealthGet message. Does not implicitly {@link protobuf.HealthGet.verify|verify} messages.
+         * @param message HealthGet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: protobuf.IHealthGet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified HealthGet message, length delimited. Does not implicitly {@link protobuf.HealthGet.verify|verify} messages.
+         * @param message HealthGet message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: protobuf.IHealthGet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a HealthGet message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns HealthGet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): protobuf.HealthGet;
+
+        /**
+         * Decodes a HealthGet message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns HealthGet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): protobuf.HealthGet;
+
+        /**
+         * Verifies a HealthGet message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a HealthGet message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns HealthGet
+         */
+        public static fromObject(object: { [k: string]: any }): protobuf.HealthGet;
+
+        /**
+         * Creates a plain object from a HealthGet message. Also converts values to other types if specified.
+         * @param message HealthGet
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: protobuf.HealthGet, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this HealthGet to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for HealthGet
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
     /** Properties of a PositionInfo. */
     interface IPositionInfo {
 

@@ -1802,6 +1802,233 @@ $root.protobuf = (function() {
         return HealthBuff;
     })();
 
+    protobuf.HealthGet = (function() {
+
+        /**
+         * Properties of a HealthGet.
+         * @memberof protobuf
+         * @interface IHealthGet
+         * @property {string|null} [ID] HealthGet ID
+         * @property {number|null} [Health] HealthGet Health
+         */
+
+        /**
+         * Constructs a new HealthGet.
+         * @memberof protobuf
+         * @classdesc Represents a HealthGet.
+         * @implements IHealthGet
+         * @constructor
+         * @param {protobuf.IHealthGet=} [properties] Properties to set
+         */
+        function HealthGet(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * HealthGet ID.
+         * @member {string} ID
+         * @memberof protobuf.HealthGet
+         * @instance
+         */
+        HealthGet.prototype.ID = "";
+
+        /**
+         * HealthGet Health.
+         * @member {number} Health
+         * @memberof protobuf.HealthGet
+         * @instance
+         */
+        HealthGet.prototype.Health = 0;
+
+        /**
+         * Creates a new HealthGet instance using the specified properties.
+         * @function create
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {protobuf.IHealthGet=} [properties] Properties to set
+         * @returns {protobuf.HealthGet} HealthGet instance
+         */
+        HealthGet.create = function create(properties) {
+            return new HealthGet(properties);
+        };
+
+        /**
+         * Encodes the specified HealthGet message. Does not implicitly {@link protobuf.HealthGet.verify|verify} messages.
+         * @function encode
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {protobuf.IHealthGet} message HealthGet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        HealthGet.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.ID != null && Object.hasOwnProperty.call(message, "ID"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.ID);
+            if (message.Health != null && Object.hasOwnProperty.call(message, "Health"))
+                writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.Health);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified HealthGet message, length delimited. Does not implicitly {@link protobuf.HealthGet.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {protobuf.IHealthGet} message HealthGet message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        HealthGet.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a HealthGet message from the specified reader or buffer.
+         * @function decode
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {protobuf.HealthGet} HealthGet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        HealthGet.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.HealthGet();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.ID = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.Health = reader.uint32();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a HealthGet message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {protobuf.HealthGet} HealthGet
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        HealthGet.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a HealthGet message.
+         * @function verify
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        HealthGet.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                if (!$util.isString(message.ID))
+                    return "ID: string expected";
+            if (message.Health != null && message.hasOwnProperty("Health"))
+                if (!$util.isInteger(message.Health))
+                    return "Health: integer expected";
+            return null;
+        };
+
+        /**
+         * Creates a HealthGet message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {protobuf.HealthGet} HealthGet
+         */
+        HealthGet.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.HealthGet)
+                return object;
+            var message = new $root.protobuf.HealthGet();
+            if (object.ID != null)
+                message.ID = String(object.ID);
+            if (object.Health != null)
+                message.Health = object.Health >>> 0;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a HealthGet message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {protobuf.HealthGet} message HealthGet
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        HealthGet.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.ID = "";
+                object.Health = 0;
+            }
+            if (message.ID != null && message.hasOwnProperty("ID"))
+                object.ID = message.ID;
+            if (message.Health != null && message.hasOwnProperty("Health"))
+                object.Health = message.Health;
+            return object;
+        };
+
+        /**
+         * Converts this HealthGet to JSON.
+         * @function toJSON
+         * @memberof protobuf.HealthGet
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        HealthGet.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for HealthGet
+         * @function getTypeUrl
+         * @memberof protobuf.HealthGet
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        HealthGet.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/protobuf.HealthGet";
+        };
+
+        return HealthGet;
+    })();
+
     protobuf.PositionInfo = (function() {
 
         /**

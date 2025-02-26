@@ -42,5 +42,6 @@ export enum EventName {
     KeyDown,
     KeyUp,
     SyncPosition,
-    Damage,
+    TakeDamage,
+    TakeHealth,
 }

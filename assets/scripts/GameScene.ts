@@ -1,8 +1,9 @@
-import { _decorator, Camera, Component, EventKeyboard, KeyCode, Label, Node, NodeEventType, Prefab, Vec3 } from 'cc';
+import { _decorator, Camera, Component, EventKeyboard, KeyCode, Label, macro, Node, NodeEventType, Prefab, Vec3 } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
 import { EventManager, EventName } from './Singleton/EventManager';
 import { NodePoolManager } from './Singleton/NodePoolManager';
+import { HealthBuff } from './HealthBuff';
 const { ccclass, property } = _decorator;
 
 export enum Action {
@@ -15,6 +16,7 @@ export enum Action {
     Die = '1007',
     Damage = '1008',
     HealthBuff = '1009',
+    HealthGet = '1010',
 }
 
 export const ActionReverseMap = {
@@ -27,6 +29,7 @@ export const ActionReverseMap = {
     '1007': 'Die',
     '1008': 'Damage',
     '1009': 'HealthBuff',
+    '1010': 'HealthGet'
 }
 
 @ccclass('GameScene')
@@ -57,6 +60,7 @@ export class GameScene extends Component {
             player.setPosInfoPackHandler(this.sendPosInfoPacket.bind(this));
             player.setAttackPackHandler(this.sendAttackPacket.bind(this));
             player.setDamagePackHandler(this.sendDamagePacket.bind(this));
+            player.setHealthGetPackHandler(this.sendHealthGetPacket.bind(this));
         })
         // 註冊按鈕事件
         this.join = this.node.getChildByName("Join");
@@ -182,7 +186,7 @@ export class GameScene extends Component {
                     bodyArray = data.slice(actionLength);
                     msg = protobuf.protobuf.Damage.decode(bodyArray);
                     console.log("[受傷]封包 body:", msg);
-                    EventManager.dispathEvent(EventName.Damage, msg.ID, msg.DamagePower);
+                    EventManager.dispathEvent(EventName.TakeDamage, msg.ID, msg.DamagePower);
                     break;
                 case Action.HealthBuff:
                     bodyArray = data.slice(actionLength);
@@ -191,6 +195,12 @@ export class GameScene extends Component {
                     // EventManager.dispathEvent(EventName.Damage, msg.ID, msg.DamagePower);
                     const buffPos = new Vec3(msg.X, msg.Y, 0);
                     this.generateHealthBuff(buffPos);
+                    break;
+                case Action.HealthGet:
+                    bodyArray = data.slice(actionLength);
+                    msg = protobuf.protobuf.HealthGet.decode(bodyArray);
+                    console.log("[獲得血量]封包 body:", msg);
+                    EventManager.dispathEvent(EventName.TakeHealth, msg.ID, msg.Health);
                     break;
                 default:
                     console.error("未處理封包:", action);
@@ -270,6 +280,16 @@ export class GameScene extends Component {
         this.sendPacket(packet);
     }
 
+    private sendHealthGetPacket(healthQuantity: number) {
+        let healthGet = new protobuf.protobuf.HealthGet();
+        healthGet.ID = this._uuid;
+        healthGet.Health = healthQuantity;
+        console.log("HealthGet Packet:", protobuf.protobuf.HealthGet.encode(healthGet).finish());
+
+        let packet = new Packet(Action.HealthGet, protobuf.protobuf.HealthGet.encode(healthGet).finish());
+        this.sendPacket(packet);
+    }
+
     start() {
         // let pack = new protobuf.protobuf.FirstRequest();
         // pack.id = 100;
@@ -324,8 +344,13 @@ export class GameScene extends Component {
 
     generateHealthBuff(position: Vec3) {
         let nodePool = NodePoolManager.getNodePoolMgr();
-        let healthBuff = nodePool.createNode("HealthBuff", this.node, this.healthBuff);
+        let healthBuff = nodePool.createNode("HealthBuff", this.node.getChildByName("HealthBuffCollection"), this.healthBuff);
         healthBuff.position = position;
+        let healthBuffScript = healthBuff.getComponent(HealthBuff);
+        let destroy = function () {
+            if (healthBuff) nodePool.returnNode("HealthBuff", healthBuff);
+        }
+        healthBuffScript.setDestroyEvent(destroy.bind(this));
     }
 
     update(deltaTime: number) {

@@ -4,6 +4,7 @@ import { NodePoolManager } from './Singleton/NodePoolManager';
 import { StateMachine } from './FiniteStateMachine/StateMachine';
 import { IdleState } from './FiniteStateMachine/IdleState';
 import { Bullet } from './Bullet';
+import { HealthBuff } from './HealthBuff';
 const { ccclass, property } = _decorator;
 type MovePacket = (direction) => void;
 
@@ -30,6 +31,7 @@ export class Player extends Component {
     private posInfoPackHandler: Function = null;
     private attackPackHandler: Function = null;
     private damagePackHandler: Function = null;
+    private healthGetPackHandler: Function = null;
 
     private _playerID: string = "";
     private player: Node = null;
@@ -47,6 +49,7 @@ export class Player extends Component {
     private updateFrequency: number = 0.25;
     private playerWidth: number = 0;
     private health: number = 100;
+    private healthMax: number = 100;
     private healthBar: ProgressBar = null;
 
     onLoad() {
@@ -55,7 +58,8 @@ export class Player extends Component {
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
         AddEvent(EventName.KeyUp, this.onServerKeyUp.bind(this));
         AddEvent(EventName.SyncPosition, this.onSyncPosition.bind(this));
-        AddEvent(EventName.Damage, this.onDamage.bind(this));
+        AddEvent(EventName.TakeDamage, this.onTakeDamage.bind(this));
+        AddEvent(EventName.TakeHealth, this.onTakeHealth.bind(this));
     }
 
     start() {
@@ -173,6 +177,10 @@ export class Player extends Component {
         this.damagePackHandler = func;
     }
 
+    public setHealthGetPackHandler(func: Function) {
+        this.healthGetPackHandler = func;
+    }
+
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // console.log("接觸地面 self:", selfCollider, "other:", otherCollider);
         if (otherCollider.group === PHY_GROUP.FLOOR) {
@@ -183,6 +191,9 @@ export class Player extends Component {
         } else if (otherCollider.group === PHY_GROUP.BULLET) {
             let damageOfBullet = otherCollider.node.getComponent(Bullet).Damage;
             if (this.isSelfControl) this.damagePackHandler(damageOfBullet);
+        } else if (otherCollider.group === PHY_GROUP.BUFF) {
+            let healthOfBuff = otherCollider.node.getComponent(HealthBuff).Health;
+            if (this.isSelfControl) this.healthGetPackHandler(healthOfBuff);
         }
     }
 
@@ -294,7 +305,7 @@ export class Player extends Component {
         else this.node.getComponent(UITransform).setContentSize(-(this.playerWidth), this.node.getComponent(UITransform).contentSize.height);
     }
 
-    private onDamage(...ary: any[]) {
+    private onTakeDamage(...ary: any[]) {
         const id = ary[0];
         const damagePower = ary[1];
         if (id == this._playerID) {
@@ -303,6 +314,18 @@ export class Player extends Component {
             let progress = this.health / 100;
             this.healthBar.progress = progress;
             if (this.health == 0) console.log("todo: 切換玩家為死亡狀態");
+        }
+    }
+
+    private onTakeHealth(...ary: any[]) {
+        const id = ary[0];
+        const healthQuantity = ary[1];
+        if (id == this._playerID) {
+            if (this.health == this.healthMax) return;
+            this.health += healthQuantity;
+            console.log(`玩家${id} 補血後血量${this.health}`);
+            let progress = this.health / 100;
+            this.healthBar.progress = progress;
         }
     }
 
@@ -340,4 +363,5 @@ export const PHY_GROUP = {
     PLAYER: 1 << 2,
     BULLET: 1 << 3,
     WALL: 1 << 4,
+    BUFF: 1 << 5,
 };
