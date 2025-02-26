@@ -7,7 +7,7 @@ export class Bullet extends Component {
     private readonly moveSpeed: number = 30; // 水平移動速度 (每秒)
 
     @property({ tooltip: "傷害強度" })
-    private readonly damage: number = 10;
+    private readonly damage: number = 100;
 
     private rigidBody: RigidBody2D = null;
     private collider: BoxCollider2D = null;

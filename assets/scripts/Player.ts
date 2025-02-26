@@ -23,6 +23,9 @@ export class Player extends Component {
     @property({ tooltip: "面朝方向" })
     private faceToRight: boolean = false;
 
+    @property(Vec3)
+    private spawnPoint: Vec3 = null;
+
     public stateMachine: StateMachine = null;
 
     private movePackHandler: MovePacket = null;
@@ -32,6 +35,7 @@ export class Player extends Component {
     private attackPackHandler: Function = null;
     private damagePackHandler: Function = null;
     private healthGetPackHandler: Function = null;
+    private diePackHandler: Function = null;
 
     private _playerID: string = "";
     private player: Node = null;
@@ -60,6 +64,7 @@ export class Player extends Component {
         AddEvent(EventName.SyncPosition, this.onSyncPosition.bind(this));
         AddEvent(EventName.TakeDamage, this.onTakeDamage.bind(this));
         AddEvent(EventName.TakeHealth, this.onTakeHealth.bind(this));
+        this.rigidBody = this.node.getComponent(RigidBody2D);
     }
 
     start() {
@@ -153,6 +158,21 @@ export class Player extends Component {
         return this._playerID;
     }
 
+    public resetPlayer() {
+        this.player.position = this.spawnPoint;
+        this.rigidBody.linearVelocity = new Vec2(0, 10); //施加一點跳躍力讓玩家能自然墜落
+        this.player = null;
+        this._playerID = "";
+        this.health = this.healthMax;
+        this.healthBar.progress = this.health / this.healthMax;
+        if (this.collider) {
+            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            this.collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
+        input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
+        input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
+    }
+
     public setMovePackHandler(func: MovePacket) {
         this.movePackHandler = func;
     }
@@ -179,6 +199,10 @@ export class Player extends Component {
 
     public setHealthGetPackHandler(func: Function) {
         this.healthGetPackHandler = func;
+    }
+
+    public setDiePackHandler(func: Function) {
+        this.diePackHandler = func;
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -313,7 +337,7 @@ export class Player extends Component {
             console.log(`玩家${id} 剩餘血量${this.health}`);
             let progress = this.health / 100;
             this.healthBar.progress = progress;
-            if (this.health == 0) console.log("todo: 切換玩家為死亡狀態");
+            if (this.health == 0 && this.isSelfControl) this.diePackHandler();
         }
     }
 

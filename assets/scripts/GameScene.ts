@@ -29,7 +29,7 @@ export const ActionReverseMap = {
     '1007': 'Die',
     '1008': 'Damage',
     '1009': 'HealthBuff',
-    '1010': 'HealthGet'
+    '1010': 'HealthGet',
 }
 
 @ccclass('GameScene')
@@ -61,6 +61,7 @@ export class GameScene extends Component {
             player.setAttackPackHandler(this.sendAttackPacket.bind(this));
             player.setDamagePackHandler(this.sendDamagePacket.bind(this));
             player.setHealthGetPackHandler(this.sendHealthGetPacket.bind(this));
+            player.setDiePackHandler(this.sendDiePacket.bind(this));
         })
         // 註冊按鈕事件
         this.join = this.node.getChildByName("Join");
@@ -180,6 +181,8 @@ export class GameScene extends Component {
                     bodyArray = data.slice(actionLength);
                     msg = protobuf.protobuf.Die.decode(bodyArray);
                     console.log("[死亡]封包 body:", msg, "五秒後退回主菜單");
+                    this.resetPlayer();
+                    this.resetCamera();
                     //todo: 退回菜單 + 重置腳色狀態(控制權、重生位置)
                     break;
                 case Action.Damage:
@@ -290,6 +293,13 @@ export class GameScene extends Component {
         this.sendPacket(packet);
     }
 
+    private sendDiePacket() {
+        let die = new protobuf.protobuf.Die();
+        die.ID = this._uuid;
+        let packet = new Packet(Action.Die, protobuf.protobuf.Die.encode(die).finish());
+        this.sendPacket(packet);
+    }
+
     start() {
         // let pack = new protobuf.protobuf.FirstRequest();
         // pack.id = 100;
@@ -351,6 +361,13 @@ export class GameScene extends Component {
             if (healthBuff) nodePool.returnNode("HealthBuff", healthBuff);
         }
         healthBuffScript.setDestroyEvent(destroy.bind(this));
+    }
+
+    private resetPlayer() {
+        this.players.forEach(value => {
+            let player = value.getComponent(Player);
+            player.resetPlayer();
+        })
     }
 
     update(deltaTime: number) {
