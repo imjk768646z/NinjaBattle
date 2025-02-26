@@ -1,29 +1,32 @@
-import { _decorator, Camera, Component, EventKeyboard, KeyCode, Label, Node, NodeEventType, Vec3 } from 'cc';
+import { _decorator, Camera, Component, EventKeyboard, KeyCode, Label, Node, NodeEventType, Prefab, Vec3 } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
 import { EventManager, EventName } from './Singleton/EventManager';
+import { NodePoolManager } from './Singleton/NodePoolManager';
 const { ccclass, property } = _decorator;
 
 export enum Action {
-    Join = '1000',
-    Move = '2000',
-    Stop = '3000',
-    Jump = '4000',
-    PositionInfo = '5000',
-    Attack = '6000',
-    Die = '7000',
-    Damage = '8000',
+    Join = '1001',
+    Move = '1002',
+    Stop = '1003',
+    Jump = '1004',
+    PositionInfo = '1005',
+    Attack = '1006',
+    Die = '1007',
+    Damage = '1008',
+    HealthBuff = '1009',
 }
 
 export const ActionReverseMap = {
-    '1000': 'Join',
-    '2000': 'Move',
-    '3000': 'Stop',
-    '4000': 'Jump',
-    '5000': 'PositionInfo',
-    '6000': 'Attack',
-    '7000': 'Die',
-    '8000': 'Damage',
+    '1001': 'Join',
+    '1002': 'Move',
+    '1003': 'Stop',
+    '1004': 'Jump',
+    '1005': 'PositionInfo',
+    '1006': 'Attack',
+    '1007': 'Die',
+    '1008': 'Damage',
+    '1009': 'HealthBuff',
 }
 
 @ccclass('GameScene')
@@ -34,6 +37,9 @@ export class GameScene extends Component {
 
     @property(Node)
     private camera: Node = null;
+
+    @property(Prefab)
+    private healthBuff: Prefab = null;
 
     private ws: WebSocket = null;
     private join: Node = null;
@@ -178,6 +184,14 @@ export class GameScene extends Component {
                     console.log("[受傷]封包 body:", msg);
                     EventManager.dispathEvent(EventName.Damage, msg.ID, msg.DamagePower);
                     break;
+                case Action.HealthBuff:
+                    bodyArray = data.slice(actionLength);
+                    msg = protobuf.protobuf.HealthBuff.decode(bodyArray);
+                    console.log("[補血包]封包 body:", msg);
+                    // EventManager.dispathEvent(EventName.Damage, msg.ID, msg.DamagePower);
+                    const buffPos = new Vec3(msg.X, msg.Y, 0);
+                    this.generateHealthBuff(buffPos);
+                    break;
                 default:
                     console.error("未處理封包:", action);
                     break;
@@ -306,6 +320,12 @@ export class GameScene extends Component {
         console.log("重置相機")
         this.camera.setParent(this.node);
         this.camera.setPosition(0, 0, 0);
+    }
+
+    generateHealthBuff(position: Vec3) {
+        let nodePool = NodePoolManager.getNodePoolMgr();
+        let healthBuff = nodePool.createNode("HealthBuff", this.node, this.healthBuff);
+        healthBuff.position = position;
     }
 
     update(deltaTime: number) {

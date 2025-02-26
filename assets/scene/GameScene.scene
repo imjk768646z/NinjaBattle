@@ -2205,6 +2205,10 @@
     "camera": {
       "__id__": 3
     },
+    "healthBuff": {
+      "__uuid__": "64d6825d-181f-4c48-8d80-77eee773e4ee",
+      "__expectedType__": "cc.Prefab"
+    },
     "_id": "1d86A/AHNPOpxL5MaUWUNe"
   },
   {

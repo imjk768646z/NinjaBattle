@@ -1575,6 +1575,233 @@ $root.protobuf = (function() {
         return Die;
     })();
 
+    protobuf.HealthBuff = (function() {
+
+        /**
+         * Properties of a HealthBuff.
+         * @memberof protobuf
+         * @interface IHealthBuff
+         * @property {number|null} [X] HealthBuff X
+         * @property {number|null} [Y] HealthBuff Y
+         */
+
+        /**
+         * Constructs a new HealthBuff.
+         * @memberof protobuf
+         * @classdesc Represents a HealthBuff.
+         * @implements IHealthBuff
+         * @constructor
+         * @param {protobuf.IHealthBuff=} [properties] Properties to set
+         */
+        function HealthBuff(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * HealthBuff X.
+         * @member {number} X
+         * @memberof protobuf.HealthBuff
+         * @instance
+         */
+        HealthBuff.prototype.X = 0;
+
+        /**
+         * HealthBuff Y.
+         * @member {number} Y
+         * @memberof protobuf.HealthBuff
+         * @instance
+         */
+        HealthBuff.prototype.Y = 0;
+
+        /**
+         * Creates a new HealthBuff instance using the specified properties.
+         * @function create
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {protobuf.IHealthBuff=} [properties] Properties to set
+         * @returns {protobuf.HealthBuff} HealthBuff instance
+         */
+        HealthBuff.create = function create(properties) {
+            return new HealthBuff(properties);
+        };
+
+        /**
+         * Encodes the specified HealthBuff message. Does not implicitly {@link protobuf.HealthBuff.verify|verify} messages.
+         * @function encode
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {protobuf.IHealthBuff} message HealthBuff message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        HealthBuff.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.X != null && Object.hasOwnProperty.call(message, "X"))
+                writer.uint32(/* id 1, wireType 1 =*/9).double(message.X);
+            if (message.Y != null && Object.hasOwnProperty.call(message, "Y"))
+                writer.uint32(/* id 2, wireType 1 =*/17).double(message.Y);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified HealthBuff message, length delimited. Does not implicitly {@link protobuf.HealthBuff.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {protobuf.IHealthBuff} message HealthBuff message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        HealthBuff.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a HealthBuff message from the specified reader or buffer.
+         * @function decode
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {protobuf.HealthBuff} HealthBuff
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        HealthBuff.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.HealthBuff();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.X = reader.double();
+                        break;
+                    }
+                case 2: {
+                        message.Y = reader.double();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a HealthBuff message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {protobuf.HealthBuff} HealthBuff
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        HealthBuff.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a HealthBuff message.
+         * @function verify
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        HealthBuff.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.X != null && message.hasOwnProperty("X"))
+                if (typeof message.X !== "number")
+                    return "X: number expected";
+            if (message.Y != null && message.hasOwnProperty("Y"))
+                if (typeof message.Y !== "number")
+                    return "Y: number expected";
+            return null;
+        };
+
+        /**
+         * Creates a HealthBuff message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {protobuf.HealthBuff} HealthBuff
+         */
+        HealthBuff.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.HealthBuff)
+                return object;
+            var message = new $root.protobuf.HealthBuff();
+            if (object.X != null)
+                message.X = Number(object.X);
+            if (object.Y != null)
+                message.Y = Number(object.Y);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a HealthBuff message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {protobuf.HealthBuff} message HealthBuff
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        HealthBuff.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.X = 0;
+                object.Y = 0;
+            }
+            if (message.X != null && message.hasOwnProperty("X"))
+                object.X = options.json && !isFinite(message.X) ? String(message.X) : message.X;
+            if (message.Y != null && message.hasOwnProperty("Y"))
+                object.Y = options.json && !isFinite(message.Y) ? String(message.Y) : message.Y;
+            return object;
+        };
+
+        /**
+         * Converts this HealthBuff to JSON.
+         * @function toJSON
+         * @memberof protobuf.HealthBuff
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        HealthBuff.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for HealthBuff
+         * @function getTypeUrl
+         * @memberof protobuf.HealthBuff
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        HealthBuff.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/protobuf.HealthBuff";
+        };
+
+        return HealthBuff;
+    })();
+
     protobuf.PositionInfo = (function() {
 
         /**
