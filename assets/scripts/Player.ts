@@ -5,8 +5,9 @@ import { StateMachine } from './FiniteStateMachine/StateMachine';
 import { IdleState } from './FiniteStateMachine/IdleState';
 import { Bullet } from './Bullet';
 import { HealthBuff } from './HealthBuff';
+import { Socket } from './Command/Socket';
+import { PHY_GROUP } from './Definition';
 const { ccclass, property } = _decorator;
-type MovePacket = (direction) => void;
 
 @ccclass('Player')
 export class Player extends Component {
@@ -27,16 +28,6 @@ export class Player extends Component {
     private spawnPoint: Vec3 = null;
 
     public stateMachine: StateMachine = null;
-
-    private movePackHandler: MovePacket = null;
-    private stopPackHandler: MovePacket = null;
-    private jumpPackHandler: Function = null;
-    private posInfoPackHandler: Function = null;
-    private attackPackHandler: Function = null;
-    private damagePackHandler: Function = null;
-    private healthGetPackHandler: Function = null;
-    private diePackHandler: Function = null;
-
     private _playerID: string = "";
     private player: Node = null;
     private moveRight: boolean = false; //todo: 只需要留下往右 取反就是往左
@@ -173,38 +164,6 @@ export class Player extends Component {
         input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
     }
 
-    public setMovePackHandler(func: MovePacket) {
-        this.movePackHandler = func;
-    }
-
-    public setStopPackHandler(func: MovePacket) {
-        this.stopPackHandler = func;
-    }
-
-    public setJumpPackHandler(func: Function) {
-        this.jumpPackHandler = func;
-    }
-
-    public setPosInfoPackHandler(func: Function) {
-        this.posInfoPackHandler = func;
-    }
-
-    public setAttackPackHandler(func: Function) {
-        this.attackPackHandler = func;
-    }
-
-    public setDamagePackHandler(func: Function) {
-        this.damagePackHandler = func;
-    }
-
-    public setHealthGetPackHandler(func: Function) {
-        this.healthGetPackHandler = func;
-    }
-
-    public setDiePackHandler(func: Function) {
-        this.diePackHandler = func;
-    }
-
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // console.log("接觸地面 self:", selfCollider, "other:", otherCollider);
         if (otherCollider.group === PHY_GROUP.FLOOR) {
@@ -214,10 +173,10 @@ export class Player extends Component {
             console.log("接觸玩家");
         } else if (otherCollider.group === PHY_GROUP.BULLET) {
             let damageOfBullet = otherCollider.node.getComponent(Bullet).Damage;
-            if (this.isSelfControl) this.damagePackHandler(damageOfBullet);
+            if (this.isSelfControl) Socket.sendDamagePacket(damageOfBullet);
         } else if (otherCollider.group === PHY_GROUP.BUFF) {
             let healthOfBuff = otherCollider.node.getComponent(HealthBuff).Health;
-            if (this.isSelfControl) this.healthGetPackHandler(healthOfBuff);
+            if (this.isSelfControl) Socket.sendHealthGetPacket(healthOfBuff);
         }
     }
 
@@ -238,21 +197,21 @@ export class Player extends Component {
     private onKeyDown(event: EventKeyboard) {
         switch (event.keyCode) {
             case KeyCode.ARROW_RIGHT:
-                if (this.isSelfControl) this.movePackHandler(true);
+                if (this.isSelfControl) Socket.sendMovePacket(true);
                 if (this.moveLeft) this.moveLeft = false;
                 this.moveRight = true;
                 this.faceToRight = true;
                 this.flipPlayer();
                 break;
             case KeyCode.ARROW_LEFT:
-                if (this.isSelfControl) this.movePackHandler(false);
+                if (this.isSelfControl) Socket.sendMovePacket(false);
                 if (this.moveRight) this.moveRight = false;
                 this.moveLeft = true;
                 this.faceToRight = false;
                 this.flipPlayer();
                 break;
             case KeyCode.SPACE:
-                if (this.isSelfControl) this.jumpPackHandler();
+                if (this.isSelfControl) Socket.sendJumpPacket();
                 if (this.onGround) {
                     this.rigidBody.linearVelocity = new Vec2(this.rigidBody.linearVelocity.x, this.jumpForce); // 施加跳躍力
                     this.onGround = false; // 跳躍後標記為離地
@@ -260,7 +219,7 @@ export class Player extends Component {
                 break;
             case KeyCode.KEY_X:
                 if (this.canFight) {
-                    if (this.isSelfControl) this.attackPackHandler();
+                    if (this.isSelfControl) Socket.sendAttackPacket();
                     this.canFight = false;
                     this.onFight = true;
                     this.scheduleOnce(this.resetFight, 1);
@@ -274,11 +233,11 @@ export class Player extends Component {
     private onKeyUp(event: EventKeyboard) {
         switch (event.keyCode) {
             case KeyCode.ARROW_RIGHT:
-                if (this.isSelfControl) this.stopPackHandler(true);
+                if (this.isSelfControl) Socket.sendStopPacket(true);
                 this.moveRight = false;
                 break;
             case KeyCode.ARROW_LEFT:
-                if (this.isSelfControl) this.stopPackHandler(false);
+                if (this.isSelfControl) Socket.sendStopPacket(false);
                 this.moveLeft = false;
                 break;
             default:
@@ -337,7 +296,7 @@ export class Player extends Component {
             console.log(`玩家${id} 剩餘血量${this.health}`);
             let progress = this.health / 100;
             this.healthBar.progress = progress;
-            if (this.health == 0 && this.isSelfControl) this.diePackHandler();
+            if (this.health == 0 && this.isSelfControl) Socket.sendDiePacket();
         }
     }
 
@@ -380,12 +339,3 @@ export class Player extends Component {
         }
     }
 }
-
-export const PHY_GROUP = {
-    DEFAULT: 1 << 0,
-    FLOOR: 1 << 1,
-    PLAYER: 1 << 2,
-    BULLET: 1 << 3,
-    WALL: 1 << 4,
-    BUFF: 1 << 5,
-};
