@@ -7,7 +7,7 @@ import { Player } from "../Player";
 export class WalkState implements IState {
     enter(player: Player): void {
         console.log("進入 Walk 狀態");
-
+        player.onWalk();
     }
     update(player: Player, deltaTime: number): void {
         let velocity = player.RigidBody.linearVelocity;

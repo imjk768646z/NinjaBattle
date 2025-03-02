@@ -1,4 +1,4 @@
-import { _decorator, Camera, Component, director, EventKeyboard, KeyCode, Label, macro, Node, NodeEventType, Prefab, Vec3 } from 'cc';
+import { _decorator, BoxCollider2D, Camera, Component, director, EventKeyboard, KeyCode, Label, macro, Node, NodeEventType, PolygonCollider2D, Prefab, UITransform, Vec3 } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
 import { EventManager, EventName } from './Singleton/EventManager';
@@ -36,6 +36,13 @@ export class GameScene extends Component {
         this.websocketConn.addMessageListener("GameScene", this.onMessage.bind(this));
         // setPlayerController
         this.setPlayerController();
+        this.players.forEach(playerNode => {
+            let player = playerNode.getComponent(Player);
+            console.log("!! Scale:", player.PlayerScale)
+            playerNode.getComponent(BoxCollider2D).size.x = playerNode.getComponent(UITransform).contentSize.x * player.PlayerScale;
+            playerNode.getComponent(BoxCollider2D).size.y = playerNode.getComponent(UITransform).contentSize.y * player.PlayerScale;
+            playerNode.setScale(player.PlayerScale, player.PlayerScale, player.PlayerScale);
+        })
     }
 
     private setPlayerController() {
@@ -114,6 +121,7 @@ export class GameScene extends Component {
                 this.resetPlayer();
                 this.resetCamera();
                 //todo: 退回菜單 + 重置腳色狀態(控制權、重生位置)
+                director.loadScene("MenuScene", this.switch2MenuScene.bind(this));
                 break;
             case Action.Damage:
                 bodyArray = data.slice(actionLength);

@@ -1,4 +1,4 @@
-import { _decorator, Component, director, Node, NodeEventType, Vec3 } from 'cc';
+import { _decorator, Animation, Component, director, Node, NodeEventType, resources, SpriteFrame, Vec3 } from 'cc';
 import { Packet, WebSocketConnection } from './Connection/WebSocketConnection';
 import { Action, ActionReverseMap } from './Definition';
 import protobuf from '../../Proto/protobuf.js';
@@ -16,6 +16,7 @@ export class MenuScene extends Component {
 
     onLoad() {
         console.log("MenuScene onLoad");
+
         this.websocketConn = WebSocketManager.getWebSocketConn;
 
         // setWebsocket2Socket
@@ -26,10 +27,29 @@ export class MenuScene extends Component {
         this.join.on(NodeEventType.TOUCH_END, () => {
             Socket.sendJoinPacket();
         })
+
+
+        // console.log("Animation Clips:", clips)
     }
 
-    start() {
+    async start() {
+        await this.loadImg();
+        let map = getValue<Map<string, SpriteFrame[]>>(ModelKey.NinjaClipMap);
+        console.log("Ninja Walking:", map);
 
+        let animationComponent = this.node.getChildByName("Node-001").getComponent(Animation);
+        let clips = animationComponent.clips;
+        console.log("Ninja clips:", clips);
+
+        /* clips.forEach(clip => {
+            if (clip.name == "idle") {
+                console.log("idle clip:", clip);
+                console.log("idle state:", animationComponent.getState("idle"));
+            }
+        }) */
+        // animationComponent.stop();
+        // animationComponent.getState("walk").play();
+        // animationComponent.getState("idle").play();
     }
 
     private onMessage(event) {
@@ -72,6 +92,29 @@ export class MenuScene extends Component {
             WebSocketManager.getWebSocketConn.removeListener("MenuScene");
             gameScene.init();
         }
+    }
+
+    private async loadImg() {
+        return new Promise(res => {
+            resources.loadDir("/images/ninja-maria/walking", SpriteFrame, (err, sprite) => {
+                if (err) {
+                    res(null);
+                } else {
+                    /* audio.forEach((audio) => {
+                        // GameModel.Inst.AudioAssets.set(audio.name, audio);
+                        AudioEngineControl.getInstance().setAudioTask(audio.name, audio);
+                    }) */
+                    res(sprite);
+                    let map = getValue<Map<string, SpriteFrame[]>>(ModelKey.NinjaClipMap);
+                    if (map == null) {
+                        map = new Map<string, SpriteFrame[]>();
+                    }
+                    map.set("Ninja_Walking", sprite);
+                    setValue<Map<string, SpriteFrame[]>>(ModelKey.NinjaClipMap, map);
+                    // console.log("sprite:", sprite);
+                }
+            })
+        })
     }
 
     update(deltaTime: number) {

@@ -1,6 +1,7 @@
 export enum ModelKey {
     JoinPacket,
     PlayerUUID,
+    NinjaClipMap,
 }
 
 const ModelMap: Map<string, any> = new Map<string, any>();

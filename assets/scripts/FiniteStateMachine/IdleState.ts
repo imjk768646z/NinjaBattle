@@ -9,6 +9,7 @@ export class IdleState implements IState {
         console.log("進入 Idle 狀態");
         // 停止水平移動
         // player.rigidBody.linearVelocity = new Vec2(0, player.rigidBody.linearVelocity.y);
+        player.onIdle();
     }
     update(player: Player, deltaTime: number): void {
         // console.log("更新狀態");

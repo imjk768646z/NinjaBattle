@@ -7,6 +7,7 @@ export class JumpState implements IState {
     enter(player: Player): void {
         console.log("進入 Jump 狀態");
         // 這邊已在按鍵事件中觸發跳躍力，此處僅作狀態紀錄
+        player.onJump();
     }
     update(player: Player, deltaTime: number): void {
         let velocity = player.RigidBody.linearVelocity;

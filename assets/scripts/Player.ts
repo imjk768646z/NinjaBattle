@@ -1,4 +1,4 @@
-import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, ProgressBar, RigidBody2D, UITransform, Vec2, Vec3 } from 'cc';
+import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, ProgressBar, RigidBody2D, UITransform, Vec2, Vec3, Animation, Sprite } from 'cc';
 import { AddEvent, EventManager, EventName } from './Singleton/EventManager';
 import { NodePoolManager } from './Singleton/NodePoolManager';
 import { StateMachine } from './FiniteStateMachine/StateMachine';
@@ -27,7 +27,11 @@ export class Player extends Component {
     @property(Vec3)
     private spawnPoint: Vec3 = null;
 
+    @property({ tooltip: "縮放比例" })
+    private playerScale: number = 1;
+
     public stateMachine: StateMachine = null;
+    private animation: Animation = null;
     private _playerID: string = "";
     private player: Node = null;
     private moveRight: boolean = false; //todo: 只需要留下往右 取反就是往左
@@ -35,6 +39,7 @@ export class Player extends Component {
 
     private onFight: boolean = false;
     private canFight: boolean = true;
+    private coolDownTime: number = 0.5;  //攻擊冷卻時間(單位：秒)
     private rigidBody: RigidBody2D = null;
     private collider: Collider2D = null;
     private onGround: boolean = true; // 是否接觸地面(腳色出現時可能尚未落地，必須改為落地後重設onGround)
@@ -43,19 +48,21 @@ export class Player extends Component {
     private Delta: number = 0;
     private updateFrequency: number = 0.25;
     private playerWidth: number = 0;
+
     private health: number = 100;
     private healthMax: number = 100;
     private healthBar: ProgressBar = null;
 
     onLoad() {
-        this.playerWidth = this.node.getComponent(UITransform).contentSize.width;
+        this.animation = this.node.getChildByName("Animation").getComponent(Animation);
+        this.playerWidth = this.node.getChildByName("Animation").getComponent(UITransform).contentSize.width;
         this.healthBar = this.node.getComponent(ProgressBar);
+        this.rigidBody = this.node.getComponent(RigidBody2D);
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
         AddEvent(EventName.KeyUp, this.onServerKeyUp.bind(this));
         AddEvent(EventName.SyncPosition, this.onSyncPosition.bind(this));
         AddEvent(EventName.TakeDamage, this.onTakeDamage.bind(this));
         AddEvent(EventName.TakeHealth, this.onTakeHealth.bind(this));
-        this.rigidBody = this.node.getComponent(RigidBody2D);
     }
 
     start() {
@@ -63,6 +70,10 @@ export class Player extends Component {
         // 初始化狀態機，起始狀態設為 Idle
         this.stateMachine = new StateMachine(this, new IdleState());
         this.flipPlayer();
+    }
+
+    get PlayerScale(): number {
+        return this.playerScale;
     }
 
     get MoveLeft(): boolean {
@@ -89,12 +100,20 @@ export class Player extends Component {
         this.onFight = mode;
     }
 
+    get CoolDownTime(): number {
+        return this.coolDownTime;
+    }
+
     get RigidBody(): RigidBody2D {
         return this.rigidBody;
     }
 
     get WalkSpeed(): number {
         return this.walkSpeed;
+    }
+
+    get Health(): number { //暫時測試用
+        return this.health;
     }
 
     get Bullet(): Prefab {
@@ -222,7 +241,7 @@ export class Player extends Component {
                     if (this.isSelfControl) Socket.sendAttackPacket();
                     this.canFight = false;
                     this.onFight = true;
-                    this.scheduleOnce(this.resetFight, 1);
+                    this.scheduleOnce(this.resetFight, this.coolDownTime);
                 }
                 break;
             default:
@@ -284,8 +303,23 @@ export class Player extends Component {
     }
 
     private flipPlayer() {
-        if (this.faceToRight) this.node.getComponent(UITransform).setContentSize(this.playerWidth, this.node.getComponent(UITransform).contentSize.height);
-        else this.node.getComponent(UITransform).setContentSize(-(this.playerWidth), this.node.getComponent(UITransform).contentSize.height);
+        // if (this.faceToRight) this.node.getComponent(UITransform).setContentSize(this.playerWidth, this.node.getComponent(UITransform).contentSize.height);
+        // else this.node.getComponent(UITransform).setContentSize(-(this.playerWidth), this.node.getComponent(UITransform).contentSize.height);
+        if (this.faceToRight) {
+            // this.node.getChildByName("Animation").getComponent(UITransform).setContentSize(this.playerWidth, this.node.getChildByName("Animation").getComponent(UITransform).contentSize.height);
+            this.node.getChildByName("Animation").setScale(this.playerScale, this.playerScale, this.playerScale);
+            console.log("面向右", this.node.getChildByName("Animation").getComponent(UITransform).contentSize)
+            // this.node.setScale(this.playerScale, this.playerScale, this.playerScale);
+            // this.node.setScale(1, 1, 1);
+        }
+        else {
+            // this.node.getChildByName("Animation").getComponent(UITransform).setContentSize(-(this.playerWidth), this.node.getChildByName("Animation").getComponent(UITransform).contentSize.height);
+            // this.node.setScale(-this.playerScale, this.playerScale, this.playerScale);
+            // this.node.getComponent(UITransform).setContentSize(-246, 321);
+            // this.node.setScale(-1, 1, 1);
+            this.node.getChildByName("Animation").setScale(-this.playerScale, this.playerScale, this.playerScale);
+            console.log("面向左", this.node.getChildByName("Animation").getComponent(UITransform).contentSize)
+        }
     }
 
     private onTakeDamage(...ary: any[]) {
@@ -310,6 +344,32 @@ export class Player extends Component {
             let progress = this.health / 100;
             this.healthBar.progress = progress;
         }
+    }
+
+    public onIdle() {
+        this.stopAllAnimation();
+        this.animation.getState("idle").play();
+    }
+
+    public onWalk() {
+        this.stopAllAnimation();
+        this.animation.getState("run").play();
+        // console.log("! play walk animation")
+    }
+
+    public onJump() {
+        this.stopAllAnimation();
+        this.animation.getState("jump").play();
+    }
+
+    public onAttack() {
+        this.stopAllAnimation();
+        this.animation.getState("throw").play();
+    }
+
+    private stopAllAnimation() {
+        const clips = this.animation.clips;
+        clips.forEach(clip => this.animation.getState(clip.name).stop());
     }
 
     update(deltaTime: number) {

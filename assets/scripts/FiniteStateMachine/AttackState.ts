@@ -8,6 +8,7 @@ export class AttackState implements IState {
         console.log("進入 Attack 狀態");
         // 執行攻擊行為，例如產生子彈或播放攻擊動畫
         // 攻擊邏輯可以根據需求擴充
+        player.onAttack();
     }
     update(player: Player, deltaTime: number): void {
         // 攻擊結束後返回 Idle 狀態 (或根據情境返回其他狀態)
@@ -24,8 +25,12 @@ export class AttackState implements IState {
             }
             bulletScript.init(player.node.position, player.FaceToRight);
             bulletScript.setDestroyEvent(destroy.bind(this));
+            if (player.Health == 0) return; //暫時測試用
+            setTimeout(() => {
+                player.stateMachine.changeState(player.stateMachine.lastState);
+            }, player.CoolDownTime * 1000);
         }
-        player.stateMachine.changeState(player.stateMachine.lastState);
+        //todo: 玩家若死亡要切換至死亡狀態機
     }
     exit(player: Player): void {
         console.log("離開 Attack 狀態");
