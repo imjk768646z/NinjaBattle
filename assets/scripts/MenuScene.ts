@@ -13,6 +13,7 @@ export class MenuScene extends Component {
 
     private websocketConn: WebSocketConnection = null;
     private join: Node = null;
+    private quit: Node = null;
 
     onLoad() {
         console.log("MenuScene onLoad");
@@ -24,12 +25,36 @@ export class MenuScene extends Component {
 
         this.websocketConn.addMessageListener("MenuScene", this.onMessage.bind(this));
         this.join = this.node.getChildByName("Join");
+        this.join.active = true;
+        this.quit = this.node.getChildByName("Quit");
+        this.quit.active = false;
+
         this.join.on(NodeEventType.TOUCH_END, () => {
             Socket.sendJoinPacket();
+            this.deactivateButton(this.join);
+            this.activateButton(this.quit)
         })
 
+        this.quit.on(NodeEventType.TOUCH_END, () => {
+            Socket.sendQuit();
+            this.deactivateButton(this.quit);
+            this.activateButton(this.join);
+        })
 
         // console.log("Animation Clips:", clips)
+    }
+
+    private activateButton(button: Node) {
+        button.active = true;
+    }
+
+    private deactivateButton(button: Node) {
+        button.active = false;
+    }
+
+    public reset() {
+        this.join.active = true;
+        this.quit.active = false;
     }
 
     async start() {

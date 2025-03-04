@@ -1,5 +1,5 @@
 import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, Node, RigidBody2D } from 'cc';
-import { PHY_GROUP } from './Player';
+import { PHY_GROUP } from './Definition';
 const { ccclass, property } = _decorator;
 
 @ccclass('HealthBuff')

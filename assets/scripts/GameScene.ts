@@ -120,7 +120,7 @@ export class GameScene extends Component {
                 console.log("[死亡]封包 body:", msg, "五秒後退回主菜單");
                 this.resetPlayer();
                 this.resetCamera();
-                //todo: 退回菜單 + 重置腳色狀態(控制權、重生位置)
+                //todo: 退回菜單 + 重置腳色狀態(控制權、重生位置) 倒數五秒後切換場景
                 director.loadScene("MenuScene", this.switch2MenuScene.bind(this));
                 break;
             case Action.Damage:
@@ -160,6 +160,7 @@ export class GameScene extends Component {
         const menuScene = director.getScene().getChildByName("Canvas").getComponent(MenuScene);;
         if (menuScene) {
             WebSocketManager.getWebSocketConn.removeListener("GameScene");
+            menuScene.reset();
             console.log("切換場景至 MenuScene");
         }
     }

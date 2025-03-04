@@ -16,6 +16,9 @@ export namespace protobuf {
 
         /** Join AllPlayers */
         AllPlayers?: (string[]|null);
+
+        /** Join IsQuit */
+        IsQuit?: (boolean|null);
     }
 
     /** Represents a Join. */
@@ -35,6 +38,9 @@ export namespace protobuf {
 
         /** Join AllPlayers. */
         public AllPlayers: string[];
+
+        /** Join IsQuit. */
+        public IsQuit: boolean;
 
         /**
          * Creates a new Join instance using the specified properties.

@@ -13,7 +13,17 @@ export class Socket {
 
     public static sendJoinPacket() {
         let join = new protobuf.protobuf.Join();
+        join.IsQuit = false;
         console.log("Send Packet [Join]:", protobuf.protobuf.Join.encode(join).finish());
+
+        let packet = new Packet(Action.Join, protobuf.protobuf.Join.encode(join).finish());
+        this.websocketConn.sendPacket(packet);
+    }
+
+    public static sendQuit() {
+        let join = new protobuf.protobuf.Join();
+        join.IsQuit = true;
+        console.log("Send Packet [Quit]:", protobuf.protobuf.Join.encode(join).finish());
 
         let packet = new Packet(Action.Join, protobuf.protobuf.Join.encode(join).finish());
         this.websocketConn.sendPacket(packet);

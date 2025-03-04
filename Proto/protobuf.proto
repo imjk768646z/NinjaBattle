@@ -6,6 +6,7 @@ message Join {
   string ID = 1;                   //玩家ID
   string GameState = 2;            //遊戲狀態：wait/start
   repeated string AllPlayers = 3;  //房間內所有玩家
+  bool IsQuit = 4;
 }
 
 message Move {

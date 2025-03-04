@@ -27,6 +27,7 @@ $root.protobuf = (function() {
          * @property {string|null} [ID] Join ID
          * @property {string|null} [GameState] Join GameState
          * @property {Array.<string>|null} [AllPlayers] Join AllPlayers
+         * @property {boolean|null} [IsQuit] Join IsQuit
          */
 
         /**
@@ -70,6 +71,14 @@ $root.protobuf = (function() {
         Join.prototype.AllPlayers = $util.emptyArray;
 
         /**
+         * Join IsQuit.
+         * @member {boolean} IsQuit
+         * @memberof protobuf.Join
+         * @instance
+         */
+        Join.prototype.IsQuit = false;
+
+        /**
          * Creates a new Join instance using the specified properties.
          * @function create
          * @memberof protobuf.Join
@@ -100,6 +109,8 @@ $root.protobuf = (function() {
             if (message.AllPlayers != null && message.AllPlayers.length)
                 for (var i = 0; i < message.AllPlayers.length; ++i)
                     writer.uint32(/* id 3, wireType 2 =*/26).string(message.AllPlayers[i]);
+            if (message.IsQuit != null && Object.hasOwnProperty.call(message, "IsQuit"))
+                writer.uint32(/* id 4, wireType 0 =*/32).bool(message.IsQuit);
             return writer;
         };
 
@@ -146,6 +157,10 @@ $root.protobuf = (function() {
                         if (!(message.AllPlayers && message.AllPlayers.length))
                             message.AllPlayers = [];
                         message.AllPlayers.push(reader.string());
+                        break;
+                    }
+                case 4: {
+                        message.IsQuit = reader.bool();
                         break;
                     }
                 default:
@@ -196,6 +211,9 @@ $root.protobuf = (function() {
                     if (!$util.isString(message.AllPlayers[i]))
                         return "AllPlayers: string[] expected";
             }
+            if (message.IsQuit != null && message.hasOwnProperty("IsQuit"))
+                if (typeof message.IsQuit !== "boolean")
+                    return "IsQuit: boolean expected";
             return null;
         };
 
@@ -222,6 +240,8 @@ $root.protobuf = (function() {
                 for (var i = 0; i < object.AllPlayers.length; ++i)
                     message.AllPlayers[i] = String(object.AllPlayers[i]);
             }
+            if (object.IsQuit != null)
+                message.IsQuit = Boolean(object.IsQuit);
             return message;
         };
 
@@ -243,6 +263,7 @@ $root.protobuf = (function() {
             if (options.defaults) {
                 object.ID = "";
                 object.GameState = "";
+                object.IsQuit = false;
             }
             if (message.ID != null && message.hasOwnProperty("ID"))
                 object.ID = message.ID;
@@ -253,6 +274,8 @@ $root.protobuf = (function() {
                 for (var j = 0; j < message.AllPlayers.length; ++j)
                     object.AllPlayers[j] = message.AllPlayers[j];
             }
+            if (message.IsQuit != null && message.hasOwnProperty("IsQuit"))
+                object.IsQuit = message.IsQuit;
             return object;
         };
 
