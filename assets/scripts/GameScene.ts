@@ -24,13 +24,19 @@ export class GameScene extends Component {
     @property(Prefab)
     private healthBuff: Prefab = null;
 
+    private gameResult: Node = null;
+    private countDownTime: number = 5;
+    private countDownStartTime: number = 5;
+
     private websocketConn: WebSocketConnection = null;
 
     onLoad() {
-
+        this.gameResult = this.node.getChildByName("GameResult");
+        this.gameResult.active = false;
     }
 
     public init() {
+        this.gameResult.active = false;
         // setting websocketConn
         this.websocketConn = WebSocketManager.getWebSocketConn;
         this.websocketConn.addMessageListener("GameScene", this.onMessage.bind(this));
@@ -118,10 +124,21 @@ export class GameScene extends Component {
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Die.decode(bodyArray);
                 console.log("[死亡]封包 body:", msg, "五秒後退回主菜單");
+                // todo: 結算贏輸+新增畫面
+                this.gameResult.active = true;
+                // 重置腳色狀態、控制權、相機位置
                 this.resetPlayer();
                 this.resetCamera();
-                //todo: 退回菜單 + 重置腳色狀態(控制權、重生位置) 倒數五秒後切換場景
-                director.loadScene("MenuScene", this.switch2MenuScene.bind(this));
+                // 倒數五秒後切換場景
+                this.schedule(() => {
+                    if (this.countDownTime == 0) {
+                        director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
+                        return;
+                    }
+                    // todo: 顯示倒數秒數
+                    console.log("count down: ", this.countDownTime);
+                    this.countDownTime--;
+                }, 1, 5, 0);
                 break;
             case Action.Damage:
                 bodyArray = data.slice(actionLength);
@@ -157,7 +174,9 @@ export class GameScene extends Component {
     }
 
     private switch2MenuScene() {
-        const menuScene = director.getScene().getChildByName("Canvas").getComponent(MenuScene);;
+        const menuScene = director.getScene().getChildByName("Canvas").getComponent(MenuScene);
+        this.countDownTime = this.countDownStartTime;
+        this.unscheduleAllCallbacks();
         if (menuScene) {
             WebSocketManager.getWebSocketConn.removeListener("GameScene");
             menuScene.reset();
@@ -165,9 +184,7 @@ export class GameScene extends Component {
         }
     }
 
-    // todo: 玩家離線或遊戲結束後需要重置相機的位置
     private resetCamera() {
-        console.log("重置相機");
         this.camera.setParent(this.node);
         this.camera.setPosition(0, 0, 0);
     }
