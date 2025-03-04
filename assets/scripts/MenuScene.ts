@@ -1,4 +1,4 @@
-import { _decorator, Animation, Component, director, Node, NodeEventType, resources, SpriteFrame, Vec3 } from 'cc';
+import { _decorator, Animation, Component, director, Node, NodeEventType, resources, SpriteFrame, tween, Vec3 } from 'cc';
 import { Packet, WebSocketConnection } from './Connection/WebSocketConnection';
 import { Action, ActionReverseMap } from './Definition';
 import protobuf from '../../Proto/protobuf.js';
@@ -14,6 +14,7 @@ export class MenuScene extends Component {
     private websocketConn: WebSocketConnection = null;
     private join: Node = null;
     private quit: Node = null;
+    private loadingRoom: Node = null;
 
     onLoad() {
         console.log("MenuScene onLoad");
@@ -25,20 +26,31 @@ export class MenuScene extends Component {
 
         this.websocketConn.addMessageListener("MenuScene", this.onMessage.bind(this));
         this.join = this.node.getChildByName("Join");
-        this.join.active = true;
         this.quit = this.node.getChildByName("Quit");
+        this.loadingRoom = this.node.getChildByName("LoadingRoom");
+        this.join.active = true;
         this.quit.active = false;
+        this.loadingRoom.active = false;
 
         this.join.on(NodeEventType.TOUCH_END, () => {
             Socket.sendJoinPacket();
             this.deactivateButton(this.join);
-            this.activateButton(this.quit)
+            this.activateButton(this.quit);
+            this.scheduleOnce(() => {
+                this.loadingRoom.active = true;
+                tween(this.loadingRoom)
+                    .by(1, { angle: -360 })
+                    .repeatForever()
+                    .start();
+            })
         })
 
         this.quit.on(NodeEventType.TOUCH_END, () => {
             Socket.sendQuit();
             this.deactivateButton(this.quit);
             this.activateButton(this.join);
+            this.loadingRoom.active = false;
+            this.unscheduleAllCallbacks();
         })
 
         // console.log("Animation Clips:", clips)
@@ -55,6 +67,7 @@ export class MenuScene extends Component {
     public reset() {
         this.join.active = true;
         this.quit.active = false;
+        this.loadingRoom.active = false;
     }
 
     async start() {
@@ -102,6 +115,7 @@ export class MenuScene extends Component {
                     if (msg.AllPlayers.length >= 2) {
                         console.log("遊戲準備開始，切換場景到GameScene");
                         // 切換場景
+                        this.unscheduleAllCallbacks();
                         director.loadScene("GameScene", this.switch2GameScene.bind(this));
                     }
                 }
