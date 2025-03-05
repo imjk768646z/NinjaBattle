@@ -161,6 +161,12 @@ export class GameScene extends Component {
                 console.log("[獲得血量]封包 body:", msg);
                 EventManager.dispathEvent(EventName.TakeHealth, msg.ID, msg.Health);
                 break;
+            case Action.Error:
+                bodyArray = data.slice(actionLength);
+                msg = protobuf.protobuf.Error.decode(bodyArray);
+                console.log("[錯誤]封包 body:", msg);
+                //todo: 取消玩家控制權 退回菜單
+                break;
             default:
                 console.error("未處理封包:", action);
                 break;

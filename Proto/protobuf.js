@@ -2302,6 +2302,209 @@ $root.protobuf = (function() {
         return PositionInfo;
     })();
 
+    protobuf.Error = (function() {
+
+        /**
+         * Properties of an Error.
+         * @memberof protobuf
+         * @interface IError
+         * @property {string|null} [ErrorMsg] Error ErrorMsg
+         */
+
+        /**
+         * Constructs a new Error.
+         * @memberof protobuf
+         * @classdesc Represents an Error.
+         * @implements IError
+         * @constructor
+         * @param {protobuf.IError=} [properties] Properties to set
+         */
+        function Error(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Error ErrorMsg.
+         * @member {string} ErrorMsg
+         * @memberof protobuf.Error
+         * @instance
+         */
+        Error.prototype.ErrorMsg = "";
+
+        /**
+         * Creates a new Error instance using the specified properties.
+         * @function create
+         * @memberof protobuf.Error
+         * @static
+         * @param {protobuf.IError=} [properties] Properties to set
+         * @returns {protobuf.Error} Error instance
+         */
+        Error.create = function create(properties) {
+            return new Error(properties);
+        };
+
+        /**
+         * Encodes the specified Error message. Does not implicitly {@link protobuf.Error.verify|verify} messages.
+         * @function encode
+         * @memberof protobuf.Error
+         * @static
+         * @param {protobuf.IError} message Error message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Error.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.ErrorMsg != null && Object.hasOwnProperty.call(message, "ErrorMsg"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.ErrorMsg);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Error message, length delimited. Does not implicitly {@link protobuf.Error.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof protobuf.Error
+         * @static
+         * @param {protobuf.IError} message Error message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Error.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes an Error message from the specified reader or buffer.
+         * @function decode
+         * @memberof protobuf.Error
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {protobuf.Error} Error
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Error.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.protobuf.Error();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.ErrorMsg = reader.string();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes an Error message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof protobuf.Error
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {protobuf.Error} Error
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Error.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies an Error message.
+         * @function verify
+         * @memberof protobuf.Error
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Error.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.ErrorMsg != null && message.hasOwnProperty("ErrorMsg"))
+                if (!$util.isString(message.ErrorMsg))
+                    return "ErrorMsg: string expected";
+            return null;
+        };
+
+        /**
+         * Creates an Error message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof protobuf.Error
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {protobuf.Error} Error
+         */
+        Error.fromObject = function fromObject(object) {
+            if (object instanceof $root.protobuf.Error)
+                return object;
+            var message = new $root.protobuf.Error();
+            if (object.ErrorMsg != null)
+                message.ErrorMsg = String(object.ErrorMsg);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from an Error message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof protobuf.Error
+         * @static
+         * @param {protobuf.Error} message Error
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Error.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.ErrorMsg = "";
+            if (message.ErrorMsg != null && message.hasOwnProperty("ErrorMsg"))
+                object.ErrorMsg = message.ErrorMsg;
+            return object;
+        };
+
+        /**
+         * Converts this Error to JSON.
+         * @function toJSON
+         * @memberof protobuf.Error
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Error.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for Error
+         * @function getTypeUrl
+         * @memberof protobuf.Error
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        Error.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/protobuf.Error";
+        };
+
+        return Error;
+    })();
+
     return protobuf;
 })();
 

@@ -9,6 +9,7 @@ export enum Action {
     Damage = '1008',
     HealthBuff = '1009',
     HealthGet = '1010',
+    Error = '1011',
 }
 
 export const ActionReverseMap = {
@@ -22,6 +23,7 @@ export const ActionReverseMap = {
     '1008': 'Damage',
     '1009': 'HealthBuff',
     '1010': 'HealthGet',
+    '1011': 'Error',
 }
 
 export const PHY_GROUP = {

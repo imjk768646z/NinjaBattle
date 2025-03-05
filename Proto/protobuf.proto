@@ -51,3 +51,7 @@ message PositionInfo {
   double X = 2;
   double Y = 3;
 }
+
+message Error {
+  string ErrorMsg = 1;
+}
