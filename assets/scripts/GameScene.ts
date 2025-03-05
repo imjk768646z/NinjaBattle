@@ -126,20 +126,24 @@ export class GameScene extends Component {
                 msg = protobuf.protobuf.Die.decode(bodyArray);
                 console.log("[死亡]封包 body:", msg, "五秒後退回主菜單");
                 // todo: 結算贏輸+新增畫面
-                this.gameResult.active = true;
-                // 重置腳色狀態、控制權、相機位置
-                this.resetPlayer();
-                this.resetCamera();
-                // 倒數五秒後切換場景
-                this.schedule(() => {
-                    if (this.countDownTime == 0) {
-                        director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
-                        return;
-                    }
-                    // todo: 顯示倒數秒數
-                    console.log("count down: ", this.countDownTime);
-                    this.countDownTime--;
-                }, 1, 5, 0);
+                this.disablePlayer(); //取消玩家控制權
+                setTimeout(() => {
+                    this.gameResult.active = true;
+                    // 重置腳色狀態、相機位置
+                    this.resetPlayer();
+                    this.resetCamera();
+                    // 倒數五秒後切換場景
+                    this.schedule(() => {
+                        if (this.countDownTime == 0) {
+                            director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
+                            return;
+                        }
+                        // todo: 顯示倒數秒數
+                        console.log("count down: ", this.countDownTime);
+                        this.countDownTime--;
+                    }, 1, 5, 0);
+                }, 2000);
+
                 break;
             case Action.Damage:
                 bodyArray = data.slice(actionLength);
@@ -211,6 +215,13 @@ export class GameScene extends Component {
         this.players.forEach(value => {
             let player = value.getComponent(Player);
             player.resetPlayer();
+        })
+    }
+
+    private disablePlayer() {
+        this.players.forEach(value => {
+            let player = value.getComponent(Player);
+            player.closePlayerControll = value;
         })
     }
 

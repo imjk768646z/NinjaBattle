@@ -135,18 +135,17 @@ export class Player extends Component {
         // this.schedule(this.posInfoPackHandler, 5, macro.REPEAT_FOREVER, 1);
     }
 
-    /* set offPlayerControll(player: Node) {
+    set closePlayerControll(player: Node) {
         this.player = player;
         this.rigidBody = this.player.getComponent(RigidBody2D);
         this.collider = this.player.getComponent(Collider2D);
-        // 註冊碰撞偵測，當碰撞時設置 onGround = true
         if (this.collider) {
             this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             this.collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
         }
         input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
         input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
-    } */
+    }
 
     set setPlayerOtherControll(player: Node) {
         this.player = player;
@@ -175,12 +174,12 @@ export class Player extends Component {
         this._playerID = "";
         this.health = this.healthMax;
         this.healthProgressBar.progress = this.health / this.healthMax;
-        if (this.collider) {
+        /* if (this.collider) {
             this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             this.collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
         }
         input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
-        input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
+        input.off(Input.EventType.KEY_UP, this.onKeyUp, this); */
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -330,6 +329,7 @@ export class Player extends Component {
             console.log(`玩家${id} 剩餘血量${this.health}`);
             let progress = this.health / 100;
             this.healthProgressBar.progress = progress;
+            //todo: 新增死亡狀態機 並播放死亡動畫
             if (this.health == 0 && this.isSelfControl) Socket.sendDiePacket();
         }
     }
