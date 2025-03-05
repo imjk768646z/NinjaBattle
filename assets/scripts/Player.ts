@@ -42,7 +42,7 @@ export class Player extends Component {
     private coolDownTime: number = 0.5;  //攻擊冷卻時間(單位：秒)
     private rigidBody: RigidBody2D = null;
     private collider: Collider2D = null;
-    private onGround: boolean = true; // 是否接觸地面(腳色出現時可能尚未落地，必須改為落地後重設onGround)
+    private onGround: boolean = false; // 是否接觸地面
     private serverPosition: Vec3 = null; //後端發來的位置封包
     private isSelfControl: boolean = false;
     private Delta: number = 0;
