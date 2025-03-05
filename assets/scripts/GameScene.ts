@@ -1,4 +1,4 @@
-import { _decorator, BoxCollider2D, Camera, Component, director, EventKeyboard, KeyCode, Label, macro, Node, NodeEventType, PolygonCollider2D, Prefab, UITransform, Vec3 } from 'cc';
+import { _decorator, BoxCollider2D, Camera, Component, director, EventKeyboard, KeyCode, Label, macro, Node, NodeEventType, PolygonCollider2D, Prefab, ProgressBar, UITransform, Vec3 } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
 import { EventManager, EventName } from './Singleton/EventManager';
@@ -47,6 +47,7 @@ export class GameScene extends Component {
             console.log("!! Scale:", player.PlayerScale)
             playerNode.getComponent(BoxCollider2D).size.x = playerNode.getComponent(UITransform).contentSize.x * player.PlayerScale;
             playerNode.getComponent(BoxCollider2D).size.y = playerNode.getComponent(UITransform).contentSize.y * player.PlayerScale;
+            playerNode.getComponent(ProgressBar).totalLength = playerNode.getComponent(ProgressBar).totalLength * player.PlayerScale;
             playerNode.setScale(player.PlayerScale, player.PlayerScale, player.PlayerScale);
         })
     }

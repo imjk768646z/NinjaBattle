@@ -51,12 +51,12 @@ export class Player extends Component {
 
     private health: number = 100;
     private healthMax: number = 100;
-    private healthBar: ProgressBar = null;
+    private healthProgressBar: ProgressBar = null;
 
     onLoad() {
         this.animation = this.node.getChildByName("Animation").getComponent(Animation);
         this.playerWidth = this.node.getChildByName("Animation").getComponent(UITransform).contentSize.width;
-        this.healthBar = this.node.getComponent(ProgressBar);
+        this.healthProgressBar = this.node.getComponent(ProgressBar);
         this.rigidBody = this.node.getComponent(RigidBody2D);
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
         AddEvent(EventName.KeyUp, this.onServerKeyUp.bind(this));
@@ -174,7 +174,7 @@ export class Player extends Component {
         this.player = null;
         this._playerID = "";
         this.health = this.healthMax;
-        this.healthBar.progress = this.health / this.healthMax;
+        this.healthProgressBar.progress = this.health / this.healthMax;
         if (this.collider) {
             this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             this.collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
@@ -329,7 +329,7 @@ export class Player extends Component {
             this.health -= damagePower;
             console.log(`玩家${id} 剩餘血量${this.health}`);
             let progress = this.health / 100;
-            this.healthBar.progress = progress;
+            this.healthProgressBar.progress = progress;
             if (this.health == 0 && this.isSelfControl) Socket.sendDiePacket();
         }
     }
@@ -342,7 +342,7 @@ export class Player extends Component {
             this.health += healthQuantity;
             console.log(`玩家${id} 補血後血量${this.health}`);
             let progress = this.health / 100;
-            this.healthBar.progress = progress;
+            this.healthProgressBar.progress = progress;
         }
     }
 
