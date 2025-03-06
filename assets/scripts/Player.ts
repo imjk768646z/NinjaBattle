@@ -168,8 +168,8 @@ export class Player extends Component {
     }
 
     public resetPlayer() {
-        this.player.position = this.spawnPoint;
-        this.rigidBody.linearVelocity = new Vec2(0, 10); //施加一點跳躍力讓玩家能自然墜落
+        // this.player.position = this.spawnPoint;
+        // this.rigidBody.linearVelocity = new Vec2(0, 10); //施加一點跳躍力讓玩家能自然墜落
         this.player = null;
         this._playerID = "";
         this.health = this.healthMax;
@@ -330,6 +330,7 @@ export class Player extends Component {
             let progress = this.health / 100;
             this.healthProgressBar.progress = progress;
             //todo: 新增死亡狀態機 並播放死亡動畫
+            if (this.health == 0) console.log(`玩家${id} 播放死亡動畫`);
             if (this.health == 0 && this.isSelfControl) Socket.sendDiePacket();
         }
     }

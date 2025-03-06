@@ -10,6 +10,7 @@ import { getValue, ModelKey } from './Model/Model';
 import { Action, ActionReverseMap } from './Definition';
 import { Socket } from './Command/Socket';
 import { MenuScene } from './MenuScene';
+import { GameResult } from './GameResult';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameScene')
@@ -36,7 +37,6 @@ export class GameScene extends Component {
     }
 
     public init() {
-        this.gameResult.active = false;
         // setting websocketConn
         this.websocketConn = WebSocketManager.getWebSocketConn;
         this.websocketConn.addMessageListener("GameScene", this.onMessage.bind(this));
@@ -124,10 +124,12 @@ export class GameScene extends Component {
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Die.decode(bodyArray);
                 console.log("[死亡]封包 body:", msg, "五秒後退回主菜單");
-                // todo: 結算贏輸+新增畫面
                 this.disablePlayer(); //取消玩家控制權
+
                 setTimeout(() => {
                     this.gameResult.active = true;
+                    let gameResultInstance = this.gameResult.getComponent(GameResult);
+                    gameResultInstance.showScore(msg.ID);
                     // 重置腳色狀態、相機位置
                     this.resetPlayer();
                     this.resetCamera();
@@ -137,12 +139,10 @@ export class GameScene extends Component {
                             director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
                             return;
                         }
-                        // todo: 顯示倒數秒數
-                        console.log("count down: ", this.countDownTime);
+                        gameResultInstance.showCountDown(this.countDownTime);
                         this.countDownTime--;
                     }, 1, 5, 0);
                 }, 2000);
-
                 break;
             case Action.Damage:
                 bodyArray = data.slice(actionLength);
