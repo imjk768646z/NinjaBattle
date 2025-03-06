@@ -44,7 +44,6 @@ export class GameScene extends Component {
         this.setPlayerController();
         this.players.forEach(playerNode => {
             let player = playerNode.getComponent(Player);
-            console.log("!! Scale:", player.PlayerScale)
             playerNode.getComponent(BoxCollider2D).size.x = playerNode.getComponent(UITransform).contentSize.x * player.PlayerScale;
             playerNode.getComponent(BoxCollider2D).size.y = playerNode.getComponent(UITransform).contentSize.y * player.PlayerScale;
             playerNode.getComponent(ProgressBar).totalLength = playerNode.getComponent(ProgressBar).totalLength * player.PlayerScale;
