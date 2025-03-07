@@ -1,6 +1,6 @@
-import { _decorator, Animation, Component, director, Node, NodeEventType, resources, SpriteFrame, tween, Vec3 } from 'cc';
+import { _decorator, Animation, Component, director, Label, Node, NodeEventType, resources, SpriteFrame, tween, Vec3 } from 'cc';
 import { Packet, WebSocketConnection } from './Connection/WebSocketConnection';
-import { Action, ActionReverseMap } from './Definition';
+import { Action, ActionReverseMap, MsgCode, MsgType } from './Definition';
 import protobuf from '../../Proto/protobuf.js';
 import { GameScene } from './GameScene';
 import { WebSocketManager } from './Connection/WebSocketManager';
@@ -15,6 +15,9 @@ export class MenuScene extends Component {
     private join: Node = null;
     private quit: Node = null;
     private loadingRoom: Node = null;
+    private searchingTime: number = 1; //尋找玩家時間(單位:分鐘)
+    private isGameStart: boolean = false;
+    private msgBox: Node = null;
 
     onLoad() {
         console.log("MenuScene onLoad");
@@ -24,34 +27,20 @@ export class MenuScene extends Component {
         // setWebsocket2Socket
         Socket.WebsocketConn = this.websocketConn;
 
-        this.websocketConn.addMessageListener("MenuScene", this.onMessage.bind(this));
+        this.websocketConn.addListener("onopen", this.onOpen.bind(this));
+        this.websocketConn.addListener("onmessage", this.onMessage.bind(this));
+        this.websocketConn.addListener("onclose", this.onClose.bind(this));
         this.join = this.node.getChildByName("Join");
         this.quit = this.node.getChildByName("Quit");
         this.loadingRoom = this.node.getChildByName("LoadingRoom");
+        this.msgBox = this.node.getChildByName("MsgBox");
         this.join.active = true;
         this.quit.active = false;
         this.loadingRoom.active = false;
+        this.msgBox.active = false;
 
-        this.join.on(NodeEventType.TOUCH_END, () => {
-            Socket.sendJoinPacket();
-            this.deactivateButton(this.join);
-            this.activateButton(this.quit);
-            this.scheduleOnce(() => {
-                this.loadingRoom.active = true;
-                tween(this.loadingRoom)
-                    .by(1, { angle: -360 })
-                    .repeatForever()
-                    .start();
-            })
-        })
-
-        this.quit.on(NodeEventType.TOUCH_END, () => {
-            Socket.sendQuit();
-            this.deactivateButton(this.quit);
-            this.activateButton(this.join);
-            this.loadingRoom.active = false;
-            this.unscheduleAllCallbacks();
-        })
+        this.join.on(NodeEventType.TOUCH_END, this.onJoin.bind(this));
+        this.quit.on(NodeEventType.TOUCH_END, this.onQuit.bind(this));
 
         // console.log("Animation Clips:", clips)
     }
@@ -64,10 +53,58 @@ export class MenuScene extends Component {
         button.active = false;
     }
 
+    private onJoin() {
+        if (this.websocketConn.ReadyState == WebSocket.CONNECTING || this.websocketConn.ReadyState == WebSocket.CLOSED) {
+            this.showMsgBox(MsgType.WebSocketClose);
+            return;
+        }
+
+        if (this.websocketConn.ReadyState == WebSocket.OPEN) {
+            Socket.sendJoinPacket();
+            this.deactivateButton(this.join);
+            this.activateButton(this.quit);
+            this.startSearch();
+            this.scheduleOnce(() => {
+                this.loadingRoom.active = true;
+                tween(this.loadingRoom)
+                    .by(1, { angle: -360 })
+                    .repeatForever()
+                    .start();
+            })
+        }
+    }
+
+    private onQuit() {
+        Socket.sendQuit();
+        this.deactivateButton(this.quit);
+        this.activateButton(this.join);
+        this.loadingRoom.active = false;
+        this.unscheduleAllCallbacks();
+    }
+
+    private startSearch() {
+        setTimeout(() => {
+            if (!this.isGameStart) {
+                Socket.sendQuit();
+                this.deactivateButton(this.quit);
+                this.activateButton(this.join);
+                this.loadingRoom.active = false;
+                this.unscheduleAllCallbacks();
+                this.showMsgBox(MsgType.NoPlayer);
+            }
+        }, this.searchingTime * 1000 * 60);
+    }
+
+    private showMsgBox(message: MsgType) {
+        this.msgBox.active = true;
+        this.msgBox.getChildByName("Content").getChildByName("message").getComponent(Label).string = MsgCode[message];
+    }
+
     public reset() {
         this.join.active = true;
         this.quit.active = false;
         this.loadingRoom.active = false;
+        this.isGameStart = false;
     }
 
     async start() {
@@ -88,6 +125,10 @@ export class MenuScene extends Component {
         // animationComponent.stop();
         // animationComponent.getState("walk").play();
         // animationComponent.getState("idle").play();
+    }
+
+    private onOpen(event) {
+        console.log("✅ [MenuScene] 連線成功！", event);
     }
 
     private onMessage(event) {
@@ -114,6 +155,7 @@ export class MenuScene extends Component {
                 if (msg.GameState == "start") {
                     if (msg.AllPlayers.length >= 2) {
                         console.log("遊戲準備開始，切換場景到GameScene");
+                        this.isGameStart = true;
                         // 切換場景
                         this.unscheduleAllCallbacks();
                         director.loadScene("GameScene", this.switch2GameScene.bind(this));
@@ -125,10 +167,16 @@ export class MenuScene extends Component {
         }
     }
 
+    private onClose(event) {
+        console.log("❌ [MenuScene] 連線已關閉");
+        this.showMsgBox(MsgType.WebSocketClose);
+    }
+
     private switch2GameScene() {
         const gameScene = director.getScene().getChildByName("Canvas").getComponent(GameScene);
         if (gameScene) {
-            WebSocketManager.getWebSocketConn.removeListener("MenuScene");
+            // WebSocketManager.getWebSocketConn.removeListener("MenuScene");
+            WebSocketManager.getWebSocketConn.removeAllListener();
             gameScene.init();
         }
     }

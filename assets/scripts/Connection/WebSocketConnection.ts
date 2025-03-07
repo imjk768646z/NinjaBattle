@@ -8,37 +8,34 @@ export class WebSocketConnection {
         // this._websocket = new WebSocket('wss://將後端網址放在這');
         this._websocket.binaryType = "arraybuffer"; // 指定接收的二進位資料型態
 
-        this._websocket.onopen = (res) => {
-            console.log("ლ(´ڡ`ლ) 連線成功！", res);
+        this._websocket.onopen = (event) => {
+            this.executListener("onopen", event);
         };
 
         this._websocket.onmessage = (event) => {
-            this.notifyListeners(event);
+            this.executListener("onmessage", event);
         }
 
-        this._websocket.onclose = () => {
-            console.log("❌ 連線已關閉");
+        this._websocket.onclose = (event) => {
+            this.executListener("onclose", event);
         };
     }
 
-    // 訂閱 WebSocket 訊息
-    public addMessageListener(event: string, callback: Function) {
+    public addListener(event: string, callback: Function) {
         this._listener.set(event, callback);
-        console.log("listener add", this._listener);
+        console.log("add listener:", this._listener);
     }
 
-    // 通知所有訂閱者
-    private notifyListeners(event: MessageEvent) {
-        this._listener.forEach(callback => {
-            callback(event);
-        })
+    private executListener(eventName: string, eventParam: any) {
+        let callback = this._listener.get(eventName);
+        callback(eventParam);
     }
 
-    public removeListener(event) {
-        if (this._listener.has(event)) {
-            this._listener.delete(event);
+    public removeAllListener() {
+        if (this._listener) {
+            this._listener.clear();
+            console.log("remove listener:", this._listener);
         }
-        console.log("listener remove", this._listener);
     }
 
     public sendPacket(packet: Packet) {
@@ -67,6 +64,10 @@ export class WebSocketConnection {
         } else {
             console.error("WebSocket 尚未連線");
         }
+    }
+
+    public get ReadyState(): number {
+        return this._websocket.readyState;
     }
 }
 

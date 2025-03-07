@@ -39,7 +39,9 @@ export class GameScene extends Component {
     public init() {
         // setting websocketConn
         this.websocketConn = WebSocketManager.getWebSocketConn;
-        this.websocketConn.addMessageListener("GameScene", this.onMessage.bind(this));
+        this.websocketConn.addListener("onopen", this.onOpen.bind(this));
+        this.websocketConn.addListener("onmessage", this.onMessage.bind(this));
+        this.websocketConn.addListener("onclose", this.onClose.bind(this));
         // setPlayerController
         this.setPlayerController();
         this.players.forEach(playerNode => {
@@ -75,6 +77,10 @@ export class GameScene extends Component {
                 console.log("已設定玩家控制權，遊戲準備開始");
             }
         }
+    }
+
+    private onOpen(event) {
+        console.log("✅ [GameScene] 連線成功！", event);
     }
 
     private onMessage(event) {
@@ -176,6 +182,11 @@ export class GameScene extends Component {
         }
     }
 
+    private onClose(event) {
+        console.log("❌ [GameScene] 連線已關閉");
+        //todo: 彈出視窗 顯示網路斷線
+    }
+
     start() {
         // 模擬遊戲結束後退回菜單
         /* setTimeout(() => {
@@ -188,7 +199,7 @@ export class GameScene extends Component {
         this.countDownTime = this.countDownStartTime;
         this.unscheduleAllCallbacks();
         if (menuScene) {
-            WebSocketManager.getWebSocketConn.removeListener("GameScene");
+            WebSocketManager.getWebSocketConn.removeAllListener();
             menuScene.reset();
             console.log("切換場景至 MenuScene");
         }

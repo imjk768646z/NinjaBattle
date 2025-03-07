@@ -381,7 +381,7 @@ export class Player extends Component {
 
             if (this.Delta >= this.updateFrequency) {
                 this.Delta = 0;
-                // if (this.isSelfControl) this.posInfoPackHandler(this.player.position); //暫時關閉(開啟後會定時更新玩家位置)
+                // if (this.isSelfControl) Socket.sendPosInfoPacket(this.player.position); //暫時關閉(開啟後會定時更新玩家位置)
                 // console.log("C2S 玩家位置", this.player.position);
             }
 
