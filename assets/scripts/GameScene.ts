@@ -142,12 +142,12 @@ export class GameScene extends Component {
                     this.gameResult.active = true;
                     let gameResultInstance = this.gameResult.getComponent(GameResult);
                     gameResultInstance.showScore(msg.ID);
-                    // 重置腳色狀態、相機位置
-                    this.resetPlayer();
-                    this.resetCamera();
                     // 倒數五秒後切換場景
                     this.schedule(() => {
                         if (this.countDownTime == 0) {
+                            // 重置腳色狀態、相機位置
+                            this.resetPlayer();
+                            this.resetCamera();
                             director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
                             return;
                         }

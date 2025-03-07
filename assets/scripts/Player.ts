@@ -137,6 +137,8 @@ export class Player extends Component {
 
     set closePlayerControll(player: Node) {
         this.player = player;
+        this.moveLeft = false;
+        this.moveRight = false;
         this.rigidBody = this.player.getComponent(RigidBody2D);
         this.collider = this.player.getComponent(Collider2D);
         if (this.collider) {
