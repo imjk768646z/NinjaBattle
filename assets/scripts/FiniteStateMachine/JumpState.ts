@@ -2,14 +2,21 @@ import { AttackState } from "./AttackState";
 import { IdleState } from "./IdleState";
 import { IState } from "./IState";
 import { Player } from "../Player";
+import { DieState } from "./DieState";
 
 export class JumpState implements IState {
     enter(player: Player): void {
         console.log("進入 Jump 狀態");
-        // 這邊已在按鍵事件中觸發跳躍力，此處僅作狀態紀錄
         player.onJump();
     }
+
     update(player: Player, deltaTime: number): void {
+        // 若血量歸零則切換到 Die 狀態
+        if (player.Health == 0) {
+            player.stateMachine.changeState(new DieState());
+            return;
+        }
+
         let velocity = player.RigidBody.linearVelocity;
         if (player.MoveRight) {
             velocity.x = player.WalkSpeed;
@@ -24,11 +31,12 @@ export class JumpState implements IState {
         if (player.OnGround) {
             player.stateMachine.changeState(new IdleState());
         }
-
+        // 若開始攻擊則切換到 Attack 狀態
         if (player.OnFight) {
             player.stateMachine.changeState(new AttackState());
         }
     }
+
     exit(player: Player): void {
         console.log("離開 Jump 狀態");
     }

@@ -34,7 +34,7 @@ export class Player extends Component {
     private animation: Animation = null;
     private _playerID: string = "";
     private player: Node = null;
-    private moveRight: boolean = false; //todo: 只需要留下往右 取反就是往左
+    private moveRight: boolean = false;
     private moveLeft: boolean = false;
 
     private onFight: boolean = false;
