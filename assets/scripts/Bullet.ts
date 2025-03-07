@@ -12,7 +12,9 @@ export class Bullet extends Component {
     private rigidBody: RigidBody2D = null;
     private collider: BoxCollider2D = null;
     private isGoRight: boolean = false;
-    private offset: number = 100;
+    private offset: number = 62;
+    private rotationSpeed: number = 135;
+    private delayTime: number = 0.5;
 
     private destroyBullet: Function = null;
 
@@ -40,6 +42,9 @@ export class Bullet extends Component {
             this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             this.collider.on(Contact2DType.END_CONTACT, this.onEndContact, this);
         }
+        this.scheduleOnce(() => {
+            this.rigidBody!.enabledContactListener = true;
+        }, this.delayTime);
     }
 
     start() {
@@ -65,6 +70,7 @@ export class Bullet extends Component {
         if (this.isGoRight) velocity.x = this.moveSpeed;
         else velocity.x = -this.moveSpeed;
 
+        this.node.angle -= this.rotationSpeed * deltaTime;
         this.rigidBody.linearVelocity = velocity;
     }
 
