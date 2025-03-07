@@ -7,10 +7,11 @@ import { HealthBuff } from './HealthBuff';
 import { WebSocketConnection } from './Connection/WebSocketConnection';
 import { WebSocketManager } from './Connection/WebSocketManager';
 import { getValue, ModelKey } from './Model/Model';
-import { Action, ActionReverseMap } from './Definition';
+import { Action, ActionReverseMap, MsgCode, MsgType } from './Definition';
 import { Socket } from './Command/Socket';
 import { MenuScene } from './MenuScene';
 import { GameResult } from './GameResult';
+import { MsgBox } from './MsgBox';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameScene')
@@ -30,15 +31,20 @@ export class GameScene extends Component {
     private countDownStartTime: number = 5;
 
     private websocketConn: WebSocketConnection = null;
+    private msgBox: Node = null;
 
     onLoad() {
         this.gameResult = this.node.getChildByName("GameResult");
         this.gameResult.active = false;
+        this.msgBox = this.node.getChildByName("MsgBox");
+        let msgBoxInstance = this.msgBox.getComponent(MsgBox);
+        msgBoxInstance.setCloseHandler(this.quitGameScene.bind(this));
     }
 
     public init() {
         // setting websocketConn
         this.websocketConn = WebSocketManager.getWebSocketConn;
+        this.websocketConn.removeAllListener();
         this.websocketConn.addListener("onopen", this.onOpen.bind(this));
         this.websocketConn.addListener("onmessage", this.onMessage.bind(this));
         this.websocketConn.addListener("onclose", this.onClose.bind(this));
@@ -175,6 +181,8 @@ export class GameScene extends Component {
                 msg = protobuf.protobuf.Error.decode(bodyArray);
                 console.log("[錯誤]封包 body:", msg);
                 //todo: 取消玩家控制權 退回菜單
+                this.disablePlayer();
+                this.showMsgBox(MsgType.PlayerIsLeft);
                 break;
             default:
                 console.error("未處理封包:", action);
@@ -184,7 +192,8 @@ export class GameScene extends Component {
 
     private onClose(event) {
         console.log("❌ [GameScene] 連線已關閉");
-        //todo: 彈出視窗 顯示網路斷線
+        this.showMsgBox(MsgType.WebSocketClose);
+        this.disablePlayer();
     }
 
     start() {
@@ -194,31 +203,42 @@ export class GameScene extends Component {
         }, 3000); */
     }
 
+    private showMsgBox(message: MsgType) {
+        this.msgBox.active = true;
+        this.msgBox.getChildByName("Content").getChildByName("message").getComponent(Label).string = MsgCode[message];
+    }
+
+    private quitGameScene() {
+        // 重置腳色狀態、相機位置
+        this.resetPlayer();
+        this.resetCamera();
+        director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
+    }
+
     private switch2MenuScene() {
         const menuScene = director.getScene().getChildByName("Canvas").getComponent(MenuScene);
         this.countDownTime = this.countDownStartTime;
         this.unscheduleAllCallbacks();
         if (menuScene) {
-            WebSocketManager.getWebSocketConn.removeAllListener();
             menuScene.reset();
             console.log("切換場景至 MenuScene");
         }
-    }
-
-    private resetCamera() {
-        this.camera.setParent(this.node);
-        this.camera.setPosition(0, 0, 0);
     }
 
     generateHealthBuff(position: Vec3) {
         let nodePool = NodePoolManager.getNodePoolMgr();
         let healthBuff = nodePool.createNode("HealthBuff", this.node.getChildByName("HealthBuffCollection"), this.healthBuff);
         healthBuff.position = position;
-        let healthBuffScript = healthBuff.getComponent(HealthBuff);
+        let healthBuffInstance = healthBuff.getComponent(HealthBuff);
         let destroy = function () {
             if (healthBuff) nodePool.returnNode("HealthBuff", healthBuff);
         }
-        healthBuffScript.setDestroyEvent(destroy.bind(this));
+        healthBuffInstance.setDestroyEvent(destroy.bind(this));
+    }
+
+    private resetCamera() {
+        this.camera.setParent(this.node);
+        this.camera.setPosition(0, 0, 0);
     }
 
     private resetPlayer() {

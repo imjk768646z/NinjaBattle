@@ -4,6 +4,8 @@ const { ccclass, property } = _decorator;
 @ccclass('MsgBox')
 export class MsgBox extends Component {
 
+    private closeHandler: Function = null;
+
     onLoad() {
         this.drawBackgroundBody();
         this.drawCloseButton();
@@ -15,9 +17,13 @@ export class MsgBox extends Component {
 
     }
 
+    public setCloseHandler(func: Function) {
+        this.closeHandler = func;
+    }
+
     private onClose(event: EventTouch) {
-        if (event.target.name == 'Close')
-            this.node.active = false;
+        if (this.closeHandler) this.closeHandler();
+        this.node.active = false;
     }
 
     private drawBackgroundBody() {

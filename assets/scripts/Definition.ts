@@ -38,9 +38,11 @@ export const PHY_GROUP = {
 export enum MsgType {
     WebSocketClose = "WebSocketClose",
     NoPlayer = "NoPlayer",
+    PlayerIsLeft = "PlayerIsLeft",
 }
 
 export const MsgCode = {
     WebSocketClose: "連線失敗！",
-    NoPlayer: "尚未找到玩家，請重新連線。"
+    NoPlayer: "尚未找到玩家，請重新連線。",
+    PlayerIsLeft: "另一名玩家已斷線！",
 }

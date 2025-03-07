@@ -19,12 +19,12 @@ export class AttackState implements IState {
             // todo: 產生與銷毀子彈應該另外開一個腳本來執行 可以是單例模式或是中介模式
             let nodePool = NodePoolManager.getNodePoolMgr();
             let bullet = nodePool.createNode("Bullet", player.node.parent, player.Bullet);
-            let bulletScript = bullet.getComponent(Bullet);
+            let bulletInstance = bullet.getComponent(Bullet);
             let destroy = function () {
                 if (bullet) nodePool.returnNode("Bullet", bullet);
             }
-            bulletScript.init(player.node.position, player.FaceToRight);
-            bulletScript.setDestroyEvent(destroy.bind(this));
+            bulletInstance.init(player.node.position, player.FaceToRight);
+            bulletInstance.setDestroyEvent(destroy.bind(this));
             if (player.Health == 0) return; //暫時測試用
             setTimeout(() => {
                 player.stateMachine.changeState(player.stateMachine.lastState);

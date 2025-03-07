@@ -23,7 +23,7 @@ export class MenuScene extends Component {
         console.log("MenuScene onLoad");
 
         this.websocketConn = WebSocketManager.getWebSocketConn;
-
+        this.websocketConn.removeAllListener();
         // setWebsocket2Socket
         Socket.WebsocketConn = this.websocketConn;
 
@@ -175,8 +175,6 @@ export class MenuScene extends Component {
     private switch2GameScene() {
         const gameScene = director.getScene().getChildByName("Canvas").getComponent(GameScene);
         if (gameScene) {
-            // WebSocketManager.getWebSocketConn.removeListener("MenuScene");
-            WebSocketManager.getWebSocketConn.removeAllListener();
             gameScene.init();
         }
     }
