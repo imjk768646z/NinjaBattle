@@ -27,7 +27,7 @@ export class AttackState implements IState {
             let destroy = function () {
                 if (bullet) nodePool.returnNode("Bullet", bullet);
             }
-            bulletInstance.init(player.node.position, player.FaceToRight);
+            bulletInstance.init(player.node.position, player.FaceToRight, player.PlayerID);
             bulletInstance.setDestroyEvent(destroy.bind(this));
             // 攻擊時血量歸零則切換到 Die 狀態
             if (player.Health == 0) {

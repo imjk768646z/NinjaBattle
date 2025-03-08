@@ -1,4 +1,4 @@
-import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, Node, Prefab, RigidBody2D, Vec3 } from 'cc';
+import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, Node, Prefab, RigidBody2D, Vec2, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Bullet')
@@ -12,9 +12,10 @@ export class Bullet extends Component {
     private rigidBody: RigidBody2D = null;
     private collider: BoxCollider2D = null;
     private isGoRight: boolean = false;
-    private offset: number = 62;
-    private rotationSpeed: number = 135;
-    private delayTime: number = 0.5;
+    private offset: number = 62;            //子彈與角色的偏移量
+    private rotationSpeed: number = 135;    //旋轉速度
+    private delayTime: number = 0.5;        //延遲開啟碰撞檢測的時間
+    private ownerID: string = "";           //子彈所屬ID(來自玩家的ID)
 
     private destroyBullet: Function = null;
 
@@ -23,7 +24,9 @@ export class Bullet extends Component {
      * @param spawnPoint 玩家當前的座標
      * @param isGoRight 玩家面朝的方向
      */
-    init(spawnPoint: Vec3, goRight: boolean) {
+    init(spawnPoint: Vec3, goRight: boolean, belongID) {
+        this.reset();
+        this.ownerID = belongID;
         let newPosition = spawnPoint;
         if (goRight) {
             this.isGoRight = true;
@@ -56,13 +59,16 @@ export class Bullet extends Component {
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        console.log("擊中:", otherCollider);
-        // todo: 若擊中玩家 該玩家要發送受傷封包
         this.scheduleOnce(this.destroyBullet, 0);
     }
 
     private onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
 
+    }
+
+    private reset() {
+        this.rigidBody.enabledContactListener = false;
+        this.rigidBody.linearVelocity = new Vec2(0, 0);
     }
 
     update(deltaTime: number) {
@@ -76,6 +82,10 @@ export class Bullet extends Component {
 
     get Damage(): number {
         return this.damage;
+    }
+
+    get OwnerID(): string {
+        return this.ownerID;
     }
 }
 

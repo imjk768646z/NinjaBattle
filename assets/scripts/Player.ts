@@ -192,8 +192,13 @@ export class Player extends Component {
         } else if (otherCollider.group === PHY_GROUP.DEFAULT) {
             console.log("接觸玩家");
         } else if (otherCollider.group === PHY_GROUP.BULLET) {
-            let damageOfBullet = otherCollider.node.getComponent(Bullet).Damage;
-            if (this.isSelfControl) Socket.sendDamagePacket(damageOfBullet);
+            let bulletInstance = otherCollider.node.getComponent(Bullet);
+            if (this._playerID == bulletInstance.OwnerID) { //無視被自己射出的子彈給擊中
+                return;
+            } else {
+                let damageOfBullet = otherCollider.node.getComponent(Bullet).Damage;
+                if (this.isSelfControl) Socket.sendDamagePacket(damageOfBullet);
+            }
         } else if (otherCollider.group === PHY_GROUP.BUFF) {
             let healthOfBuff = otherCollider.node.getComponent(HealthBuff).Health;
             if (this.isSelfControl) Socket.sendHealthGetPacket(healthOfBuff);

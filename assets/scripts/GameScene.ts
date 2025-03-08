@@ -147,7 +147,7 @@ export class GameScene extends Component {
                         if (this.countDownTime == 0) {
                             // 重置腳色狀態、相機位置
                             this.resetPlayer();
-                            this.resetCamera();
+                            this.resetCamera(); //todo: 重置相機位置的時機要調整 因為玩家有可能跑到地圖邊界 如果此時遊戲結束會看不到輸贏畫面
                             director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
                             return;
                         }
