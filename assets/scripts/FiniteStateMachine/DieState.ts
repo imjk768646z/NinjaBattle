@@ -4,7 +4,7 @@ import { IState } from "./IState";
 export class DieState implements IState {
     enter(player: Player): void {
         console.log("進入 Die 狀態");
-        // player.onDie(); //todo: 補上死亡動畫
+        player.onDie();
     }
 
     update(player: Player, deltaTime: number): void {

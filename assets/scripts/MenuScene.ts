@@ -112,7 +112,7 @@ export class MenuScene extends Component {
         let map = getValue<Map<string, SpriteFrame[]>>(ModelKey.NinjaClipMap);
         console.log("Ninja Walking:", map);
 
-        let animationComponent = this.node.getChildByName("Node-001").getComponent(Animation);
+        let animationComponent = this.node.getChildByName("Node-002").getComponent(Animation);
         let clips = animationComponent.clips;
         console.log("Ninja clips:", clips);
 

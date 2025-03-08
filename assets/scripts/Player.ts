@@ -370,6 +370,11 @@ export class Player extends Component {
         this.animation.getState("throw").play();
     }
 
+    public onDie() {
+        this.stopAllAnimation();
+        this.animation.getState("die").play();
+    }
+
     private stopAllAnimation() {
         const clips = this.animation.clips;
         clips.forEach(clip => this.animation.getState(clip.name).stop());

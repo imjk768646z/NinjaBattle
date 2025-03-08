@@ -363,6 +363,10 @@
       {
         "__uuid__": "223d29bb-6991-415c-bb5e-1ac3b71f3ca6",
         "__expectedType__": "cc.AnimationClip"
+      },
+      {
+        "__uuid__": "8a05f31d-f79b-44bb-95b6-625eebb4a90e",
+        "__expectedType__": "cc.AnimationClip"
       }
     ],
     "_defaultClip": {
