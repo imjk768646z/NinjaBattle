@@ -1,4 +1,4 @@
-import { _decorator, BoxCollider2D, Camera, Component, director, EventKeyboard, KeyCode, Label, macro, Node, NodeEventType, PolygonCollider2D, Prefab, ProgressBar, UITransform, Vec3 } from 'cc';
+import { _decorator, Animation, AnimationClip, BoxCollider2D, Camera, Component, director, EventKeyboard, KeyCode, Label, macro, Node, NodeEventType, PolygonCollider2D, Prefab, ProgressBar, UITransform, Vec3 } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
 import { EventManager, EventName } from './Singleton/EventManager';
@@ -57,6 +57,13 @@ export class GameScene extends Component {
             playerNode.getComponent(ProgressBar).totalLength = playerNode.getComponent(ProgressBar).totalLength * player.PlayerScale;
             playerNode.setScale(player.PlayerScale, player.PlayerScale, player.PlayerScale);
         })
+        // setting Player's Animation Clips
+        // todo: 建立角色設定檔 依照設定檔設定角色大小及動畫
+        let animationClips = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
+        let mariaAniClips = animationClips.get("Maria_Animation");
+        let shinzoAniClips = animationClips.get("Shinzo_Animation");
+        this.players[0].getChildByName("Animation").getComponent(Animation).clips = mariaAniClips;
+        this.players[1].getChildByName("Animation").getComponent(Animation).clips = shinzoAniClips;
     }
 
     private setPlayerController() {

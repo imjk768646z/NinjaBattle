@@ -53,6 +53,26 @@ export class LoadRes extends Component {
 
     private loadShinzoAnimationClips() {
         return new Promise(res => {
+            resources.loadDir("/animation_clips/ninja_shinzo", AnimationClip, async (err, clips) => {
+                if (err) {
+                    res(null);
+                } else {
+                    console.log("! shinzo clips:", clips)
+                    let map = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
+                    if (map == null) {
+                        map = new Map<string, AnimationClip[]>();
+                    }
+                    map.set("Shinzo_Animation", clips);
+                    setValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation, map);
+                    await this.nextLoad("", false);
+                    res(clips);
+                }
+            })
+        })
+    }
+
+    private loadTest() {
+        return new Promise(res => {
             setTimeout(async () => {
                 await this.nextLoad("", false);
                 res("success");
