@@ -1,4 +1,4 @@
-import { _decorator, Animation, Component, director, Label, Node, NodeEventType, resources, SpriteFrame, tween, Vec3 } from 'cc';
+import { _decorator, Animation, AnimationClip, Component, director, Label, Node, NodeEventType, resources, SpriteFrame, tween, Vec3 } from 'cc';
 import { Packet, WebSocketConnection } from './Connection/WebSocketConnection';
 import { Action, ActionReverseMap, MsgCode, MsgType } from './Definition';
 import protobuf from '../../Proto/protobuf.js';
@@ -6,10 +6,14 @@ import { GameScene } from './GameScene';
 import { WebSocketManager } from './Connection/WebSocketManager';
 import { getValue, ModelKey, setValue } from './Model/Model';
 import { Socket } from './Command/Socket';
+import { LoadRes } from './LoadRes';
 const { ccclass, property } = _decorator;
 
 @ccclass('MenuScene')
 export class MenuScene extends Component {
+
+    @property(LoadRes)
+    private loadRes: LoadRes = null;
 
     private websocketConn: WebSocketConnection = null;
     private join: Node = null;
@@ -41,8 +45,16 @@ export class MenuScene extends Component {
 
         this.join.on(NodeEventType.TOUCH_END, this.onJoin.bind(this));
         this.quit.on(NodeEventType.TOUCH_END, this.onQuit.bind(this));
+    }
 
-        // console.log("Animation Clips:", clips)
+    async start() {
+        console.log("MenuScene start");
+        let isLoaded = getValue<boolean>(ModelKey.IsLoaded);
+        if (isLoaded) this.loadRes.node.active = false;
+        else await this.loadRes!.load();
+
+        let map = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
+        console.log("Maria_Animation:", map);
     }
 
     private activateButton(button: Node) {
@@ -107,26 +119,6 @@ export class MenuScene extends Component {
         this.isGameStart = false;
     }
 
-    async start() {
-        await this.loadImg();
-        let map = getValue<Map<string, SpriteFrame[]>>(ModelKey.NinjaClipMap);
-        console.log("Ninja Walking:", map);
-
-        let animationComponent = this.node.getChildByName("Node-002").getComponent(Animation);
-        let clips = animationComponent.clips;
-        console.log("Ninja clips:", clips);
-
-        /* clips.forEach(clip => {
-            if (clip.name == "idle") {
-                console.log("idle clip:", clip);
-                console.log("idle state:", animationComponent.getState("idle"));
-            }
-        }) */
-        // animationComponent.stop();
-        // animationComponent.getState("walk").play();
-        // animationComponent.getState("idle").play();
-    }
-
     private onOpen(event) {
         console.log("✅ [MenuScene] 連線成功！", event);
     }
@@ -177,29 +169,6 @@ export class MenuScene extends Component {
         if (gameScene) {
             gameScene.init();
         }
-    }
-
-    private async loadImg() {
-        return new Promise(res => {
-            resources.loadDir("/images/ninja-maria/walking", SpriteFrame, (err, sprite) => {
-                if (err) {
-                    res(null);
-                } else {
-                    /* audio.forEach((audio) => {
-                        // GameModel.Inst.AudioAssets.set(audio.name, audio);
-                        AudioEngineControl.getInstance().setAudioTask(audio.name, audio);
-                    }) */
-                    res(sprite);
-                    let map = getValue<Map<string, SpriteFrame[]>>(ModelKey.NinjaClipMap);
-                    if (map == null) {
-                        map = new Map<string, SpriteFrame[]>();
-                    }
-                    map.set("Ninja_Walking", sprite);
-                    setValue<Map<string, SpriteFrame[]>>(ModelKey.NinjaClipMap, map);
-                    // console.log("sprite:", sprite);
-                }
-            })
-        })
     }
 
     update(deltaTime: number) {
