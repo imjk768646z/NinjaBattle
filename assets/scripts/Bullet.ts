@@ -1,4 +1,6 @@
 import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, Node, Prefab, RigidBody2D, Vec2, Vec3 } from 'cc';
+import { PHY_GROUP } from './Definition';
+import { Player } from './Player';
 const { ccclass, property } = _decorator;
 
 @ccclass('Bullet')
@@ -45,9 +47,6 @@ export class Bullet extends Component {
             this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             this.collider.on(Contact2DType.END_CONTACT, this.onEndContact, this);
         }
-        this.scheduleOnce(() => {
-            this.rigidBody!.enabledContactListener = true;
-        }, this.delayTime);
     }
 
     start() {
@@ -59,7 +58,13 @@ export class Bullet extends Component {
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        this.scheduleOnce(this.destroyBullet, 0);
+        if (otherCollider.group === PHY_GROUP.PLAYER) {
+            let player = otherCollider.node.getComponent(Player);
+            if (this.ownerID == player.PlayerID) return;   //子彈擊中玩家自己則不銷毀
+            else this.scheduleOnce(this.destroyBullet, 0); //擊中其他玩家則銷毀
+        } else {
+            this.scheduleOnce(this.destroyBullet, 0);      //擊中玩家以外的物體也要銷毀
+        }
     }
 
     private onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -67,7 +72,6 @@ export class Bullet extends Component {
     }
 
     private reset() {
-        this.rigidBody.enabledContactListener = false;
         this.rigidBody.linearVelocity = new Vec2(0, 0);
     }
 
