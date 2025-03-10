@@ -7,7 +7,7 @@ import { HealthBuff } from './HealthBuff';
 import { WebSocketConnection } from './Connection/WebSocketConnection';
 import { WebSocketManager } from './Connection/WebSocketManager';
 import { getValue, ModelKey } from './Model/Model';
-import { Action, ActionReverseMap, MsgCode, MsgType } from './Definition';
+import { Action, ActionReverseMap, MsgCode, MsgType, PlayerSetting } from './Definition';
 import { Socket } from './Command/Socket';
 import { MenuScene } from './MenuScene';
 import { GameResult } from './GameResult';
@@ -50,20 +50,17 @@ export class GameScene extends Component {
         this.websocketConn.addListener("onclose", this.onClose.bind(this));
         // setPlayerController
         this.setPlayerController();
-        this.players.forEach(playerNode => {
+        this.players.forEach((playerNode, index) => {
             let player = playerNode.getComponent(Player);
+            // setting palyer's size
             playerNode.getComponent(BoxCollider2D).size.x = playerNode.getComponent(UITransform).contentSize.x * player.PlayerScale;
             playerNode.getComponent(BoxCollider2D).size.y = playerNode.getComponent(UITransform).contentSize.y * player.PlayerScale;
             playerNode.getComponent(ProgressBar).totalLength = playerNode.getComponent(ProgressBar).totalLength * player.PlayerScale;
             playerNode.setScale(player.PlayerScale, player.PlayerScale, player.PlayerScale);
+            // setting palyer's animation
+            let animationClips = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
+            playerNode.getChildByName("Animation").getComponent(Animation).clips = animationClips.get(PlayerSetting[index]["name"]);
         })
-        // setting Player's Animation Clips
-        // todo: 建立角色設定檔 依照設定檔設定角色大小及動畫
-        let animationClips = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
-        let mariaAniClips = animationClips.get("Maria_Animation");
-        let shinzoAniClips = animationClips.get("Shinzo_Animation");
-        this.players[0].getChildByName("Animation").getComponent(Animation).clips = mariaAniClips;
-        this.players[1].getChildByName("Animation").getComponent(Animation).clips = shinzoAniClips;
     }
 
     private setPlayerController() {

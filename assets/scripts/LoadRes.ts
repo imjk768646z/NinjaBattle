@@ -37,12 +37,11 @@ export class LoadRes extends Component {
                 if (err) {
                     res(null);
                 } else {
-                    console.log("! maria clips:", clips)
                     let map = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
                     if (map == null) {
                         map = new Map<string, AnimationClip[]>();
                     }
-                    map.set("Maria_Animation", clips);
+                    map.set("ninja_maria", clips);
                     setValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation, map);
                     await this.nextLoad("載入動畫 Shinzo", true);
                     res(clips);
@@ -57,12 +56,11 @@ export class LoadRes extends Component {
                 if (err) {
                     res(null);
                 } else {
-                    console.log("! shinzo clips:", clips)
                     let map = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
                     if (map == null) {
                         map = new Map<string, AnimationClip[]>();
                     }
-                    map.set("Shinzo_Animation", clips);
+                    map.set("ninja_shinzo", clips);
                     setValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation, map);
                     await this.nextLoad("", false);
                     res(clips);

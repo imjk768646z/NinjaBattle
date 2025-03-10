@@ -35,6 +35,11 @@ export const PHY_GROUP = {
     BUFF: 1 << 5,
 }
 
+export const PlayerSetting = [
+    { name: "ninja_maria" },
+    { name: "ninja_shinzo" },
+]
+
 export enum MsgType {
     WebSocketClose = "WebSocketClose",
     NoPlayer = "NoPlayer",
