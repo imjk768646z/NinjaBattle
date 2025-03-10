@@ -23,7 +23,7 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 207
+      "__id__": 203
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -54,7 +54,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 211
+      "__id__": 210
     },
     "_id": "8325229a-dc1e-441d-a736-f556b3c8fb4a"
   },
@@ -102,24 +102,21 @@
       },
       {
         "__id__": 190
-      },
-      {
-        "__id__": 199
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 203
+        "__id__": 199
       },
       {
-        "__id__": 204
+        "__id__": 200
       },
       {
-        "__id__": 205
+        "__id__": 201
       },
       {
-        "__id__": 206
+        "__id__": 202
       }
     ],
     "_prefab": null,
@@ -2385,8 +2382,7 @@
     "instance": {
       "__id__": 147
     },
-    "targetOverrides": null,
-    "nestedPrefabInstanceRoots": null
+    "targetOverrides": null
   },
   {
     "__type__": "cc.PrefabInstance",
@@ -2515,8 +2511,7 @@
     "instance": {
       "__id__": 157
     },
-    "targetOverrides": null,
-    "nestedPrefabInstanceRoots": null
+    "targetOverrides": null
   },
   {
     "__type__": "cc.PrefabInstance",
@@ -3708,130 +3703,6 @@
     "value": false
   },
   {
-    "__type__": "cc.Node",
-    "_name": "TestAni",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "_parent": {
-      "__id__": 2
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [
-      {
-        "__id__": 200
-      },
-      {
-        "__id__": 201
-      },
-      {
-        "__id__": 202
-      }
-    ],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_mobility": 0,
-    "_layer": 33554432,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_id": "16HXwBB6NGp7U1B6Ws8E3v"
-  },
-  {
-    "__type__": "cc.UITransform",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 199
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "_contentSize": {
-      "__type__": "cc.Size",
-      "width": 100,
-      "height": 100
-    },
-    "_anchorPoint": {
-      "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
-    },
-    "_id": "46z9JG091EZqflOorhscBJ"
-  },
-  {
-    "__type__": "cc.Sprite",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 199
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "_customMaterial": null,
-    "_srcBlendFactor": 2,
-    "_dstBlendFactor": 4,
-    "_color": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_spriteFrame": null,
-    "_type": 0,
-    "_fillType": 0,
-    "_sizeMode": 1,
-    "_fillCenter": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_fillStart": 0,
-    "_fillRange": 0,
-    "_isTrimmedMode": true,
-    "_useGrayscale": false,
-    "_atlas": null,
-    "_id": "0cltZOX99JcJcofJq7TPSL"
-  },
-  {
-    "__type__": "cc.Animation",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 199
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "playOnLoad": false,
-    "_clips": [],
-    "_defaultClip": null,
-    "_id": "4eYwTA6BJG+ZAc1SvVmhgC"
-  },
-  {
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
@@ -3934,7 +3805,10 @@
     "instance": null,
     "targetOverrides": [
       {
-        "__id__": 208
+        "__id__": 204
+      },
+      {
+        "__id__": 207
       }
     ],
     "nestedPrefabInstanceRoots": [
@@ -4003,7 +3877,7 @@
       "__id__": 145
     },
     "sourceInfo": {
-      "__id__": 209
+      "__id__": 205
     },
     "propertyPath": [
       "_barSprite"
@@ -4012,7 +3886,7 @@
       "__id__": 145
     },
     "targetInfo": {
-      "__id__": 210
+      "__id__": 206
     }
   },
   {
@@ -4028,30 +3902,61 @@
     ]
   },
   {
+    "__type__": "cc.TargetOverrideInfo",
+    "source": {
+      "__id__": 145
+    },
+    "sourceInfo": {
+      "__id__": 208
+    },
+    "propertyPath": [
+      "bleedEffect"
+    ],
+    "target": {
+      "__id__": 145
+    },
+    "targetInfo": {
+      "__id__": 209
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "33FF8+kChEJqL5oGqLUBe3"
+    ]
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "f8aEYPM8hPc4Cw/xvKs8jA",
+      "4amBzcme5PF4Gm3Nb5IX1Y"
+    ]
+  },
+  {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 212
+      "__id__": 211
     },
     "shadows": {
-      "__id__": 213
+      "__id__": 212
     },
     "_skybox": {
-      "__id__": 214
+      "__id__": 213
     },
     "fog": {
-      "__id__": 215
+      "__id__": 214
     },
     "octree": {
-      "__id__": 216
+      "__id__": 215
     },
     "skin": {
-      "__id__": 217
+      "__id__": 216
     },
     "lightProbeInfo": {
-      "__id__": 218
+      "__id__": 217
     },
     "postSettings": {
-      "__id__": 219
+      "__id__": 218
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false

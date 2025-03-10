@@ -1,4 +1,4 @@
-import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, ProgressBar, RigidBody2D, UITransform, Vec2, Vec3, Animation, Sprite } from 'cc';
+import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, ProgressBar, RigidBody2D, UITransform, Vec2, Vec3, Animation, Sprite, ParticleSystem2D } from 'cc';
 import { AddEvent, EventManager, EventName } from './Singleton/EventManager';
 import { NodePoolManager } from './Singleton/NodePoolManager';
 import { StateMachine } from './FiniteStateMachine/StateMachine';
@@ -20,6 +20,10 @@ export class Player extends Component {
 
     @property(Prefab)
     private bullet: Prefab = null;
+
+    //todo: 改變流血特效的圖片
+    @property(Node)
+    private bleedEffect: Node = null;
 
     @property({ tooltip: "面朝方向" })
     private faceToRight: boolean = false;
@@ -172,6 +176,7 @@ export class Player extends Component {
     public resetPlayer() {
         // this.player.position = this.spawnPoint;
         // this.rigidBody.linearVelocity = new Vec2(0, 10); //施加一點跳躍力讓玩家能自然墜落
+        this.unscheduleAllCallbacks();
         this.player = null;
         this._playerID = "";
         this.health = this.healthMax;
@@ -336,7 +341,7 @@ export class Player extends Component {
             console.log(`玩家${id} 剩餘血量${this.health}`);
             let progress = this.health / 100;
             this.healthProgressBar.progress = progress;
-            //todo: 新增死亡狀態機 並播放死亡動畫
+            this.bleedControll();
             if (this.health == 0) console.log(`玩家${id} 播放死亡動畫`);
             if (this.health == 0 && this.isSelfControl) Socket.sendDiePacket();
         }
@@ -351,6 +356,14 @@ export class Player extends Component {
             console.log(`玩家${id} 補血後血量${this.health}`);
             let progress = this.health / 100;
             this.healthProgressBar.progress = progress;
+        }
+    }
+
+    private bleedControll() {
+        this.bleedEffect.active = !this.bleedEffect.active;
+        if (this.bleedEffect.active) {
+            const ps = this.bleedEffect.getComponent(ParticleSystem2D);
+            this.scheduleOnce(this.bleedControll.bind(this), ps.life);
         }
     }
 
