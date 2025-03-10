@@ -147,6 +147,7 @@ export class MenuScene extends Component {
                 if (msg.GameState == "start") {
                     if (msg.AllPlayers.length >= 2) {
                         console.log("遊戲準備開始，切換場景到GameScene");
+                        this.quit.active = false; //配對成功後關閉「退出」按鈕
                         this.isGameStart = true;
                         // 切換場景
                         this.unscheduleAllCallbacks();
