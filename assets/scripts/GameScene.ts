@@ -1,4 +1,4 @@
-import { _decorator, Animation, AnimationClip, BoxCollider2D, Camera, Component, director, EventKeyboard, KeyCode, Label, macro, Node, NodeEventType, PolygonCollider2D, Prefab, ProgressBar, UITransform, Vec3 } from 'cc';
+import { _decorator, Animation, AnimationClip, BoxCollider2D, Component, director, EventKeyboard, KeyCode, Label, Node, Prefab, ProgressBar, UITransform, Vec3 } from 'cc';
 import { default as protobuf } from '../../Proto/protobuf.js';
 import { Player } from './Player';
 import { EventManager, EventName } from './Singleton/EventManager';
@@ -8,10 +8,10 @@ import { WebSocketConnection } from './Connection/WebSocketConnection';
 import { WebSocketManager } from './Connection/WebSocketManager';
 import { getValue, ModelKey } from './Model/Model';
 import { Action, ActionReverseMap, MsgCode, MsgType, PlayerSetting } from './Definition';
-import { Socket } from './Command/Socket';
 import { MenuScene } from './MenuScene';
 import { GameResult } from './GameResult';
 import { MsgBox } from './MsgBox';
+import { CameraController } from './CameraController';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameScene')
@@ -20,12 +20,10 @@ export class GameScene extends Component {
     @property(Node)
     private players: Node[] = [];
 
-    @property(Node)
-    private camera: Node = null;
-
     @property(Prefab)
     private healthBuff: Prefab = null;
 
+    private cameraController: CameraController = null;
     private gameResult: Node = null;
     private countDownTime: number = 5;
     private countDownStartTime: number = 5;
@@ -39,6 +37,7 @@ export class GameScene extends Component {
         this.msgBox = this.node.getChildByName("MsgBox");
         let msgBoxInstance = this.msgBox.getComponent(MsgBox);
         msgBoxInstance.setCloseHandler(this.quitGameScene.bind(this));
+        this.cameraController = this.node.getChildByName("Camera").getComponent(CameraController);
     }
 
     public init() {
@@ -76,8 +75,7 @@ export class GameScene extends Component {
                         console.log("我的ID為:", playerUUID, "使用腳色", [index]);
                         player.setPlayerSelfControll = this.players[index];
                         // 設定相機跟隨玩家的移動
-                        this.camera.setParent(this.players[index]);
-                        // this.camera.setPosition(0, 1800, 0); //解析度改為1920*1080後 重設相機位置無效
+                        this.cameraController.setPlayer = this.players[index];
                     } else {
                         console.log("另一個玩家ID是", uuid, "他使用腳色", [index]);
                         player.setPlayerOtherControll = this.players[index];
@@ -143,6 +141,7 @@ export class GameScene extends Component {
                 this.disablePlayer(); //取消玩家控制權
 
                 setTimeout(() => {
+                    this.cameraController.resetCamera();
                     this.gameResult.active = true;
                     let gameResultInstance = this.gameResult.getComponent(GameResult);
                     gameResultInstance.showScore(msg.ID);
@@ -151,7 +150,6 @@ export class GameScene extends Component {
                         if (this.countDownTime == 0) {
                             // 重置腳色狀態、相機位置
                             this.resetPlayer();
-                            this.resetCamera(); //todo: 重置相機位置的時機要調整 因為玩家有可能跑到地圖邊界 如果此時遊戲結束會看不到輸贏畫面
                             director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
                             return;
                         }
@@ -215,7 +213,7 @@ export class GameScene extends Component {
     private quitGameScene() {
         // 重置腳色狀態、相機位置
         this.resetPlayer();
-        this.resetCamera();
+        this.cameraController.resetCamera();
         director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
     }
 
@@ -238,11 +236,6 @@ export class GameScene extends Component {
             if (healthBuff) nodePool.returnNode("HealthBuff", healthBuff);
         }
         healthBuffInstance.setDestroyEvent(destroy.bind(this));
-    }
-
-    private resetCamera() {
-        this.camera.setParent(this.node);
-        this.camera.setPosition(0, 0, 0);
     }
 
     private resetPlayer() {
