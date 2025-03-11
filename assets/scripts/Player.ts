@@ -21,7 +21,6 @@ export class Player extends Component {
     @property(Prefab)
     private bullet: Prefab = null;
 
-    //todo: 改變流血特效的圖片
     @property(Node)
     private bleedEffect: Node = null;
 
