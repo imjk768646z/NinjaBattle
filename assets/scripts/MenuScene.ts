@@ -36,9 +36,9 @@ export class MenuScene extends Component {
         this.websocketConn.addListener("onopen", this.onOpen.bind(this));
         this.websocketConn.addListener("onmessage", this.onMessage.bind(this));
         this.websocketConn.addListener("onclose", this.onClose.bind(this));
-        this.join = this.node.getChildByName("Join");
-        this.quit = this.node.getChildByName("Quit");
-        this.loadingRoom = this.node.getChildByName("LoadingRoom");
+        this.join = this.node.getChildByName("Button").getChildByName("Join");
+        this.quit = this.node.getChildByName("Button").getChildByName("Quit");
+        this.loadingRoom = this.node.getChildByName("Button").getChildByName("LoadingRoom");
         this.msgBox = this.node.getChildByName("MsgBox");
         this.join.active = true;
         this.quit.active = false;
