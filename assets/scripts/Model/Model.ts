@@ -2,6 +2,7 @@ export enum ModelKey {
     IsLoaded,
     NinjaClipMap,
     NinjaAnimation,
+    SpriteMap,
     JoinPacket,
     PlayerUUID,
 }

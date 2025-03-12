@@ -7,6 +7,7 @@ import { WebSocketManager } from './Connection/WebSocketManager';
 import { getValue, ModelKey, setValue } from './Model/Model';
 import { Socket } from './Command/Socket';
 import { LoadRes } from './LoadRes';
+import { BackgroundController } from './Controller/BackgroundController';
 const { ccclass, property } = _decorator;
 
 @ccclass('MenuScene')
@@ -22,6 +23,7 @@ export class MenuScene extends Component {
     private searchingTime: number = 1; //尋找玩家時間(單位:分鐘)
     private isGameStart: boolean = false;
     private msgBox: Node = null;
+    private bgcInstance: BackgroundController = null;
 
     onLoad() {
         console.log("MenuScene onLoad");
@@ -42,6 +44,7 @@ export class MenuScene extends Component {
         this.quit.active = false;
         this.loadingRoom.active = false;
         this.msgBox.active = false;
+        this.bgcInstance = this.node.getChildByName("Background").getComponent(BackgroundController);
 
         this.join.on(NodeEventType.TOUCH_END, this.onJoin.bind(this));
         this.quit.on(NodeEventType.TOUCH_END, this.onQuit.bind(this));
@@ -55,6 +58,12 @@ export class MenuScene extends Component {
 
         let map = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
         console.log("Maria_Animation:", map);
+
+        let sprites = getValue<Map<string, SpriteFrame[]>>(ModelKey.SpriteMap);
+        console.log("background images:", sprites);
+        
+        // 開始播放背景動畫
+        this.bgcInstance.play();
     }
 
     private activateButton(button: Node) {

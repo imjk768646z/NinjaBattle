@@ -13,12 +13,13 @@ export class LoadRes extends Component {
     private funcs = [
         this.loadMariaAnimationClips.bind(this),
         this.loadShinzoAnimationClips.bind(this),
+        this.loadSprites.bind(this),
     ];
 
     private funcsIdx = 0;
 
     onLoad() {
-        this.progressBar = this.node.getComponent(ProgressBar);
+
     }
 
     start() {
@@ -26,8 +27,9 @@ export class LoadRes extends Component {
     }
 
     async load() {
+        this.node.active = true;
+        this.progressBar = this.node.getComponent(ProgressBar);
         //開始載入資源
-        console.log("開始載入資源");
         await this.nextLoad("載入動畫 Maria", true);
     }
 
@@ -62,8 +64,29 @@ export class LoadRes extends Component {
                     }
                     map.set("ninja_shinzo", clips);
                     setValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation, map);
-                    await this.nextLoad("", false);
+                    await this.nextLoad("載入圖片", true);
                     res(clips);
+                }
+            })
+        })
+    }
+
+    private loadSprites() {
+        return new Promise(res => {
+            resources.loadDir("/images/background", SpriteFrame, async (err, sprites) => {
+                if (err) {
+                    res(null);
+                } else {
+                    sprites.forEach(sprite => {
+                        let map = getValue<Map<string, SpriteFrame>>(ModelKey.SpriteMap);
+                        if (map == null) {
+                            map = new Map<string, SpriteFrame>();
+                        }
+                        map.set(sprite.name, sprite);
+                        setValue<Map<string, SpriteFrame>>(ModelKey.SpriteMap, map);
+                    })
+                    await this.nextLoad("", false);
+                    res(sprites);
                 }
             })
         })

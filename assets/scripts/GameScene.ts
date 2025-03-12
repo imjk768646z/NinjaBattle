@@ -11,7 +11,7 @@ import { Action, ActionReverseMap, MsgCode, MsgType, PlayerSetting } from './Def
 import { MenuScene } from './MenuScene';
 import { GameResult } from './GameResult';
 import { MsgBox } from './MsgBox';
-import { CameraController } from './CameraController';
+import { CameraController } from './Controller/CameraController';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameScene')
