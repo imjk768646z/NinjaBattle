@@ -8,9 +8,11 @@ export class MsgBox extends Component {
 
     onLoad() {
         this.drawBackgroundBody();
-        this.drawCloseButton();
+        this.drawCloseButton(new Color("#844200"));
         this.drawContentBody();
         this.node.getChildByName("Close").on(Node.EventType.TOUCH_START, this.onClose, this);
+        this.node.getChildByName("Close").on(Node.EventType.MOUSE_ENTER, this.onCloseEnter, this);
+        this.node.getChildByName("Close").on(Node.EventType.MOUSE_LEAVE, this.onCloseLeave, this);
     }
 
     start() {
@@ -26,6 +28,14 @@ export class MsgBox extends Component {
         this.node.active = false;
     }
 
+    private onCloseEnter(event: EventTouch) {
+        this.drawCloseButton(new Color("#642100"));
+    }
+
+    private onCloseLeave(event: EventTouch) {
+        this.drawCloseButton(new Color("#844200"));
+    }
+
     private drawBackgroundBody() {
         let graphics = this.node.getChildByName("BackgroundBody").getComponent(Graphics);
         let contentSize = graphics.node.getComponent(UITransform).contentSize;
@@ -38,24 +48,24 @@ export class MsgBox extends Component {
 
         graphics.clear();
         graphics.roundRect(x, y, width, height, radius);
-        graphics.fillColor = new Color(60, 60, 60, 255);
+        graphics.fillColor = new Color("#FF8000");
         graphics.fill();
     }
 
-    private drawCloseButton() {
-        let MainGraphics = this.node.getChildByName("Close").getComponent(Graphics);
-        MainGraphics.clear();
-        MainGraphics.moveTo(-5, 5);
-        MainGraphics.lineTo(5, -5);
-        MainGraphics.moveTo(5, 5);
-        MainGraphics.lineTo(-5, -5);
-        MainGraphics.lineWidth = 5;
-        MainGraphics.strokeColor = Color.GRAY;
-        MainGraphics.stroke();
+    private drawCloseButton(color: Color) {
+        let graphics = this.node.getChildByName("Close").getComponent(Graphics);
+        graphics.clear();
+        graphics.moveTo(-5, 5);
+        graphics.lineTo(5, -5);
+        graphics.moveTo(5, 5);
+        graphics.lineTo(-5, -5);
+        graphics.lineWidth = 5;
+        graphics.strokeColor = color;
+        graphics.stroke();
     }
 
     private drawContentBody() {
-        let graphics = this.node.getChildByName("Content").getComponent(Graphics);
+        let graphics = this.node.getChildByName("Content").getChildByName("Background").getComponent(Graphics);
         let contentSize = graphics.getComponent(UITransform).contentSize;
 
         let x = -(contentSize.width / 2);
@@ -65,7 +75,7 @@ export class MsgBox extends Component {
 
         graphics.clear();
         graphics.rect(x, y, width, height);
-        graphics.fillColor = new Color("#1B1C1D");
+        graphics.fillColor = new Color("#844200");
         graphics.fill();
     }
 
