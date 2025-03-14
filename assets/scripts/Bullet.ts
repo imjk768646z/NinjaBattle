@@ -60,10 +60,15 @@ export class Bullet extends Component {
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         if (otherCollider.group === PHY_GROUP.PLAYER) {
             let player = otherCollider.node.getComponent(Player);
-            if (this.ownerID == player.PlayerID) return;   //子彈擊中玩家自己則不銷毀
-            else this.scheduleOnce(this.destroyBullet, 0); //擊中其他玩家則銷毀
-        } else {
-            this.scheduleOnce(this.destroyBullet, 0);      //擊中玩家以外的物體也要銷毀
+            if (this.ownerID == player.PlayerID) { //子彈擊中玩家自己則不銷毀
+                return;   
+            } else {                               //子彈擊中其他玩家則銷毀
+                this.unschedule(this.destroyBullet);
+                this.scheduleOnce(this.destroyBullet, 0);
+            }
+        } else {                                   //擊中玩家以外的物體也要銷毀
+            this.unschedule(this.destroyBullet);
+            this.scheduleOnce(this.destroyBullet, 0); 
         }
     }
 

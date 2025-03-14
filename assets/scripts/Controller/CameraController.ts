@@ -16,10 +16,6 @@ export class CameraController extends Component {
     }
 
     update(deltaTime: number) {
-
-    }
-
-    lateUpdate(deltaTime: number) {
         if (this.player) {
             const halfOfCameraWidth = (this.cameraWidth + this.cameraWidthOffset) / 2;
             const halfOfCameraHeight = this.cameraHeight / 2;
