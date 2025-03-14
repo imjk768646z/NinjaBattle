@@ -115,8 +115,7 @@ export class LoadRes extends Component {
 
             }
         } else {
-            console.log("資源載入完成，關閉該節點")
-            //關閉該節點
+            // 資源載入完成，關閉該節點
             this.node.active = false;
             setValue<boolean>(ModelKey.IsLoaded, true);
         }

@@ -23,7 +23,7 @@ export class BackgroundController extends Component {
             this.back_end.addChild(new Node());
             let backendSp = this.back_end.children[i].addComponent(Sprite);
             if (spriteMap != null) {
-                backendSp.spriteFrame = spriteMap.get("seamless_ocean"); //todo: seamless_ocean圖片銜接的不好 需要重做
+                backendSp.spriteFrame = spriteMap.get("seamless_ocean");
             }
             const backendWidth = this.back_end.children[i].getComponent(UITransform).contentSize.width;
             this.back_end.children[i].setPosition((i * backendWidth), this.back_end.children[i].position.y, this.back_end.children[i].position.z);

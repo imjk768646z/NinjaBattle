@@ -21,12 +21,13 @@ export class MenuScene extends Component {
     private quit: Node = null;
     private loadingRoom: Node = null;
     private searchingTime: number = 1; //尋找玩家時間(單位:分鐘)
+    private searchTimeout: number = null;
     private isGameStart: boolean = false;
     private msgBox: Node = null;
     private bgcInstance: BackgroundController = null;
 
     onLoad() {
-        console.log("MenuScene onLoad");
+        // console.log("MenuScene onLoad");
 
         this.websocketConn = WebSocketManager.getWebSocketConn;
         this.websocketConn.removeAllListener();
@@ -51,17 +52,17 @@ export class MenuScene extends Component {
     }
 
     async start() {
-        console.log("MenuScene start");
+        // console.log("MenuScene start");
         let isLoaded = getValue<boolean>(ModelKey.IsLoaded);
         if (isLoaded) this.loadRes.node.active = false;
         else await this.loadRes!.load();
 
         let map = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
-        console.log("Maria_Animation:", map);
+        // console.log("Maria_Animation:", map);
 
         let sprites = getValue<Map<string, SpriteFrame[]>>(ModelKey.SpriteMap);
-        console.log("background images:", sprites);
-        
+        // console.log("background images:", sprites);
+
         // 開始播放背景動畫
         this.bgcInstance.play();
     }
@@ -101,10 +102,11 @@ export class MenuScene extends Component {
         this.activateButton(this.join);
         this.loadingRoom.active = false;
         this.unscheduleAllCallbacks();
+        if (this.searchTimeout != null) clearTimeout(this.searchTimeout);
     }
 
     private startSearch() {
-        setTimeout(() => {
+        this.searchTimeout = setTimeout(() => {
             if (!this.isGameStart) {
                 Socket.sendQuit();
                 this.deactivateButton(this.quit);
@@ -139,14 +141,14 @@ export class MenuScene extends Component {
         let action = new TextDecoder().decode(actionArray);
         let bodyArray = null;
         let msg = null;
-        console.log("封包 action:", ActionReverseMap[action]);
+        // console.log("[Packet Action]:", ActionReverseMap[action]);
 
         switch (action) {
-            case Action.Join:
+            case Action.Join: //建立/加入房間
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Join.decode(bodyArray);
                 setValue<protobuf.protobuf.Join>(ModelKey.JoinPacket, msg);
-                console.log("[加入]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 // 設定uuid
                 let uuid = getValue<string>(ModelKey.PlayerUUID);
                 if (uuid == null) {
@@ -155,25 +157,25 @@ export class MenuScene extends Component {
                 }
                 if (msg.GameState == "start") {
                     if (msg.AllPlayers.length >= 2) {
-                        console.log("遊戲準備開始，切換場景到GameScene");
                         this.quit.active = false; //配對成功後關閉「退出」按鈕
                         this.isGameStart = true;
-                        // 切換場景
                         this.unscheduleAllCallbacks();
                         director.loadScene("GameScene", this.switch2GameScene.bind(this));
                     }
                 }
                 break;
             default:
+                console.error("未處理封包:", action);
                 break;
         }
     }
 
     private onClose(event) {
-        console.log("❌ [MenuScene] 連線已關閉");
+        console.warn("❌ [MenuScene] 連線已關閉");
         this.showMsgBox(MsgType.WebSocketClose);
     }
 
+    // 切換場景至 GameScene
     private switch2GameScene() {
         const gameScene = director.getScene().getChildByName("Canvas").getComponent(GameScene);
         if (gameScene) {

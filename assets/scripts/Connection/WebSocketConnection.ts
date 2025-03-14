@@ -23,7 +23,7 @@ export class WebSocketConnection {
 
     public addListener(event: string, callback: Function) {
         this._listener.set(event, callback);
-        console.log("add listener:", this._listener);
+        // console.log("add listener:", this._listener);
     }
 
     private executListener(eventName: string, eventParam: any) {
@@ -34,7 +34,7 @@ export class WebSocketConnection {
     public removeAllListener() {
         if (this._listener) {
             this._listener.clear();
-            console.log("remove listener:", this._listener);
+            // console.log("remove listener:", this._listener);
         }
     }
 
@@ -60,7 +60,6 @@ export class WebSocketConnection {
     private sendMessage(message: Uint8Array) {
         if (this._websocket && this._websocket.readyState === WebSocket.OPEN) {
             this._websocket.send(message);
-            console.log("發送訊息:", message);
         } else {
             console.error("WebSocket 尚未連線");
         }

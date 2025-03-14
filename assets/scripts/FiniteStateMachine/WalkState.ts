@@ -7,7 +7,7 @@ import { DieState } from "./DieState";
 
 export class WalkState implements IState {
     enter(player: Player): void {
-        console.log("進入 Walk 狀態");
+        // console.log("進入 Walk 狀態");
         player.onWalk();
     }
 
@@ -43,6 +43,6 @@ export class WalkState implements IState {
     }
 
     exit(player: Player): void {
-        console.log("離開 Walk 狀態");
+        // console.log("離開 Walk 狀態");
     }
 }

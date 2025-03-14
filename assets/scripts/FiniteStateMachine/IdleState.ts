@@ -7,7 +7,7 @@ import { DieState } from "./DieState";
 
 export class IdleState implements IState {
     enter(player: Player): void {
-        console.log("進入 Idle 狀態");
+        // console.log("進入 Idle 狀態");
         player.onIdle();
     }
 
@@ -32,6 +32,6 @@ export class IdleState implements IState {
     }
 
     exit(player: Player): void {
-        console.log("離開 Idle 狀態");
+        // console.log("離開 Idle 狀態");
     }
 }

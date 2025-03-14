@@ -81,8 +81,6 @@ export class GameScene extends Component {
                         player.setPlayerOtherControll = this.players[index];
                     }
                 });
-
-                console.log("已設定玩家控制權，遊戲準備開始");
             }
         }
     }
@@ -98,46 +96,46 @@ export class GameScene extends Component {
         let action = new TextDecoder().decode(actionArray);
         let bodyArray = null;
         let msg = null;
-        console.log("封包 action:", ActionReverseMap[action]);
+        // console.log("[Packet Action]:", ActionReverseMap[action]);
 
         switch (action) {
-            case Action.Move:
+            case Action.Move: //移動
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Move.decode(bodyArray);
-                console.log("[移動]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 if (msg.IsGoRight) EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.ARROW_RIGHT, true));
                 else EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.ARROW_LEFT, true));
                 break;
-            case Action.Stop:
+            case Action.Stop: //停止移動
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Stop.decode(bodyArray);
-                console.log("[停止]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 if (msg.IsStopGoRight) EventManager.dispathEvent(EventName.KeyUp, msg.ID, new EventKeyboard(KeyCode.ARROW_RIGHT, false));
                 else EventManager.dispathEvent(EventName.KeyUp, msg.ID, new EventKeyboard(KeyCode.ARROW_LEFT, false));
                 break;
-            case Action.Jump:
+            case Action.Jump: //跳躍
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Jump.decode(bodyArray);
-                console.log("[跳躍]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.SPACE, true));
                 break;
-            case Action.PositionInfo:
+            case Action.PositionInfo: //同步位置
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.PositionInfo.decode(bodyArray);
-                console.log("[同步位置]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 let poision = new Vec3(msg.X, msg.Y, 0);
                 EventManager.dispathEvent(EventName.SyncPosition, msg.ID, poision);
                 break;
-            case Action.Attack:
+            case Action.Attack: //攻擊
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Attack.decode(bodyArray);
-                console.log("[攻擊]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 EventManager.dispathEvent(EventName.KeyDown, msg.ID, new EventKeyboard(KeyCode.KEY_X, true));
                 break;
-            case Action.Die:
+            case Action.Die: //玩家死亡
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Die.decode(bodyArray);
-                console.log("[死亡]封包 body:", msg, "五秒後退回主菜單");
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 this.disablePlayer(); //取消玩家控制權
 
                 setTimeout(() => {
@@ -158,31 +156,30 @@ export class GameScene extends Component {
                     }, 1, 5, 0);
                 }, 2000);
                 break;
-            case Action.Damage:
+            case Action.Damage: //受傷
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Damage.decode(bodyArray);
-                console.log("[受傷]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 EventManager.dispathEvent(EventName.TakeDamage, msg.ID, msg.DamagePower);
                 break;
-            case Action.HealthBuff:
+            case Action.HealthBuff: //補血包
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.HealthBuff.decode(bodyArray);
-                console.log("[補血包]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 // EventManager.dispathEvent(EventName.Damage, msg.ID, msg.DamagePower);
                 const buffPos = new Vec3(msg.X, msg.Y, 0);
                 this.generateHealthBuff(buffPos);
                 break;
-            case Action.HealthGet:
+            case Action.HealthGet: //獲得血量
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.HealthGet.decode(bodyArray);
-                console.log("[獲得血量]封包 body:", msg);
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 EventManager.dispathEvent(EventName.TakeHealth, msg.ID, msg.Health);
                 break;
-            case Action.Error:
+            case Action.Error: //錯誤
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Error.decode(bodyArray);
-                console.log("[錯誤]封包 body:", msg);
-                //todo: 取消玩家控制權 退回菜單
+                // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
                 this.disablePlayer();
                 this.showMsgBox(MsgType.PlayerIsLeft);
                 break;
@@ -193,16 +190,13 @@ export class GameScene extends Component {
     }
 
     private onClose(event) {
-        console.log("❌ [GameScene] 連線已關閉");
+        console.warn("❌ [GameScene] 連線已關閉");
         this.showMsgBox(MsgType.WebSocketClose);
         this.disablePlayer();
     }
 
     start() {
-        // 模擬遊戲結束後退回菜單
-        /* setTimeout(() => {
-            director.loadScene("MenuScene", this.switch2MenuScene.bind(this));
-        }, 3000); */
+
     }
 
     private showMsgBox(message: MsgType) {
@@ -217,13 +211,13 @@ export class GameScene extends Component {
         director.loadScene("MenuScene", this.switch2MenuScene.bind(this)); //退回菜單
     }
 
+    // 切換場景至 MenuScene
     private switch2MenuScene() {
         const menuScene = director.getScene().getChildByName("Canvas").getComponent(MenuScene);
         this.countDownTime = this.countDownStartTime;
         this.unscheduleAllCallbacks();
         if (menuScene) {
             menuScene.reset();
-            console.log("切換場景至 MenuScene");
         }
     }
 

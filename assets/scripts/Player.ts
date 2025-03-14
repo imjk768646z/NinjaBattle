@@ -189,12 +189,8 @@ export class Player extends Component {
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        // console.log("接觸地面 self:", selfCollider, "other:", otherCollider);
         if (otherCollider.group === PHY_GROUP.FLOOR) {
             this.onGround = true; // 碰到地面時，允許跳躍
-            console.log("接觸地面");
-        } else if (otherCollider.group === PHY_GROUP.DEFAULT) {
-            console.log("接觸玩家");
         } else if (otherCollider.group === PHY_GROUP.BULLET) {
             let bulletInstance = otherCollider.node.getComponent(Bullet);
             if (this._playerID == bulletInstance.OwnerID) { //無視被自己射出的子彈給擊中
@@ -210,12 +206,8 @@ export class Player extends Component {
     }
 
     private onEndContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        // console.log("離開地面 self:", selfCollider, "other:", otherCollider);
         if (otherCollider.group === PHY_GROUP.FLOOR) {
             this.onGround = false; // 離開地面時，標記為不在地面
-            console.log("離開地面");
-        } else if (otherCollider.group === PHY_GROUP.DEFAULT) {
-            console.log("離開玩家");
         }
     }
 
@@ -313,23 +305,8 @@ export class Player extends Component {
     }
 
     private flipPlayer() {
-        // if (this.faceToRight) this.node.getComponent(UITransform).setContentSize(this.playerWidth, this.node.getComponent(UITransform).contentSize.height);
-        // else this.node.getComponent(UITransform).setContentSize(-(this.playerWidth), this.node.getComponent(UITransform).contentSize.height);
-        if (this.faceToRight) {
-            // this.node.getChildByName("Animation").getComponent(UITransform).setContentSize(this.playerWidth, this.node.getChildByName("Animation").getComponent(UITransform).contentSize.height);
-            this.node.getChildByName("Animation").setScale(this.playerScale, this.playerScale, this.playerScale);
-            console.log("面向右", this.node.getChildByName("Animation").getComponent(UITransform).contentSize)
-            // this.node.setScale(this.playerScale, this.playerScale, this.playerScale);
-            // this.node.setScale(1, 1, 1);
-        }
-        else {
-            // this.node.getChildByName("Animation").getComponent(UITransform).setContentSize(-(this.playerWidth), this.node.getChildByName("Animation").getComponent(UITransform).contentSize.height);
-            // this.node.setScale(-this.playerScale, this.playerScale, this.playerScale);
-            // this.node.getComponent(UITransform).setContentSize(-246, 321);
-            // this.node.setScale(-1, 1, 1);
-            this.node.getChildByName("Animation").setScale(-this.playerScale, this.playerScale, this.playerScale);
-            console.log("面向左", this.node.getChildByName("Animation").getComponent(UITransform).contentSize)
-        }
+        if (this.faceToRight) this.node.getChildByName("Animation").setScale(this.playerScale, this.playerScale, this.playerScale);
+        else this.node.getChildByName("Animation").setScale(-this.playerScale, this.playerScale, this.playerScale);
     }
 
     private onTakeDamage(...ary: any[]) {
@@ -337,11 +314,10 @@ export class Player extends Component {
         const damagePower = ary[1];
         if (id == this._playerID) {
             this.health -= damagePower;
-            console.log(`玩家${id} 剩餘血量${this.health}`);
+            // console.log(`玩家${id} 剩餘血量${this.health}`);
             let progress = this.health / 100;
             this.healthProgressBar.progress = progress;
             this.bleedControll();
-            if (this.health == 0) console.log(`玩家${id} 播放死亡動畫`);
             if (this.health == 0 && this.isSelfControl) Socket.sendDiePacket();
         }
     }
@@ -374,7 +350,6 @@ export class Player extends Component {
     public onWalk() {
         this.stopAllAnimation();
         this.animation.getState("run").play();
-        // console.log("! play walk animation")
     }
 
     public onJump() {

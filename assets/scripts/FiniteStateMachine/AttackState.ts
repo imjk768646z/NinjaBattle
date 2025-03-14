@@ -6,7 +6,7 @@ import { DieState } from "./DieState";
 
 export class AttackState implements IState {
     enter(player: Player): void {
-        console.log("進入 Attack 狀態");
+        // console.log("進入 Attack 狀態");
         player.onAttack();
     }
 
@@ -43,6 +43,6 @@ export class AttackState implements IState {
     }
 
     exit(player: Player): void {
-        console.log("離開 Attack 狀態");
+        // console.log("離開 Attack 狀態");
     }
 }

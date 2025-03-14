@@ -6,7 +6,7 @@ import { DieState } from "./DieState";
 
 export class JumpState implements IState {
     enter(player: Player): void {
-        console.log("進入 Jump 狀態");
+        // console.log("進入 Jump 狀態");
         player.onJump();
     }
 
@@ -38,6 +38,6 @@ export class JumpState implements IState {
     }
 
     exit(player: Player): void {
-        console.log("離開 Jump 狀態");
+        // console.log("離開 Jump 狀態");
     }
 }
