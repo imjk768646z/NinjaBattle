@@ -16,7 +16,6 @@ export class Bullet extends Component {
     private isGoRight: boolean = false;
     private offset: number = 62;            //子彈與角色的偏移量
     private rotationSpeed: number = 135;    //旋轉速度
-    private delayTime: number = 0.5;        //延遲開啟碰撞檢測的時間
     private ownerID: string = "";           //子彈所屬ID(來自玩家的ID)
 
     private destroyBullet: Function = null;

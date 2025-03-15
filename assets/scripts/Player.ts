@@ -34,31 +34,27 @@ export class Player extends Component {
     private playerScale: number = 1;
 
     public stateMachine: StateMachine = null;
+    
     private animation: Animation = null;
     private _playerID: string = "";
     private player: Node = null;
     private moveRight: boolean = false;
     private moveLeft: boolean = false;
-
     private onFight: boolean = false;
     private canFight: boolean = true;
     private coolDownTime: number = 0.5;  //攻擊冷卻時間(單位：秒)
     private rigidBody: RigidBody2D = null;
     private collider: Collider2D = null;
     private onGround: boolean = false; // 是否接觸地面
-    private serverPosition: Vec3 = null; //後端發來的位置封包
     private isSelfControl: boolean = false;
     private Delta: number = 0;
-    private updateFrequency: number = 0.25;
-    private playerWidth: number = 0;
-
+    private updateFrequency: number = 0.25; //更新頻率(單位:秒)
     private health: number = 100;
     private healthMax: number = 100;
     private healthProgressBar: ProgressBar = null;
 
     onLoad() {
         this.animation = this.node.getChildByName("Animation").getComponent(Animation);
-        this.playerWidth = this.node.getChildByName("Animation").getComponent(UITransform).contentSize.width;
         this.healthProgressBar = this.node.getComponent(ProgressBar);
         this.rigidBody = this.node.getComponent(RigidBody2D);
         AddEvent(EventName.KeyDown, this.onServerKeyDown.bind(this));
@@ -286,22 +282,11 @@ export class Player extends Component {
         if (id == this._playerID) {
             let clientPos = this.player.position;
             // console.log("修正前位置", this.player.position);
-            // console.log("S2C 玩家位置", updatePosition);
-
             // 插值修正 (平滑補正)
             this.player.position = clientPos.lerp(updatePosition, 0.2);
             // console.log("修正後位置", this.player.position);
         }
-        /* if (this.serverPosition) {
-            let clientPos = this.player.position;
-            console.log("當前位置", this.player.position);
-            let serverPos = this.serverPosition;
 
-            // 插值修正 (平滑補正)
-            this.player.position = clientPos.lerp(serverPos, 0.1);
-            console.log("修正位置", this.player.position);
-            this.serverPosition = null;
-        } */
     }
 
     private flipPlayer() {
@@ -374,7 +359,6 @@ export class Player extends Component {
 
     update(deltaTime: number) {
         this.Delta += deltaTime;
-
         if (this.player) {
             this.stateMachine.update(deltaTime);
 
@@ -383,19 +367,6 @@ export class Player extends Component {
                 if (this.isSelfControl) Socket.sendPosInfoPacket(this.player.position); //開啟後定時更新玩家位置
                 // console.log("C2S 玩家位置", this.player.position);
             }
-
-
-            // 如果從伺服器收到修正位置
-            /* if (this.serverPosition) {
-                let clientPos = this.player.position;
-                console.log("當前位置", this.player.position);
-                let serverPos = this.serverPosition;
-
-                // 插值修正 (平滑補正)
-                this.player.position = clientPos.lerp(serverPos, 0.1);
-                console.log("修正位置", this.player.position);
-                this.serverPosition = null;
-            } */
         }
     }
 }
