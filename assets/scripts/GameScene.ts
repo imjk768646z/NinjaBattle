@@ -194,6 +194,7 @@ export class GameScene extends Component {
 
     private onClose(event) {
         console.warn("❌ [GameScene] 連線已關閉");
+        this.cameraController.resetCamera();
         this.showMsgBox(MsgType.WebSocketClose);
         this.disablePlayer();
     }

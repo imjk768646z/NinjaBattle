@@ -59,6 +59,7 @@ export class Socket {
     }
 
     public static sendPosInfoPacket(playerPosition: Vec3) {
+        if (this.websocketConn.ReadyState == WebSocket.CLOSED) return; //防止斷線後還不停發送封包
         let position = new protobuf.protobuf.PositionInfo();
         position.ID = getValue<string>(ModelKey.PlayerUUID);
         position.X = playerPosition.x;
