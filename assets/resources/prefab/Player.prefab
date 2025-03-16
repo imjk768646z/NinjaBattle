@@ -571,7 +571,7 @@
       "__id__": 30
     },
     "walkSpeed": 10,
-    "jumpForce": 25,
+    "jumpForce": 26,
     "bullet": {
       "__uuid__": "a462ed8c-605f-426a-819b-af39e5306501",
       "__expectedType__": "cc.Prefab"

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, view } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('CameraController')
@@ -7,12 +7,15 @@ export class CameraController extends Component {
     private player: Node = null;
     private cameraWidth: number = 1920;
     private cameraHeight: number = 1080;
-    private bottomY: number = -540;          //最下方的邊界(Y軸)
-    private cameraWidthOffset: number = 240; //鏡頭寬度與螢幕寬度之落差
+    private bottomY: number = -540;        //最下方的邊界(Y軸)
+    private cameraWidthOffset: number = 0; //鏡頭寬度與螢幕寬度之落差
     private isTouchLRBorder: boolean = false;
 
     start() {
-
+        // 根據實際螢幕尺寸更新鏡頭尺寸
+        const visibleSize = view.getVisibleSize();
+        this.cameraWidth = visibleSize.width;
+        this.cameraHeight = visibleSize.height;
     }
 
     update(deltaTime: number) {

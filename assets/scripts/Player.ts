@@ -34,7 +34,7 @@ export class Player extends Component {
     private playerScale: number = 1;
 
     public stateMachine: StateMachine = null;
-    
+
     private animation: Animation = null;
     private _playerID: string = "";
     private player: Node = null;
@@ -282,8 +282,8 @@ export class Player extends Component {
         if (id == this._playerID) {
             let clientPos = this.player.position;
             // console.log("修正前位置", this.player.position);
-            // 插值修正 (平滑補正)
-            this.player.position = clientPos.lerp(updatePosition, 0.2);
+            // this.player.position = clientPos.lerp(updatePosition, 0.2); // 插值修正 (平滑補正)
+            this.player.position = updatePosition;
             // console.log("修正後位置", this.player.position);
         }
 

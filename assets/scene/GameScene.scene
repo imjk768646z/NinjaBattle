@@ -54,7 +54,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 211
+      "__id__": 214
     },
     "_id": "8325229a-dc1e-441d-a736-f556b3c8fb4a"
   },
@@ -211,7 +211,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 610.2713987473904,
+    "_orthoHeight": 674.5539906103286,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -2810,8 +2810,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -1969.962,
-      "y": 42.175,
+      "x": -1970,
+      "y": 360,
       "z": 0
     },
     "_lrot": {
@@ -2850,7 +2850,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 100,
-      "height": 1000
+      "height": 1800
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2877,7 +2877,7 @@
       "r": 175,
       "g": 175,
       "b": 175,
-      "a": 255
+      "a": 0
     },
     "_spriteFrame": {
       "__uuid__": "7d8f9b89-4fd1-4c9f-a3ab-38ec7cded7ca@f9941",
@@ -2950,7 +2950,7 @@
     "_size": {
       "__type__": "cc.Size",
       "width": 100,
-      "height": 1000
+      "height": 1800
     },
     "_id": "656RE2ZUBEQ6FNR2LSjXFa"
   },
@@ -2981,8 +2981,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 1969.83,
-      "y": 42.175,
+      "x": 1970,
+      "y": 360,
       "z": 0
     },
     "_lrot": {
@@ -3006,7 +3006,7 @@
       "y": 0,
       "z": 0
     },
-    "_id": "cczppzaLZITK4oIRmMF152"
+    "_id": "04c/oazH5GaotvhJzgkurU"
   },
   {
     "__type__": "cc.UITransform",
@@ -3021,14 +3021,14 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 100,
-      "height": 1000
+      "height": 1800
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
       "y": 0.5
     },
-    "_id": "3a+NFDLmZCC76pEDDz3Zjg"
+    "_id": "02ShUI84JEwaW+zccQDYz8"
   },
   {
     "__type__": "cc.Sprite",
@@ -3048,7 +3048,7 @@
       "r": 175,
       "g": 175,
       "b": 175,
-      "a": 255
+      "a": 0
     },
     "_spriteFrame": {
       "__uuid__": "7d8f9b89-4fd1-4c9f-a3ab-38ec7cded7ca@f9941",
@@ -3067,7 +3067,7 @@
     "_isTrimmedMode": true,
     "_useGrayscale": false,
     "_atlas": null,
-    "_id": "d1QIKTJQpCQ7qGHFfQtTs0"
+    "_id": "b1UQXQ+3xAOJoYv8hVNjyp"
   },
   {
     "__type__": "cc.RigidBody2D",
@@ -3095,7 +3095,7 @@
     },
     "_angularVelocity": 0,
     "_fixedRotation": false,
-    "_id": "85bA9S2EtP3qSwLkSE0e6f"
+    "_id": "55G7uyRYZJ66kNskw3+LMZ"
   },
   {
     "__type__": "cc.BoxCollider2D",
@@ -3121,9 +3121,9 @@
     "_size": {
       "__type__": "cc.Size",
       "width": 100,
-      "height": 1000
+      "height": 1800
     },
-    "_id": "86G6iJa4FIm7Ibdyp2DgiD"
+    "_id": "67WVvi81lD0oDymUPkb9gK"
   },
   {
     "__type__": "cc.Node",
@@ -3821,6 +3821,9 @@
       },
       {
         "__id__": 208
+      },
+      {
+        "__id__": 211
       }
     ],
     "nestedPrefabInstanceRoots": [
@@ -3945,30 +3948,61 @@
     ]
   },
   {
-    "__type__": "cc.SceneGlobals",
-    "ambient": {
+    "__type__": "cc.TargetOverrideInfo",
+    "source": {
+      "__id__": 156
+    },
+    "sourceInfo": {
       "__id__": 212
     },
-    "shadows": {
+    "propertyPath": [
+      "bleedEffect"
+    ],
+    "target": {
+      "__id__": 156
+    },
+    "targetInfo": {
       "__id__": 213
-    },
-    "_skybox": {
-      "__id__": 214
-    },
-    "fog": {
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "33FF8+kChEJqL5oGqLUBe3"
+    ]
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "f8aEYPM8hPc4Cw/xvKs8jA",
+      "4amBzcme5PF4Gm3Nb5IX1Y"
+    ]
+  },
+  {
+    "__type__": "cc.SceneGlobals",
+    "ambient": {
       "__id__": 215
     },
-    "octree": {
+    "shadows": {
       "__id__": 216
     },
-    "skin": {
+    "_skybox": {
       "__id__": 217
     },
-    "lightProbeInfo": {
+    "fog": {
       "__id__": 218
     },
-    "postSettings": {
+    "octree": {
       "__id__": 219
+    },
+    "skin": {
+      "__id__": 220
+    },
+    "lightProbeInfo": {
+      "__id__": 221
+    },
+    "postSettings": {
+      "__id__": 222
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false
