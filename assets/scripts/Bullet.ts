@@ -1,6 +1,7 @@
 import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, IPhysics2DContact, Node, Prefab, RigidBody2D, Vec2, Vec3 } from 'cc';
 import { PHY_GROUP } from './Definition';
 import { Player } from './Player';
+import { AudioEngineControl } from './Singleton/AudioEngineControl';
 const { ccclass, property } = _decorator;
 
 @ccclass('Bullet')
@@ -57,17 +58,20 @@ export class Bullet extends Component {
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        if (otherCollider.group === PHY_GROUP.WALL) AudioEngineControl.getInstance().playAudio("object_hit");
+        if (otherCollider.group === PHY_GROUP.BULLET) AudioEngineControl.getInstance().playAudio("weapon_hit");
+
         if (otherCollider.group === PHY_GROUP.PLAYER) {
             let player = otherCollider.node.getComponent(Player);
             if (this.ownerID == player.PlayerID) { //子彈擊中玩家自己則不銷毀
-                return;   
+                return;
             } else {                               //子彈擊中其他玩家則銷毀
                 this.unschedule(this.destroyBullet);
                 this.scheduleOnce(this.destroyBullet, 0);
             }
         } else {                                   //擊中玩家以外的物體也要銷毀
             this.unschedule(this.destroyBullet);
-            this.scheduleOnce(this.destroyBullet, 0); 
+            this.scheduleOnce(this.destroyBullet, 0);
         }
     }
 

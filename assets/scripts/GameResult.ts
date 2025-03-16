@@ -1,5 +1,6 @@
 import { _decorator, Component, Label, Node } from 'cc';
 import { getValue, ModelKey } from './Model/Model';
+import { AudioEngineControl } from './Singleton/AudioEngineControl';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameResult')
@@ -16,6 +17,8 @@ export class GameResult extends Component {
     }
 
     public showScore(deadID: string) {
+        AudioEngineControl.getInstance().stopAll();
+        AudioEngineControl.getInstance().playAudio("final");
         let playerUUID = getValue<string>(ModelKey.PlayerUUID);
         if (playerUUID == deadID) {
             this.score.string = "再接再厲!";

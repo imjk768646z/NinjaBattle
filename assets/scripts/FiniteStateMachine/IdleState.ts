@@ -4,8 +4,15 @@ import { JumpState } from "./JumpState";
 import { Player } from "../Player";
 import { WalkState } from "./WalkState";
 import { DieState } from "./DieState";
+import { FSMState } from "../Definition";
 
 export class IdleState implements IState {
+    constructor() {
+        this.fsmEvent = FSMState.Idle;
+    }
+
+    fsmEvent: FSMState;
+
     enter(player: Player): void {
         // console.log("進入 Idle 狀態");
         player.onIdle();

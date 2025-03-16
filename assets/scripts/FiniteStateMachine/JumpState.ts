@@ -3,8 +3,15 @@ import { IdleState } from "./IdleState";
 import { IState } from "./IState";
 import { Player } from "../Player";
 import { DieState } from "./DieState";
+import { FSMState } from "../Definition";
 
 export class JumpState implements IState {
+    constructor() {
+        this.fsmEvent = FSMState.Jump;
+    }
+
+    fsmEvent: FSMState;
+
     enter(player: Player): void {
         // console.log("進入 Jump 狀態");
         player.onJump();

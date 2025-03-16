@@ -1,5 +1,6 @@
-import { _decorator, AnimationClip, Component, Label, Node, ProgressBar, resources, SpriteFrame } from 'cc';
+import { _decorator, AnimationClip, AudioClip, Component, Label, Node, ProgressBar, resources, SpriteFrame } from 'cc';
 import { getValue, ModelKey, setValue } from './Model/Model';
+import { AudioEngineControl } from './Singleton/AudioEngineControl';
 const { ccclass, property } = _decorator;
 
 @ccclass('LoadRes')
@@ -14,6 +15,7 @@ export class LoadRes extends Component {
         this.loadMariaAnimationClips.bind(this),
         this.loadShinzoAnimationClips.bind(this),
         this.loadSprites.bind(this),
+        this.loadAudio.bind(this),
     ];
 
     private funcsIdx = 0;
@@ -85,8 +87,24 @@ export class LoadRes extends Component {
                         map.set(sprite.name, sprite);
                         setValue<Map<string, SpriteFrame>>(ModelKey.SpriteMap, map);
                     })
-                    await this.nextLoad("", false);
+                    await this.nextLoad("載入音樂", true);
                     res(sprites);
+                }
+            })
+        })
+    }
+
+    private loadAudio() {
+        return new Promise(res => {
+            resources.loadDir("/audio", AudioClip, async (err, audio) => {
+                if (err) {
+                    res(null);
+                } else {
+                    audio.forEach((audio) => {
+                        AudioEngineControl.getInstance().setAudioTask(audio.name, audio);
+                    })
+                    await this.nextLoad("", false);
+                    res(audio);
                 }
             })
         })

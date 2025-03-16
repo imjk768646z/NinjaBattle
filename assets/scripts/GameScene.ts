@@ -12,6 +12,7 @@ import { MenuScene } from './MenuScene';
 import { GameResult } from './GameResult';
 import { MsgBox } from './MsgBox';
 import { CameraController } from './Controller/CameraController';
+import { AudioEngineControl } from './Singleton/AudioEngineControl';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameScene')
@@ -41,6 +42,8 @@ export class GameScene extends Component {
     }
 
     public init() {
+        AudioEngineControl.getInstance().playMusic("game_bgm", true);
+        AudioEngineControl.getInstance().setMusicVolume(0.3);
         // setting websocketConn
         this.websocketConn = WebSocketManager.getWebSocketConn;
         this.websocketConn.removeAllListener();
@@ -213,6 +216,7 @@ export class GameScene extends Component {
 
     // 切換場景至 MenuScene
     private switch2MenuScene() {
+        AudioEngineControl.getInstance().stopAll();
         const menuScene = director.getScene().getChildByName("Canvas").getComponent(MenuScene);
         this.countDownTime = this.countDownStartTime;
         this.unscheduleAllCallbacks();

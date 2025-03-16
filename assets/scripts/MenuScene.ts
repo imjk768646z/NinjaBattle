@@ -8,6 +8,7 @@ import { getValue, ModelKey, setValue } from './Model/Model';
 import { Socket } from './Command/Socket';
 import { LoadRes } from './LoadRes';
 import { BackgroundController } from './Controller/BackgroundController';
+import { AudioEngineControl } from './Singleton/AudioEngineControl';
 const { ccclass, property } = _decorator;
 
 @ccclass('MenuScene')
@@ -65,6 +66,7 @@ export class MenuScene extends Component {
 
         // 開始播放背景動畫
         this.bgcInstance.play();
+        AudioEngineControl.getInstance().playMusic("menu_bgm", true);
     }
 
     private activateButton(button: Node) {
@@ -76,6 +78,7 @@ export class MenuScene extends Component {
     }
 
     private onJoin() {
+        AudioEngineControl.getInstance().playAudio("button_click");
         if (this.websocketConn.ReadyState == WebSocket.CONNECTING || this.websocketConn.ReadyState == WebSocket.CLOSED) {
             this.showMsgBox(MsgType.WebSocketClose);
             return;
@@ -97,6 +100,7 @@ export class MenuScene extends Component {
     }
 
     private onQuit() {
+        AudioEngineControl.getInstance().playAudio("button_click");
         Socket.sendQuit();
         this.deactivateButton(this.quit);
         this.activateButton(this.join);
@@ -177,6 +181,7 @@ export class MenuScene extends Component {
 
     // 切換場景至 GameScene
     private switch2GameScene() {
+        AudioEngineControl.getInstance().stopAll();
         const gameScene = director.getScene().getChildByName("Canvas").getComponent(GameScene);
         if (gameScene) {
             gameScene.init();

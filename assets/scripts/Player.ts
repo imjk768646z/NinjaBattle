@@ -6,7 +6,8 @@ import { IdleState } from './FiniteStateMachine/IdleState';
 import { Bullet } from './Bullet';
 import { HealthBuff } from './HealthBuff';
 import { Socket } from './Command/Socket';
-import { PHY_GROUP } from './Definition';
+import { FSMState, PHY_GROUP } from './Definition';
+import { AudioEngineControl } from './Singleton/AudioEngineControl';
 const { ccclass, property } = _decorator;
 
 @ccclass('Player')
@@ -298,6 +299,10 @@ export class Player extends Component {
         const id = ary[0];
         const damagePower = ary[1];
         if (id == this._playerID) {
+            AudioEngineControl.getInstance().stopAudio();
+            if (this.isSelfControl) AudioEngineControl.getInstance().playAudio("get_hit");
+            else AudioEngineControl.getInstance().playAudio("get_hit", 0.2);
+
             this.health -= damagePower;
             // console.log(`玩家${id} 剩餘血量${this.health}`);
             let progress = this.health / 100;
@@ -328,21 +333,39 @@ export class Player extends Component {
     }
 
     public onIdle() {
+        AudioEngineControl.getInstance().stopAudio();
         this.stopAllAnimation();
         this.animation.getState("idle").play();
     }
 
     public onWalk() {
+        if (this.onGround) {
+            AudioEngineControl.getInstance().stopAudio();
+            if (this.isSelfControl) AudioEngineControl.getInstance().playLoopAudio("running");
+            else AudioEngineControl.getInstance().playLoopAudio("running", 0.2);
+        }
+
         this.stopAllAnimation();
         this.animation.getState("run").play();
     }
 
     public onJump() {
+        // 從攻擊狀態切回跳躍狀態時不播放音效
+        if (this.stateMachine.lastState.fsmEvent != FSMState.Attack) {
+            AudioEngineControl.getInstance().stopAudio();
+            if (this.isSelfControl) AudioEngineControl.getInstance().playAudio("jumping");
+            else AudioEngineControl.getInstance().playAudio("jumping", 0.2);
+        }
+
         this.stopAllAnimation();
         this.animation.getState("jump").play();
     }
 
     public onAttack() {
+        AudioEngineControl.getInstance().stopAudio();
+        if (this.isSelfControl) AudioEngineControl.getInstance().playAudio("throwing");
+        else AudioEngineControl.getInstance().playAudio("throwing", 0.2);
+
         this.stopAllAnimation();
         this.animation.getState("throw").play();
     }

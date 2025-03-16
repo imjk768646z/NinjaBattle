@@ -3,8 +3,15 @@ import { IState } from "./IState";
 import { NodePoolManager } from "../Singleton/NodePoolManager";
 import { Player } from "../Player";
 import { DieState } from "./DieState";
+import { FSMState } from "../Definition";
 
 export class AttackState implements IState {
+    constructor() {
+        this.fsmEvent = FSMState.Attack;
+    }
+
+    fsmEvent: FSMState;
+
     enter(player: Player): void {
         // console.log("進入 Attack 狀態");
         player.onAttack();

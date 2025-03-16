@@ -26,6 +26,14 @@ export const ActionReverseMap = {
     '1011': 'Error',
 }
 
+export enum FSMState {
+    Idle,
+    Walk,
+    Jump,
+    Attack,
+    Die,
+}
+
 export const PHY_GROUP = {
     DEFAULT: 1 << 0,
     FLOOR: 1 << 1,
