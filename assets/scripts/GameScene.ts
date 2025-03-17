@@ -183,6 +183,7 @@ export class GameScene extends Component {
                 bodyArray = data.slice(actionLength);
                 msg = protobuf.protobuf.Error.decode(bodyArray);
                 // console.log(`[Packet Action]:${ActionReverseMap[action]} \n[Packet Body]:${JSON.stringify(msg)}`);
+                this.cameraController.resetCamera();
                 this.disablePlayer();
                 this.showMsgBox(MsgType.PlayerIsLeft);
                 break;
@@ -195,8 +196,8 @@ export class GameScene extends Component {
     private onClose(event) {
         console.warn("❌ [GameScene] 連線已關閉");
         this.cameraController.resetCamera();
-        this.showMsgBox(MsgType.WebSocketClose);
         this.disablePlayer();
+        this.showMsgBox(MsgType.WebSocketClose);
     }
 
     start() {
