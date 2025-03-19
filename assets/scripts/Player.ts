@@ -194,7 +194,7 @@ export class Player extends Component {
                 return;
             } else {
                 let damageOfBullet = otherCollider.node.getComponent(Bullet).Damage;
-                if (this.isSelfControl) Socket.sendDamagePacket(damageOfBullet);
+                Socket.sendDamagePacket(damageOfBullet, this._playerID);
             }
         } else if (otherCollider.group === PHY_GROUP.BUFF) {
             let healthOfBuff = otherCollider.node.getComponent(HealthBuff).Health;
@@ -392,7 +392,7 @@ export class Player extends Component {
 
             if (this.Delta >= this.updateFrequency) {
                 this.Delta = 0;
-                if (this.isSelfControl) Socket.sendPosInfoPacket(this.player.position); //開啟後定時更新玩家位置
+                // if (this.isSelfControl) Socket.sendPosInfoPacket(this.player.position); //開啟後定時更新玩家位置
                 // console.log("C2S 玩家位置", this.player.position);
             }
         }

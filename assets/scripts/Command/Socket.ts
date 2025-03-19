@@ -79,9 +79,9 @@ export class Socket {
         this.websocketConn.sendPacket(packet);
     }
 
-    public static sendDamagePacket(damageCause: number) {
+    public static sendDamagePacket(damageCause: number, playerID: string) {
         let damage = new protobuf.protobuf.Damage();
-        damage.ID = getValue<string>(ModelKey.PlayerUUID);
+        damage.ID = playerID;
         damage.DamagePower = damageCause;
         // console.log("Send Packet [Damage]:", damage);
 
