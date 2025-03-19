@@ -1,4 +1,4 @@
-import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, ProgressBar, RigidBody2D, UITransform, Vec2, Vec3, Animation, Sprite, ParticleSystem2D } from 'cc';
+import { _decorator, Collider2D, Component, Contact2DType, EventKeyboard, Input, input, IPhysics2DContact, KeyCode, macro, Node, Prefab, ProgressBar, RigidBody2D, UITransform, Vec2, Vec3, Animation, Sprite, ParticleSystem2D, tween } from 'cc';
 import { AddEvent, EventManager, EventName } from './Singleton/EventManager';
 import { NodePoolManager } from './Singleton/NodePoolManager';
 import { StateMachine } from './FiniteStateMachine/StateMachine';
@@ -112,7 +112,7 @@ export class Player extends Component {
         return this.walkSpeed;
     }
 
-    get Health(): number { //暫時測試用
+    get Health(): number {
         return this.health;
     }
 
@@ -229,7 +229,7 @@ export class Player extends Component {
                 this.flipPlayer();
                 break;
             case KeyCode.SPACE:
-                if (this.isSelfControl) Socket.sendJumpPacket();
+                if (this.isSelfControl && this.onGround) Socket.sendJumpPacket();
                 if (this.onGround) {
                     this.rigidBody.linearVelocity = new Vec2(this.rigidBody.linearVelocity.x, this.jumpForce); // 施加跳躍力
                     this.onGround = false; // 跳躍後標記為離地
@@ -279,15 +279,20 @@ export class Player extends Component {
 
     private onSyncPosition(...ary: any[]) {
         const id = ary[0];
-        const updatePosition: Vec3 = ary[1];
-        if (id == this._playerID) {
-            let clientPos = this.player.position;
-            // console.log("修正前位置", this.player.position);
-            // this.player.position = clientPos.lerp(updatePosition, 0.2); // 插值修正 (平滑補正)
-            this.player.position = updatePosition;
-            // console.log("修正後位置", this.player.position);
-        }
+        const serverPos: Vec3 = ary[1];
+        if (id == this._playerID && this.isSelfControl) return; //不處理自己操控的角色
 
+        if (id == this._playerID && !this.isSelfControl) {
+            // console.log("修正前位置", this.player.position);
+            if (Math.abs(this.player.position.y - serverPos.y) >= 20) {
+                this.player.position = serverPos;
+                // console.log("修正後位置", this.player.position);
+            } else {
+                tween(this.player)
+                    .to(0.001, { position: serverPos })
+                    .start();
+            }
+        }
     }
 
     private flipPlayer() {

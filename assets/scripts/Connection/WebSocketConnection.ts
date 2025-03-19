@@ -4,8 +4,8 @@ export class WebSocketConnection {
     private _listener: Map<string, Function> = new Map<string, Function>();
 
     public connect() {
-        this._websocket = new WebSocket('ws://localhost:5000');                                  //測試版
-        // this._websocket = new WebSocket('wss://ninjabattleserver-production.up.railway.app'); //正式版
+        // this._websocket = new WebSocket('ws://localhost:5000');                                  //測試版
+        this._websocket = new WebSocket('wss://ninjabattleserver-production.up.railway.app'); //正式版
         this._websocket.binaryType = "arraybuffer"; // 指定接收的二進位資料型態
 
         this._websocket.onopen = (event) => {
