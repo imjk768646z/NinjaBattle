@@ -313,7 +313,7 @@ export class Player extends Component {
             let progress = this.health / 100;
             this.healthProgressBar.progress = progress;
             this.bleedControll();
-            if (this.health == 0 && this.isSelfControl) Socket.sendDiePacket();
+            if (this.health == 0) Socket.sendDiePacket(this._playerID);
         }
     }
 

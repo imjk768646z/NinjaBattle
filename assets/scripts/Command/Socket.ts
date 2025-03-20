@@ -99,9 +99,9 @@ export class Socket {
         this.websocketConn.sendPacket(packet);
     }
 
-    public static sendDiePacket() {
+    public static sendDiePacket(playerID: string) {
         let die = new protobuf.protobuf.Die();
-        die.ID = getValue<string>(ModelKey.PlayerUUID);
+        die.ID = playerID;
         // console.log("Send Packet [Die]:", die);
 
         let packet = new Packet(Action.Die, protobuf.protobuf.Die.encode(die).finish());
