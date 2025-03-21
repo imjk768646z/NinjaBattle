@@ -85,6 +85,14 @@ export class MenuScene extends Component {
         if (this.websocketConn.ReadyState == WebSocket.OPEN) {
             Socket.sendJoinPacket();
             this.deactivateButton(this.startBtn);
+            this.scheduleOnce(() => {
+                this.loadingRoom.active = true;
+                console.log("開啟Loading Circle")
+                tween(this.loadingRoom)
+                    .by(1, { angle: -360 })
+                    .repeatForever()
+                    .start();
+            })
         }
     }
 
