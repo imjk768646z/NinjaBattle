@@ -75,12 +75,12 @@ export class GameScene extends Component {
                     let player = this.players[index].getComponent(Player);
                     player.setPlayerID = uuid;
                     if (uuid == playerUUID) {
-                        console.log("我的ID為:", playerUUID, "使用腳色", [index]);
+                        console.log("我的uuid:", playerUUID, "使用腳色", [index]);
                         player.setPlayerSelfControll = this.players[index];
                         // 設定相機跟隨玩家的移動
                         this.cameraController.setPlayer = this.players[index];
                     } else {
-                        console.log("另一個玩家ID是", uuid, "他使用腳色", [index]);
+                        console.log("電腦玩家uuid", uuid, "使用腳色", [index]);
                         player.setPlayerOtherControll = this.players[index];
                     }
                 });

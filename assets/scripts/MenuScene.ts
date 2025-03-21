@@ -18,6 +18,7 @@ export class MenuScene extends Component {
     private loadRes: LoadRes = null;
 
     private websocketConn: WebSocketConnection = null;
+    private startBtn: Node = null;     //開始單人遊戲
     private join: Node = null;
     private quit: Node = null;
     private loadingRoom: Node = null;
@@ -38,17 +39,20 @@ export class MenuScene extends Component {
         this.websocketConn.addListener("onopen", this.onOpen.bind(this));
         this.websocketConn.addListener("onmessage", this.onMessage.bind(this));
         this.websocketConn.addListener("onclose", this.onClose.bind(this));
-        this.join = this.node.getChildByName("Button").getChildByName("Join");
+        this.startBtn = this.node.getChildByName("Button").getChildByName("Start");
+        // this.join = this.node.getChildByName("Button").getChildByName("Join");
         this.quit = this.node.getChildByName("Button").getChildByName("Quit");
         this.loadingRoom = this.node.getChildByName("Button").getChildByName("LoadingRoom");
         this.msgBox = this.node.getChildByName("MsgBox");
-        this.join.active = true;
+        this.startBtn.active = true;
+        // this.join.active = true;
         this.quit.active = false;
         this.loadingRoom.active = false;
         this.msgBox.active = false;
         this.bgcInstance = this.node.getChildByName("Background").getComponent(BackgroundController);
 
-        this.join.on(NodeEventType.TOUCH_END, this.onJoin.bind(this));
+        this.startBtn.on(NodeEventType.TOUCH_END, this.onStartGame.bind(this));
+        // this.join.on(NodeEventType.TOUCH_END, this.onJoin.bind(this));
         this.quit.on(NodeEventType.TOUCH_END, this.onQuit.bind(this));
     }
 
@@ -57,12 +61,6 @@ export class MenuScene extends Component {
         let isLoaded = getValue<boolean>(ModelKey.IsLoaded);
         if (isLoaded) this.loadRes.node.active = false;
         else await this.loadRes!.load();
-
-        let map = getValue<Map<string, AnimationClip[]>>(ModelKey.NinjaAnimation);
-        // console.log("Maria_Animation:", map);
-
-        let sprites = getValue<Map<string, SpriteFrame[]>>(ModelKey.SpriteMap);
-        // console.log("background images:", sprites);
 
         // 開始播放背景動畫
         this.bgcInstance.play();
@@ -75,6 +73,19 @@ export class MenuScene extends Component {
 
     private deactivateButton(button: Node) {
         button.active = false;
+    }
+
+    private onStartGame() {
+        AudioEngineControl.getInstance().playAudio("button_click");
+        if (this.websocketConn.ReadyState == WebSocket.CONNECTING || this.websocketConn.ReadyState == WebSocket.CLOSED) {
+            this.showMsgBox(MsgType.WebSocketClose);
+            return;
+        }
+
+        if (this.websocketConn.ReadyState == WebSocket.OPEN) {
+            Socket.sendJoinPacket();
+            this.deactivateButton(this.startBtn);
+        }
     }
 
     private onJoin() {
@@ -128,7 +139,7 @@ export class MenuScene extends Component {
     }
 
     public reset() {
-        this.join.active = true;
+        // this.join.active = true;
         this.quit.active = false;
         this.loadingRoom.active = false;
         this.isGameStart = false;
@@ -157,7 +168,7 @@ export class MenuScene extends Component {
                 let uuid = getValue<string>(ModelKey.PlayerUUID);
                 if (uuid == null) {
                     setValue(ModelKey.PlayerUUID, msg.ID);
-                    console.log("我的uuid是:", getValue<string>(ModelKey.PlayerUUID));
+                    console.log("我的uuid:", getValue<string>(ModelKey.PlayerUUID));
                 }
                 if (msg.GameState == "start") {
                     if (msg.AllPlayers.length >= 2) {
